@@ -1,0 +1,12 @@
+.idea/
+.vscode/
+
+.env
+
+node_modules/
+/.pnp
+.pnp.js
+
+*.js
+
+dist/
