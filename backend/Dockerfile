@@ -1,14 +1,19 @@
 ###               ###
 # Build application #
 ###               ###
-FROM node:16.10.0 as builder
+FROM node:17 as builder
 
-# Retrieve sources
 WORKDIR /app
-COPY . /app
+
+# Copy dependency manager
+COPY package.json .
+COPY yarn.lock .
 
 # Install dependencies
-RUN yarn install
+RUN yarn install --prod
+
+# Copy sources
+COPY . .
 
 # Buil application
 RUN yarn build
@@ -16,22 +21,19 @@ RUN yarn build
 ###                ###
 # Create application #
 ###                ###
-FROM node:16.10.0 as application
-
-RUN npm i -g @nestjs/cli
+FROM node:17 as application
 
 # Retrieves sources
 WORKDIR /app
-COPY prisma/ /app/prisma
-COPY package.json /app/package.json
-COPY yarn.lock /app/yarn.lock
-COPY util/ /app/util
 
-# Install production dependancies
-RUN yarn install --production
+COPY package.json .
+
+COPY prisma/ prisma
+COPY util/ util
 
 # Get application build
-COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/dist dist
+COPY --from=builder /app/node_modules node_modules
 
 # Expose PORT
 EXPOSE $API_PORT
