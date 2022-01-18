@@ -2,20 +2,50 @@ version: "3.9"
 
 services:
 
-    db:
-        image: postgres:14.0-alpine3.14
-        volumes:
-            - postgres_data:/var/lib/postgresql/data
-        environment:
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-            - POSTGRES_DB=${POSTGRES_DB}
+  db:
+    image: postgres:14.0-alpine3.14
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
 
-    #backend:
-        
-    
-    #frontend:
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASS}
+    networks:
+      - backend
 
+  api:
+    image: area/backend
+    build: backend
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT
+      - DB_HOST=db
+      - DB_PORT
+      - DB_URL=postgresql://$DB_USER:$DB_PASS@db:$DB_PORT/$DB_NAME
+      - REDIS_PASS
+      - REDIS_HOST=redis
+      - REDIS_PORT
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    networks:
+      - backend
+    depends_on:
+      - db
+      - redis
+
+
+
+  #frontend:
+
+networks:
+  backend:
 
 volumes:
-    postgres_data:
+  postgres_data:
