@@ -1,0 +1,29 @@
+{
+	"id": "ad58e42c-b5ae-42b2-875c-a6bcbb3e76e7",
+	"name": "Test",
+	"values": [
+		{
+			"key": "id",
+			"value": "0",
+			"enabled": true
+		},
+		{
+			"key": "email",
+			"value": "0",
+			"enabled": true
+		},
+		{
+			"key": "password",
+			"value": "0",
+			"enabled": true
+		},
+		{
+			"key": "baseUrl",
+			"value": "localhost:5000",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2022-01-19T19:13:27.359Z",
+	"_postman_exported_using": "Postman/8.12.5"
+}

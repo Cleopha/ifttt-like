@@ -7,22 +7,22 @@ on:
     branches: ["main", "master", "develop"]
 
 defaults:
-    run:
-        shell: bash
+  run:
+    shell: bash
 
 jobs:
-    build:
-        strategy:
-            fail-fast: false
-            matrix:
-              os: [ubuntu-latest]
-              build_type: [Debug, Release]
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        build_type: [Debug, Release]
 
-        name: Build Area
-        runs-on: ${{ matrix.os }}
+    name: Build Area
+    runs-on: ${{ matrix.os }}
 
-        steps:
-            - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-            - name: Build Docker Compose
-              run: docker compose build
+      - name: Build Docker Compose
+        run: docker compose build
