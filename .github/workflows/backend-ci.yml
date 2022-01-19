@@ -2,8 +2,7 @@ name: Continuous Integration Backend
 
 on:
   push:
-    branches:
-      - '**'
+    branches: ["**"]
   pull_request:
     branches: ["main", "master", "develop"]
 
