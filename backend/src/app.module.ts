@@ -6,6 +6,7 @@ import { AuthModule } from './auth';
 import { PrismaModule } from './prisma';
 
 import { config } from './app.config';
+import { Session as SessionModule } from './app.session';
 
 @Module({
 	imports: [
@@ -16,6 +17,7 @@ import { config } from './app.config';
 		}),
 		AuthModule,
 		PrismaModule,
+		SessionModule,
 	],
 })
 export class AppModule {}

@@ -2,9 +2,13 @@ import { get } from 'env-var';
 
 const env = (name: string, required = true) => get(name).required(required);
 
+
 const api = {
 	host: env('API_HOST').asString(),
 	port: env('API_PORT').asPortNumber(),
+	session: {
+		secret: env('API_SESSION_SECRET').asString()
+	}
 };
 
 const db = {
@@ -17,10 +21,14 @@ const redis = {
 	pass: env('REDIS_PASS').asString(),
 };
 
+// Config types
+export type IApiConfig = typeof api;
+export type IDBConfig = typeof db;
+export type IRedisConfig = typeof redis;
 export interface IConfig {
-	api: typeof api;
-	db: typeof db;
-	redis: typeof redis;
+	api: IApiConfig;
+	db: IDBConfig;
+	redis: IRedisConfig;
 }
 
 export const config = (): IConfig => ({

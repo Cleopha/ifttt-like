@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, Session } from '@nestjs/common';
 
 import { compare, hash } from 'bcrypt';
 
@@ -20,7 +20,7 @@ export class AuthController {
 	}
 
 	@Post('/login')
-	async login(@Body() loginDto: LoginDto): Promise<string> {
+	async login(@Body() loginDto: LoginDto, @Session() session): Promise<string> {
 		const { email, password } = loginDto;
 
 		const user = await this.userService.getByEmail(email);
@@ -28,12 +28,15 @@ export class AuthController {
 			throw new UnauthorizedException('invalid password');
 		}
 
-		// TODO: handle session
+		session.user = { id: user.id };
+		session.save();
+
 		return 'User successfully logged in';
 	}
 
 	@Post('/logout')
-	async logout(): Promise<string> {
+	async logout(@Session() session): Promise<string> {
+		session.destroy();
 		// TODO: check if user is login
 		// TODO: Destroy user session
 		return 'foo';
