@@ -2,9 +2,9 @@ name: Continuous Integration Backend
 
 on:
   push:
-    branches: ["main", "master", "develop"]
+    branches: ["master", "develop"]
   pull_request:
-    branches: ["main", "master", "develop"]
+    branches: ["master", "develop"]
 
 defaults:
   run:
