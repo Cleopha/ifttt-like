@@ -1,16 +1,30 @@
-import { Controller, Post, Body, UnauthorizedException, Session } from '@nestjs/common';
+import {
+	Controller,
+	Post,
+	Body,
+	UnauthorizedException,
+	Session,
+	HttpCode,
+	Inject, forwardRef, HttpStatus,
+} from '@nestjs/common';
 
 import { compare, hash } from 'bcrypt';
 
+import { ISession } from "@session";
+import { UserService } from '@user';
+import { User } from '@user/entities';
+
 import { RegisterDto, LoginDto } from './dto';
-import { User } from '../user/entities';
-import { UserService } from '../user';
+import { AuthMiddleware } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
-	constructor(private readonly userService: UserService) {}
+	constructor(
+		@Inject(forwardRef(() => UserService)) private readonly userService: UserService
+	) {}
 
 	@Post('/register')
+	@HttpCode(HttpStatus.CREATED)
 	async register(@Body() registerDto: RegisterDto): Promise<User> {
 		const { password } = registerDto;
 
@@ -20,7 +34,8 @@ export class AuthController {
 	}
 
 	@Post('/login')
-	async login(@Body() loginDto: LoginDto, @Session() session): Promise<string> {
+	@HttpCode(HttpStatus.OK)
+	async login(@Body() loginDto: LoginDto, @Session() session: ISession): Promise<string> {
 		const { email, password } = loginDto;
 
 		const user = await this.userService.getByEmail(email);
@@ -35,10 +50,10 @@ export class AuthController {
 	}
 
 	@Post('/logout')
+	@AuthMiddleware()
+	@HttpCode(HttpStatus.OK)
 	async logout(@Session() session): Promise<string> {
 		session.destroy();
-		// TODO: check if user is login
-		// TODO: Destroy user session
-		return 'foo';
+		return 'User successfully logged out';
 	}
 }
