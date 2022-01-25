@@ -2,9 +2,9 @@ name: Build Area
 
 on:
   push:
-    branches: ["main", "master", "develop"]
+    branches: ["master", "develop"]
   pull_request:
-    branches: ["main", "master", "develop"]
+    branches: ["master", "develop"]
 
 defaults:
   run:
@@ -15,11 +15,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
         build_type: [Debug, Release]
 
     name: Build Area
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     env:
       DB_PORT: 5432
       DB_USER: root
