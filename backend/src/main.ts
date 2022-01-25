@@ -1,13 +1,30 @@
+// Enable module alias
+import 'module-alias/register';
+
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule } from '@nestjs/swagger';
 
-import { AppModule } from './app.module';
-import AppDoc from './app.doc';
+import * as morgan from 'morgan';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
-async function bootstrap() {
+import { AppModule } from './app.module';
+import AppDoc from '@doc';
+
+async function bootstrap(): Promise<void> {
 	const app = await NestFactory.create(AppModule);
+
+	// Use winston logger
+	app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+	const logger = new Logger('Request');
+	app.use(morgan('dev', {
+			stream: {
+				write: (msg) => logger.log(msg.replace('\n', ''))
+			}
+		}),
+	);
+
 
 	// Retrieve configuration
 	const configService = app.get(ConfigService);
@@ -23,7 +40,7 @@ async function bootstrap() {
 	const host = configService.get<string>('api.host');
 
 	await app.listen(port, host, () => {
-		Logger.log(`Server listening on ${host}:${port}`);
+		Logger.log(`Server listening on ${ host }:${ port }`);
 	});
 }
 

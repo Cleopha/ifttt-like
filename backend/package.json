@@ -6,6 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "clean": "rm -rf dist logs",
+    "clean:hard": "rm -rf dist logs node_modules",
     "prebuild": "rimraf dist",
     "build": "yarn db:generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -13,7 +15,7 @@
     "infra:dev:down": "docker-compose -f docker-compose.dev.yaml down -v",
     "infra:wait": "./util/wait-for-it.sh -h \"$REDIS_HOST\" -p \"$REDIS_PORT\" && ./util/wait-for-it.sh -h \"$DB_HOST\" -p \"$DB_PORT\"",
     "start": "yarn infra:wait && yarn db:migrate && yarn db:generate && nest start",
-    "start:dev": "yarn infra:wait && yarn db:migrate && yarn db:generate && nest start --watch",
+    "start:dev": "yarn infra:wait && yarn db:migrate && yarn db:generate && nest start --watch --exec 'node -r tsconfig-paths/register -r ts-node/register src/main.ts'",
     "start:debug": "yarn infra:wait && yarn db:migrate && yarn db:generate && nest start --debug --watch",
     "start:prod": "yarn infra:wait && yarn db:migrate && yarn db:generate && node dist/main",
     "db:migrate": "prisma migrate dev",
@@ -37,12 +39,16 @@
     "@nestjs/swagger": "^5.1.5",
     "@prisma/client": "^3.8.1",
     "@types/express-session": "^1.17.4",
+    "@types/morgan": "^1.9.3",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "connect-redis": "^6.0.0",
     "env-var": "^7.1.1",
     "express-session": "^1.17.2",
+    "module-alias": "^2.2.2",
+    "morgan": "^1.10.0",
+    "nest-winston": "^1.6.2",
     "nestjs-redis": "git+https://github.com/GyanendroKh/nestjs-redis.git#nest8-fix",
     "nestjs-session": "^2.0.0",
     "prisma": "^3.8.1",
@@ -50,7 +56,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "swagger-ui-express": "^4.3.0"
+    "swagger-ui-express": "^4.3.0",
+    "winston": "3.3.3"
   },
   "devDependencies": {
     "@nestjs/schematics": "^8.0.0",
@@ -74,7 +81,7 @@
     "ts-jest": "^27.0.3",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
-    "tsconfig-paths": "^3.10.1",
+    "tsconfig-paths": "^3.12.0",
     "typescript": "^4.3.5"
   },
   "jest": {
@@ -93,5 +100,16 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "_moduleAliases": {
+    "@logger": "dist/logger/index.js",
+    "@doc": "dist/app.doc.js",
+    "@auth": "dist/auth/index.js",
+    "@config": "dist/config/index.js",
+    "@redis": "dist/redis/index.js",
+    "@session": "dist/session/index.js",
+    "@user": "dist/user/index.js",
+    "@user/*": "dist/user/*",
+    "@db": "dist/prisma/index.js"
   }
 }

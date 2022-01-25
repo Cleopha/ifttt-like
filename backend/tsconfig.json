@@ -16,6 +16,19 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+
+    "paths": {
+      "@logger": ["src/logger/index.js"],
+      "@doc": ["src/app.doc.js"],
+      "@auth": ["src/auth/index.js"],
+      "@config": ["src/config/index.js"],
+      "@redis": ["src/redis/index.js"],
+      "@session": ["src/session/index.js"],
+      "@user": ["src/user/index.js"],
+      "@user/*": ["src/user/*"],
+      "@db": ["src/prisma/index.js"]
+    }
+  },
+  "include": ["src/**/*.ts"]
 }

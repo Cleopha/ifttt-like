@@ -1,25 +1,15 @@
 import * as ConnectRedis from 'connect-redis';
 import * as session from 'express-session';
-import { ConfigService } from '@nestjs/config';
-import { RedisService } from 'nestjs-redis';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 
-import { Redis } from './redis';
-import { IConfig } from './app.config';
+import { IConfig, ConfigService } from '@config';
+import { Redis, RedisService } from '@redis';
 
 const RedisStore = ConnectRedis(session);
 
-declare module 'express-session' {
-	interface SessionData {
-		user: {
-			id: string;
-		}
-	}
-}
-
 export const Session = SessionModule.forRootAsync({
-	imports: [Redis],
-	inject: [RedisService, ConfigService],
+	imports: [ Redis ],
+	inject: [ RedisService, ConfigService ],
 	useFactory: (redisService: RedisService, config: ConfigService<IConfig>): NestSessionOptions => {
 		const redisClient = redisService.getClient();
 		const store = new RedisStore({ client: redisClient, logErrors: true });
