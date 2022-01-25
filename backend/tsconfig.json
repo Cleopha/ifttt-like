@@ -27,7 +27,8 @@
       "@session": ["src/session/index.js"],
       "@user": ["src/user/index.js"],
       "@user/*": ["src/user/*"],
-      "@db": ["src/prisma/index.js"]
+      "@db": ["src/prisma/index.js"],
+      "@error": ["src/error/index.js"]
     }
   },
   "include": ["src/**/*.ts"]

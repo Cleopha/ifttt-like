@@ -4,10 +4,12 @@ import { PrismaService } from '@db'
 	;
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from './entities';
+import { PrismaException } from '../error';
 
 @Injectable()
 export class UserService {
-	constructor(private prisma: PrismaService) {}
+	constructor(private prisma: PrismaService) {
+	}
 
 	async create(data: CreateUserDto): Promise<User> {
 		return this.prisma.user.create({
@@ -16,31 +18,51 @@ export class UserService {
 	}
 
 	async list(): Promise<User[]> {
-		return this.prisma.user.findMany();
+		try {
+			return this.prisma.user.findMany();
+		} catch (e) {
+			throw new PrismaException(e.code, e.msg);
+		}
 	}
 
 	async getById(id: string): Promise<User | null> {
-		return this.prisma.user.findUnique({
-			where: { id },
-		});
+		try {
+			return this.prisma.user.findUnique({
+				where: { id },
+			});
+		} catch (e) {
+			throw new PrismaException(e.code, e.msg);
+		}
 	}
 
 	async getByEmail(email: string): Promise<User | null> {
-		return this.prisma.user.findUnique({
-			where: { email },
-		});
+		try {
+			return this.prisma.user.findUnique({
+				where: { email },
+			});
+		} catch (e) {
+			throw new PrismaException(e.code, e.msg);
+		}
 	}
 
 	async update(id: string, data: UpdateUserDto): Promise<User | null> {
-		return this.prisma.user.update({
-			where: { id },
-			data,
-		});
+		try {
+			return this.prisma.user.update({
+				where: { id },
+				data,
+			});
+		} catch (e) {
+			throw new PrismaException(e.code, e.msg);
+		}
 	}
 
 	async delete(id: string): Promise<User | null> {
-		return this.prisma.user.delete({
-			where: { id },
-		});
+		try {
+			return this.prisma.user.delete({
+				where: { id },
+			});
+		} catch (e) {
+			throw new PrismaException(e.code, e.msg);
+		}
 	}
 }

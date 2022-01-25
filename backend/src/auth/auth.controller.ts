@@ -5,7 +5,7 @@ import {
 	UnauthorizedException,
 	Session,
 	HttpCode,
-	Inject, forwardRef, HttpStatus,
+	Inject, forwardRef, HttpStatus, InternalServerErrorException,
 } from '@nestjs/common';
 
 import { compare, hash } from 'bcrypt';
@@ -28,9 +28,12 @@ export class AuthController {
 	async register(@Body() registerDto: RegisterDto): Promise<User> {
 		const { password } = registerDto;
 
-		// TODO: Handle error
-		const hashedPassword = await hash(password, 10);
-		return this.userService.create({ ...registerDto, password: hashedPassword });
+		try {
+			const hashedPassword = await hash(password, 10);
+			return this.userService.create({ ...registerDto, password: hashedPassword });
+		} catch (e) {
+			throw new InternalServerErrorException(e.msg)
+		}
 	}
 
 	@Post('/login')
