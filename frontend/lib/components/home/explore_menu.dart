@@ -8,6 +8,17 @@ class ExploreMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        if (kIsWeb)
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            child: const Text(
+              'Explorer',
+              style: TextStyle(
+                fontSize: 60,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
         if (!kIsWeb)
           Container(
             margin: const EdgeInsets.only(top: 25, bottom: 10),
