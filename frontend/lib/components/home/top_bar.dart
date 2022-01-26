@@ -44,7 +44,7 @@ class TopBar extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.only(left: 20),
+              padding: const EdgeInsets.only(left: 9),
               child: const Text(
                 'quentin.fringhian@gmail.com',
                 overflow: TextOverflow.ellipsis,

@@ -23,11 +23,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return GetMaterialApp(
       title: 'IFTTT Like',
+      theme: ThemeData(fontFamily: 'AvenirNext'),
       debugShowCheckedModeBanner: false,
       getPages: [],
-      home: Home(),
+      home: const Home(),
     );
   }
 }
