@@ -15,7 +15,7 @@ class ExploreMenu extends StatelessWidget {
               'Explorer',
               style: TextStyle(
                 fontSize: 60,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w900,
               ),
             ),
           ),
