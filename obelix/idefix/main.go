@@ -8,7 +8,7 @@ import (
 
 // Example for use RedisClient
 func example() {
-	rclient := redis_management.NewRedisClient()
+	rclient := redis_management.NewRedisClient("localhost:6379")
 
 	err := rclient.SetKey("1", "that my boy")
 	if err != nil {

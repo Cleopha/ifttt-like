@@ -34,9 +34,9 @@ func (client RedisClient) GetKey(key string) (string, error) {
 	return value, nil
 }
 
-func NewRedisClient() RedisClient {
+func NewRedisClient(addr string) RedisClient {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     addr,
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
