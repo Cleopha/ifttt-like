@@ -16,43 +16,46 @@ class TopBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(right: 50),
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    'assets/logo.svg',
-                    semanticsLabel: 'IFTTT Like Logo',
-                    height: kIsWeb ? 50 : 37,
-                  ),
-                  if (kIsWeb)
-                    SizedBox(
-                      width: 432,
-                      height: 50,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: const [
-                          Expanded(
-                            child: ExploreButton(),
-                          ),
-                          Expanded(
-                            child: CreateButton(),
-                          ),
-                        ],
-                      ),
-                    )
-                ],
-              ),
+            child: Row(
+              children: [
+                SvgPicture.asset(
+                  'assets/logo.svg',
+                  semanticsLabel: 'IFTTT Like Logo',
+                  height: kIsWeb ? 50 : 37,
+                ),
+                if (kIsWeb)
+                  SizedBox(
+                    width: 432,
+                    height: 50,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: const [
+                        Expanded(
+                          child: ExploreButton(),
+                        ),
+                        Expanded(
+                          child: CreateButton(),
+                        ),
+                      ],
+                    ),
+                  )
+              ],
             ),
           ),
-          const Text(
-            'quentin.fringhian@gmail.com',
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: kIsWeb ? 20 : 13,
-              fontWeight: FontWeight.w700,
-              decoration: TextDecoration.underline,
-              overflow: TextOverflow.ellipsis,
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(left: 20),
+              child: const Text(
+                'quentin.fringhian@gmail.com',
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontSize: kIsWeb ? 20 : 13,
+                  fontWeight: FontWeight.w900,
+                  decoration: TextDecoration.underline,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ),
           )
         ],
