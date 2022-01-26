@@ -23,8 +23,8 @@ services:
     depends_on:
       - zookeeper
     
-  kafka-manager:
-    container_name: kafka-manager
+  kafka-gui:
+    container_name: kafka-gui
     image: sheepkiller/kafka-manager:latest
     ports:
       - "9000:9000"
@@ -32,6 +32,8 @@ services:
       - "ZK_HOSTS=${IP}:22181"
       - "APPLICATION_SECRET=letmein"
       - "KM_ARGS=-Djava.net.preferIPv4Stack=true"
+    depends_on:
+      - kafka
 
   redis:
     image: bitnami/redis

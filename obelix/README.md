@@ -10,4 +10,4 @@
 docker-compose -f docker-compose.dev.yaml up
 ```
 
---> [kafka Manager](http://localhost:900/)
+--> [kafka Manager](http://localhost:9000/)
