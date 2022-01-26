@@ -1,7 +1,20 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import 'package:frontend/routes/home.dart';
+
 void main() {
+  if (!kIsWeb) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        // statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.black,
+      ),
+    );
+  }
   runApp(const MyApp());
 }
 
@@ -10,18 +23,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Home Page',
+    return const GetMaterialApp(
+      title: 'IFTTT Like',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Home Page'),
-        ),
-        body: const Center(
-          child: Text('Hello World'),
-        ),
-      ),
+      getPages: [],
+      home: Home(),
     );
   }
 }
