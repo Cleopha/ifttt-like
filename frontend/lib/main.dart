@@ -10,8 +10,9 @@ void main() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        // statusBarColor: Colors.transparent,
+        statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.black,
+        statusBarBrightness: Brightness.dark,
       ),
     );
   }

@@ -14,6 +14,7 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   flutter_svg: ^1.0.3
+  rolling_switch: ^0.0.2
 
 dev_dependencies:
   flutter_test:
