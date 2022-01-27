@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"idefix/redis_management"
 	"log"
@@ -8,7 +9,7 @@ import (
 
 // Example for use RedisClient
 func example() {
-	rclient := redis_management.NewRedisClient()
+	rclient := redis_management.NewRedisClient(context.Background())
 
 	err := rclient.SetKey("1", "that my boy")
 	if err != nil {
