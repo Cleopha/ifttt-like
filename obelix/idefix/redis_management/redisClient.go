@@ -43,12 +43,12 @@ func (client *RedisClient) GetKey(key string) (string, error) {
 	return value, nil
 }
 
-func NewRedisClient() *RedisClient {
+func NewRedisClient(ctx context.Context) *RedisClient {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: pass, // no password set
 		DB:       0,    // use default DB
 	})
 
-	return &RedisClient{ctx: context.Background(), rdb: rdb}
+	return &RedisClient{ctx: ctx, rdb: rdb}
 }
