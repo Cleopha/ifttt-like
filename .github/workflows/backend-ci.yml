@@ -20,6 +20,7 @@ jobs:
       DB_NAME: area
       REDIS_PORT: 6379
       REDIS_PASS: pass
+      API_HOST: localhost
       API_PORT: 5000
       API_SESSION_SECRET: secret
     steps:
@@ -27,6 +28,9 @@ jobs:
 
       - name: Build Docker Compose
         run: docker compose up -d
+
+      - name: Wait for API
+        run: ./backend/util/wait-for-api.sh
 
       - name: Run Postman suite
         uses: matt-ball/newman-action@master
