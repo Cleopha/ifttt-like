@@ -19,9 +19,11 @@ services:
     networks:
       - backend
 
-  api:
-    image: area/backend
-    build: backend
+  user-api:
+    image: area/user-api
+    build:
+      context: backend
+      dockerfile: userAPI/Dockerfile
     environment:
       - API_HOST=0.0.0.0
       - API_PORT

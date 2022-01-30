@@ -13,7 +13,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "infra:dev:up": "docker-compose -f docker-compose.dev.yaml up -d",
     "infra:dev:down": "docker-compose -f docker-compose.dev.yaml down -v",
-    "infra:wait": "./util/wait-for-it.sh -h \"$REDIS_HOST\" -p \"$REDIS_PORT\" && ./util/wait-for-it.sh -h \"$DB_HOST\" -p \"$DB_PORT\"",
+    "infra:wait": "util/wait-for-it.sh -h \"$REDIS_HOST\" -p \"$REDIS_PORT\" && util/wait-for-it.sh -h \"$DB_HOST\" -p \"$DB_PORT\"",
     "start": "yarn infra:wait && yarn db:migrate && yarn db:generate && nest start",
     "start:dev": "yarn infra:wait && yarn db:migrate && yarn db:generate && nest start --watch --exec 'node -r tsconfig-paths/register -r ts-node/register src/main.ts'",
     "start:debug": "yarn infra:wait && yarn db:migrate && yarn db:generate && nest start --debug --watch",
