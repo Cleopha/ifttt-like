@@ -23,6 +23,8 @@ jobs:
       API_HOST: localhost
       API_PORT: 5000
       API_SESSION_SECRET: secret
+      API_SESSION_MAX_AGE: 2160000
+      API_SESSION_SECURE: false
     steps:
       - uses: actions/checkout@v2
 
