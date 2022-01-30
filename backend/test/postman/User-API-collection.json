@@ -124,7 +124,7 @@
 							"script": {
 								"exec": [
 									"pm.test('Success', function() {",
-									"    pm.response.to.have.status(201)",
+									"    pm.response.to.have.status(200)",
 									"})",
 									"",
 									""
@@ -209,7 +209,7 @@
 							"script": {
 								"exec": [
 									"pm.test('Success', function() {",
-									"    pm.response.to.have.status(200)",
+									"    pm.response.to.have.status(403)",
 									"})"
 								],
 								"type": "text/javascript"
