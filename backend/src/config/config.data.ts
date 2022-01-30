@@ -7,7 +7,9 @@ const api = {
 	host: env('API_HOST').asString(),
 	port: env('API_PORT').asPortNumber(),
 	session: {
-		secret: env('API_SESSION_SECRET').asString()
+		secret: env('API_SESSION_SECRET').asString(),
+		maxAge: env('API_SESSION_MAX_AGE').asInt(),
+		secure: env('API_SESSION_SECURE').asBool()
 	}
 };
 
