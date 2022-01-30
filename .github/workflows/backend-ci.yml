@@ -37,8 +37,8 @@ jobs:
       - name: Run Postman suite
         uses: matt-ball/newman-action@master
         with:
-          collection: backend/test/postman/User-API-collection.json
-          environment: backend/test/postman/Area-environment.json
+          collection: backend/userAPI/test/postman/User-API-collection.json
+          environment: backend/userAPI/test/postman/Area-environment.json
 
       - name: Down docker
         run: docker compose stop
