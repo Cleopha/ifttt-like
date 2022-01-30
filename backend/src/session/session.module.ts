@@ -20,10 +20,10 @@ export const Session = SessionModule.forRootAsync({
 				resave: true,
 				saveUninitialized: true,
 				cookie: {
-					secure: false,
+					secure: config.get<boolean>('api.session.secure' as keyof IConfig),
 					sameSite: false,
 					httpOnly: true,
-					maxAge: 60000 * 60 * 6,
+					maxAge: config.get<number>('api.session.maxAge' as keyof IConfig),
 				},
 			},
 		};
