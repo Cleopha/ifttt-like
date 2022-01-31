@@ -19,7 +19,8 @@ CREATE TABLE "Task" (
     "name" TEXT,
     "type" "TaskType" NOT NULL,
     "action" "TaskAction" NOT NULL,
-    "param" JSONB NOT NULL,
+    "nextTask" TEXT,
+    "params" JSONB NOT NULL,
     "workflowId" TEXT NOT NULL,
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
