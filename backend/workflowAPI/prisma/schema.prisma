@@ -34,7 +34,8 @@ model Task {
     name       String?
     type       TaskType
     action     TaskAction
-    param      Json
+    nextTask   String?
+    params      Json
     workflow   Workflow @relation(fields: [workflowId], references: [id])
     workflowId String
 }
