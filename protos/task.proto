@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+// Area Workflow API
+package area.task;
+
+// Imports
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
+// Options
+option go_package = "./";
+
+
+// Task kind
+enum TaskType {
+  ACTION = 0;
+  REACTION = 1;
+}
+
+enum TaskAction {
+  GITHUB_PR_MERGE = 0;    // Action
+  GITHUB_ISSUE_CLOSE = 1; // Action & reaction
+  TIMER_DATE = 2;         // Action
+  TIMER_INTERVAL = 3;     // Action
+}
+
+/////            /////
+// Task definition  //
+/////            /////
+message Task {
+  string id = 1;
+  optional string name = 2;
+  TaskType type = 3;
+  TaskAction action = 4;
+  string next_task = 5;
+  google.protobuf.Struct params = 6;
+}
+
+service TaskService {
+  rpc CreateTask(CreateTaskRequest) returns (Task);
+  rpc ListTasks(ListTasksRequest) returns (ListTasksResponse);
+  rpc GetTask(GetTaskRequest) returns (Task);
+  rpc UpdateTask(UpdateTaskRequest) returns (Task);
+  rpc DeleteTask(DeleteTaskRequest) returns (google.protobuf.Empty);
+}
+
+message ListTasksRequest {
+  optional TaskType filer_type = 1;
+  optional TaskAction filer_action = 2;
+}
+
+message ListTasksResponse {
+  repeated Task tasks = 1;
+}
+
+message GetTaskRequest {
+  string id = 1;
+}
+
+message CreateTaskRequest {
+  string workflow_id = 1;
+  optional string name = 2;
+  TaskType type = 3;
+  TaskAction action = 4;
+  string next_task = 5;
+  google.protobuf.Struct params = 6;
+}
+
+message UpdateTaskRequest {
+  string id = 1;
+  optional string name = 2;
+  optional TaskType type = 3;
+  optional TaskAction action = 4;
+  optional string next_task = 5;
+  optional google.protobuf.Struct params = 6;
+}
+
+message DeleteTaskRequest {
+  string id = 1;
+}
