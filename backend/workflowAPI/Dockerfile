@@ -18,6 +18,7 @@ COPY workflowAPI/nest-cli.json .
 COPY workflowAPI/tsconfig.json .
 COPY workflowAPI/tsconfig.build.json .
 COPY workflowAPI/prisma prisma
+COPY protos-ts /protos-ts
 
 # Buil application
 RUN yarn build
