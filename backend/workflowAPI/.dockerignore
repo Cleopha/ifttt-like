@@ -1,0 +1,22 @@
+docker-compose.dev.yaml
+Dockerfile
+
+# Misc
+README.md
+.gitignore
+.dockerignore
+.prettierrc
+
+# Env
+.env
+.env.example
+
+# Dependencies
+node_modules/
+
+# Build
+dist/
+test/
+
+# Logs
+logs
