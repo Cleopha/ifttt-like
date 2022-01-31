@@ -11,7 +11,7 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(30),
+      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -21,6 +21,7 @@ class TopBar extends StatelessWidget {
                 SvgPicture.asset(
                   'assets/logo.svg',
                   semanticsLabel: 'IFTTT Like Logo',
+                  alignment: Alignment.centerLeft,
                   height: kIsWeb ? 50 : 37,
                 ),
                 if (kIsWeb)
