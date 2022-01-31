@@ -18,21 +18,25 @@ jobs:
       DB_USER: root
       DB_PASS: mypassword
       DB_NAME: area
+      DB_USER_SCHEMA: user
+      DB_WORKFLOW_SCHEMA: workflow
       REDIS_PORT: 6379
       REDIS_PASS: pass
       API_HOST: localhost
-      API_PORT: 5000
-      API_SESSION_SECRET: secret
-      API_SESSION_MAX_AGE: 2160000
-      API_SESSION_SECURE: false
+      USER_API_PORT: 5000
+      USER_API_SESSION_SECRET: secret
+      USER_API_SESSION_MAX_AGE: 2160000
+      USER_API_SESSION_SECURE: false
+      WORKFLOW_API_PORT: 8000
     steps:
       - uses: actions/checkout@v2
 
       - name: Build Docker Compose
         run: docker compose up -d
 
-      - name: Wait for API
-        run: ./backend/util/wait-for-api.sh
+      - name: Wait for User API
+        run: |
+          API_PORT=$USER_API_PORT ./backend/util/wait-for-api.sh
 
       - name: Run Postman suite
         uses: matt-ball/newman-action@master
