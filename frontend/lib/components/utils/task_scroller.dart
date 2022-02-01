@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:frontend/components/utils/taskCard/task_card.dart';
-import 'package:frontend/utils/services.dart';
 
 class TaskScroller extends StatelessWidget {
   const TaskScroller({
+    required this.tasks,
     Key? key,
   }) : super(key: key);
+
+  final List<TaskCard> tasks;
 
   @override
   Widget build(BuildContext context) {
@@ -25,48 +27,7 @@ class TaskScroller extends StatelessWidget {
             crossAxisCount: kIsWeb ? 3 : 1,
             crossAxisSpacing: 15,
             mainAxisSpacing: 15,
-            children: [
-              TaskCard(
-                author: 'quentinFringhian',
-                numberOfUsers: 3,
-                action: actions['prMerge']!,
-                reactions: [
-                  reactions['openIssue']!,
-                  reactions['sendMessage']!,
-                  reactions['sendMessage']!,
-                ],
-                isActive: true,
-              ),
-              TaskCard(
-                author: 'quentinFringhian',
-                numberOfUsers: 30000,
-                action: actions['xHours']!,
-                reactions: [
-                  reactions['sendMessage']!,
-                ],
-                isActive: true,
-              ),
-              TaskCard(
-                author: 'quentinFringhian',
-                numberOfUsers: 2875,
-                action: actions['folderChange']!,
-                reactions: [
-                  reactions['sendMessage']!,
-                  reactions['openIssue']!,
-                ],
-                isActive: true,
-              ),
-              TaskCard(
-                author: 'quentinFringhian',
-                numberOfUsers: 2875,
-                action: actions['specificRole']!,
-                reactions: [
-                  reactions['sendMessage']!,
-                  reactions['addRole']!,
-                ],
-                isActive: true,
-              ),
-            ],
+            children: tasks,
           ),
         ),
       ],
