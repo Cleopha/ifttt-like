@@ -6,16 +6,16 @@ import 'package:get/get.dart';
 import 'package:frontend/routes/home.dart';
 
 void main() {
-  // if (!kIsWeb) {
-  //   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  //   SystemChrome.setSystemUIOverlayStyle(
-  //     const SystemUiOverlayStyle(
-  //       statusBarColor: Colors.transparent,
-  //       systemNavigationBarColor: Colors.black,
-  //       statusBarBrightness: Brightness.dark,
-  //     ),
-  //   );
-  // }
+  if (!kIsWeb) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.black,
+        statusBarBrightness: Brightness.dark,
+      ),
+    );
+  }
   runApp(const MyApp());
 }
 
