@@ -9,7 +9,7 @@
     "clean": "rm -rf dist",
     "clean:hard": "rm -rf dist node_modules",
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "yarn db:generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "infra:dev:up": "docker-compose -f docker-compose.dev.yaml up -d",
     "infra:dev:down": "docker-compose -f docker-compose.dev.yaml down -v",

@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { Empty } from "./google/protobuf/empty";
+import { Observable } from 'rxjs';
 
 export const protobufPackage = "area.task";
 
@@ -72,9 +73,9 @@ export interface DeleteTaskRequest {
 }
 
 export interface TaskService {
-  CreateTask(request: CreateTaskRequest): Promise<Task>;
-  ListTasks(request: ListTasksRequest): Promise<ListTasksResponse>;
-  GetTask(request: GetTaskRequest): Promise<Task>;
-  UpdateTask(request: UpdateTaskRequest): Promise<Task>;
-  DeleteTask(request: DeleteTaskRequest): Promise<Empty>;
+  CreateTask(request: CreateTaskRequest): Observable<Task>;
+  ListTasks(request: ListTasksRequest): Observable<ListTasksResponse>;
+  GetTask(request: GetTaskRequest): Observable<Task>;
+  UpdateTask(request: UpdateTaskRequest): Observable<Task>;
+  DeleteTask(request: DeleteTaskRequest): Observable<Empty>;
 }
