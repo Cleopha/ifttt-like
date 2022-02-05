@@ -35,7 +35,7 @@ model Task {
     type       TaskType
     action     TaskAction
     nextTask   String?
-    params      Json
-    workflow   Workflow @relation(fields: [workflowId], references: [id])
+    params     Json
+    workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
     workflowId String
 }
