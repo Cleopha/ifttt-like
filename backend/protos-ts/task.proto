@@ -13,10 +13,12 @@ option go_package = "./";
 
 // Task kind
 enum TaskType {
-  ACTION = 0;
-  REACTION = 1;
+  ACTION = 0; // Wait for an action
+  REACTION = 1; // React to an action
 }
 
+// Available action in the project
+// It will be completed with time
 enum TaskAction {
   GITHUB_PR_MERGE = 0;    // Action
   GITHUB_ISSUE_CLOSE = 1; // Action & reaction
@@ -24,18 +26,21 @@ enum TaskAction {
   TIMER_INTERVAL = 3;     // Action
 }
 
-/////            /////
-// Task definition  //
-/////            /////
+// Task correspond to an action or reaction
 message Task {
   string id = 1;
   optional string name = 2;
   TaskType type = 3;
   TaskAction action = 4;
+
+  // Next task to execute (set to "" by default)
   string next_task = 5;
+
+  // Any additional metadata required to execute the task
   google.protobuf.Struct params = 6;
 }
 
+// CRUD operation to manipulate a Task
 service TaskService {
   rpc CreateTask(CreateTaskRequest) returns (Task);
   rpc ListTasks(ListTasksRequest) returns (ListTasksResponse);

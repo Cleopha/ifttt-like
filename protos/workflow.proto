@@ -12,9 +12,7 @@ import "task.proto";
 option go_package = "./";
 
 
-/////                /////
-// Workflow definition  //
-/////                /////
+// A workflow is a set of task (action and reaction) to execute
 message Workflow {
   string id = 1;
   string owner = 2;
@@ -22,6 +20,7 @@ message Workflow {
   repeated task.Task tasks = 4;
 }
 
+// CRUD operation to manipulate a Workflow
 service WorkflowService {
   rpc CreateWorkflow(CreateWorkflowRequest) returns (Workflow);
   rpc ListWorkflows(ListWorkflowsRequest) returns (ListWorkflowsResponse);

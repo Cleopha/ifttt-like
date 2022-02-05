@@ -10,11 +10,7 @@ import { IsOptional, IsString } from 'class-validator';
 
 export const protobufPackage = "area.workflow";
 
-/**
- * ///                /////
- * Workflow definition  //
- * ///                /////
- */
+/** A workflow is a set of task (action and reaction) to execute */
 export interface Workflow {
   id: string;
   owner: string;
@@ -65,6 +61,8 @@ export class DeleteWorkflowRequest {
 
 export const AREA_WORKFLOW_PACKAGE_NAME = "area.workflow";
 
+/** CRUD operation to manipulate a Workflow */
+
 export interface WorkflowServiceClient {
   createWorkflow(
     request: CreateWorkflowRequest,
@@ -91,6 +89,8 @@ export interface WorkflowServiceClient {
     metadata?: Metadata
   ): Observable<Empty>;
 }
+
+/** CRUD operation to manipulate a Workflow */
 
 export interface WorkflowServiceController {
   createWorkflow(
