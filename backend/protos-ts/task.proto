@@ -45,8 +45,8 @@ service TaskService {
 }
 
 message ListTasksRequest {
-  optional TaskType filer_type = 1;
-  optional TaskAction filer_action = 2;
+  optional TaskType filter_type = 1;
+  optional TaskAction filter_action = 2;
 }
 
 message ListTasksResponse {
