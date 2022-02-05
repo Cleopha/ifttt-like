@@ -17,15 +17,14 @@ RUN unzip -o protoc-3.18.1-linux-x86_64.zip -d ./usr/local && \
 ###
 FROM setup AS gen-workflow-api-doc
 
+RUN chmod -R a+r /usr/local/include
+
 # Copy workflow API protobuf
 COPY task.proto /protos/task.proto
 COPY workflow.proto /protos/workflow.proto
 
-# Create output directory
-RUN mkdir -p /out
-
 # Generate documentation
-RUN bash entrypoint.sh
+RUN protoc -Iprotos --doc_out=/ protos/*.proto
 
 ###
 # Expose gRPC documentation with nginx
@@ -34,4 +33,4 @@ FROM nginx:latest AS doc-server
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=gen-workflow-api-doc /out/index.html /usr/share/nginx/html/workflow/index.html
+COPY --from=gen-workflow-api-doc /index.html /usr/share/nginx/html/workflow/index.html

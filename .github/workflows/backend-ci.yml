@@ -28,6 +28,7 @@ jobs:
       USER_API_SESSION_MAX_AGE: 2160000
       USER_API_SESSION_SECURE: false
       WORKFLOW_API_PORT: 8000
+      GRPC_DOC_PORT: 9000
     steps:
       - uses: actions/checkout@v2
 
