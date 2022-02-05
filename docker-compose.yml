@@ -62,7 +62,13 @@ services:
     depends_on:
       - database
 
-  #frontend:
+  grpc-doc:
+    image: area/grpc-doc
+    build:
+      context: protos
+      dockerfile: Dockerfile
+    ports:
+      - "${GRPC_DOC_PORT}:80"
 
 networks:
   backend:
