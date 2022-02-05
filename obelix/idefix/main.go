@@ -2,51 +2,34 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"idefix/kafka_producer"
-	"idefix/redis_management"
+	"idefix/devAuth"
+	"idefix/operator"
+	"idefix/producer"
+	"idefix/redis"
+	"idefix/watcher"
 	"log"
-	"os"
+	"time"
 )
 
-// Example for use RedisClient
-func example() {
-	rclient := redis_management.NewRedisClient(context.Background())
-
-	err := rclient.SetKey("1", "that my boy")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	key, err := rclient.GetKey("1")
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("key: ", key)
-}
-
-type Order struct {
-	Pizza string `json:"pizza"`
-	Table int    `json:"table"`
-}
-
 func main() {
-	producer, err := kafka_producer.CreateProducer()
+	kp, err := producer.New()
 	if err != nil {
-		fmt.Println("error1", err.Error())
-		os.Exit(1)
+		log.Fatalf("failed to create new producer: %v", err)
+	}
+	rc := redis.NewClient(context.Background())
+	client := devAuth.GithubAuth()
+
+	w := watcher.Watcher{
+		Requester: client,
+		Operator: &operator.IdefixOperator{
+			RC: rc,
+			KP: kp,
+		},
+		Interval: 2 * time.Second,
 	}
 
-	pizza, _ := json.Marshal(Order{"margarita", 17})
-
-	msg := kafka_producer.PreparePublish("ntm", pizza)
-	p, o, err := producer.SendMessage(msg)
+	err = w.Watch()
 	if err != nil {
-		return
+		log.Fatal(err)
 	}
-
-	fmt.Println("Partition: ", p)
-	fmt.Println("Offset: ", o)
-
 }

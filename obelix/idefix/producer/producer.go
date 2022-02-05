@@ -12,7 +12,7 @@ func init() {
 	brokers = []string{os.Getenv("PRODUCER_ENDPOINT")}
 }
 
-func New() (*sarama.SyncProducer, error) {
+func New() (sarama.SyncProducer, error) {
 	config := sarama.NewConfig()
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.RequiredAcks = sarama.WaitForAll
@@ -23,7 +23,7 @@ func New() (*sarama.SyncProducer, error) {
 		return nil, fmt.Errorf("failed to create sync producer: %v", err)
 	}
 
-	return &producer, nil
+	return producer, nil
 }
 
 func PreparePublish(topic string, data []byte) *sarama.ProducerMessage {
