@@ -11,11 +11,17 @@ export const protobufPackage = "area.task";
 
 /** Task kind */
 export enum TaskType {
+  /** ACTION - Wait for an action */
   ACTION = 0,
+  /** REACTION - React to an action */
   REACTION = 1,
   UNRECOGNIZED = -1,
 }
 
+/**
+ * Available action in the project
+ * It will be completed with time
+ */
 export enum TaskAction {
   /** GITHUB_PR_MERGE - Action */
   GITHUB_PR_MERGE = 0,
@@ -28,17 +34,15 @@ export enum TaskAction {
   UNRECOGNIZED = -1,
 }
 
-/**
- * ///            /////
- * Task definition  //
- * ///            /////
- */
+/** Task correspond to an action or reaction */
 export interface Task {
   id: string;
   name?: string | undefined;
   type: TaskType;
   action: TaskAction;
+  /** Next task to execute (set to "" by default) */
   nextTask: string;
+  /** Any additional metadata required to execute the task */
   params: { [key: string]: any } | undefined;
 }
 
@@ -113,6 +117,8 @@ export class DeleteTaskRequest {
 
 export const AREA_TASK_PACKAGE_NAME = "area.task";
 
+/** CRUD operation to manipulate a Task */
+
 export interface TaskServiceClient {
   createTask(request: CreateTaskRequest, metadata?: Metadata): Observable<Task>;
 
@@ -130,6 +136,8 @@ export interface TaskServiceClient {
     metadata?: Metadata
   ): Observable<Empty>;
 }
+
+/** CRUD operation to manipulate a Task */
 
 export interface TaskServiceController {
   createTask(
