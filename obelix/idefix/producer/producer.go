@@ -1,17 +1,29 @@
-package kafka_producer
+package producer
 
-import "github.com/Shopify/sarama"
+import (
+	"fmt"
+	"github.com/Shopify/sarama"
+	"os"
+)
 
-var brokers = []string{"127.0.0.1:19092"}
+var brokers []string
 
-func CreateProducer() (sarama.SyncProducer, error) {
+func init() {
+	brokers = []string{os.Getenv("PRODUCER_ENDPOINT")}
+}
+
+func New() (*sarama.SyncProducer, error) {
 	config := sarama.NewConfig()
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Return.Successes = true
 	producer, err := sarama.NewSyncProducer(brokers, config)
 
-	return producer, err
+	if err != nil {
+		return nil, fmt.Errorf("failed to create sync producer: %v", err)
+	}
+
+	return &producer, nil
 }
 
 func PreparePublish(topic string, data []byte) *sarama.ProducerMessage {
