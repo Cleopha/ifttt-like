@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { Task, Prisma } from '@prisma/client';
 
-import { PrismaService } from '../prisma';
+import { PrismaService } from '@db';
 
 
 export interface IListTaskFilter {

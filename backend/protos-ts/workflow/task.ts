@@ -7,8 +7,6 @@ import { Metadata } from "@grpc/grpc-js";
 import { Empty } from "./google/protobuf/empty";
 import { IsEnum, IsObject, IsOptional, IsString } from 'class-validator';
 
-export const protobufPackage = "area.task";
-
 /** Task kind */
 export enum TaskType {
   /** ACTION - Wait for an action */

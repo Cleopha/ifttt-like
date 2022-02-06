@@ -2,8 +2,6 @@
 import { util, configure } from "protobufjs/minimal";
 import * as Long from "long";
 
-export const protobufPackage = "google.protobuf";
-
 /**
  * `NullValue` is a singleton enumeration to represent the null value for the
  * `Value` type union.
@@ -68,8 +66,6 @@ export interface ListValue {
   /** Repeated field of dynamically typed values. */
   values: any[];
 }
-
-export const GOOGLE_PROTOBUF_PACKAGE_NAME = "google.protobuf";
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

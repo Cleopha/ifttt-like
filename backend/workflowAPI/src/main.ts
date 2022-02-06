@@ -1,9 +1,13 @@
+// Enable module alias
+import 'module-alias/register';
+
+
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { ConfigService } from '@nestjs/config';
-import { IApiConfig } from './config/config.data';
 import { Logger } from '@nestjs/common';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+
+import { IApiConfig, ConfigService } from '@config';
+import { AppModule } from './app.module';
 
 
 async function bootstrap(): Promise<void> {
