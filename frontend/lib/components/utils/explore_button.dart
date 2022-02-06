@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 class ExploreButton extends StatelessWidget {
-  const ExploreButton({Key? key}) : super(key: key);
+  const ExploreButton({
+    this.colorReverse = false,
+    Key? key,
+  }) : super(key: key);
+
+  final bool colorReverse;
 
   @override
   Widget build(BuildContext context) {
@@ -11,13 +16,15 @@ class ExploreButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(43),
-          color: kIsWeb ? Colors.black : Colors.white24,
+          color: kIsWeb
+              ? (colorReverse ? Colors.white : Colors.black)
+              : Colors.white24,
         ),
-        child: const Center(
+        child: Center(
           child: Text(
             'Explorer',
             style: TextStyle(
-              color: Colors.white,
+              color: colorReverse ? Colors.black : Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.w700,
             ),

@@ -6,7 +6,12 @@ import 'package:frontend/components/utils/create_button.dart';
 import 'package:frontend/components/utils/explore_button.dart';
 
 class TopBar extends StatelessWidget {
-  const TopBar({Key? key}) : super(key: key);
+  const TopBar({
+    this.colorReverse = false,
+    Key? key,
+  }) : super(key: key);
+
+  final bool colorReverse;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,8 @@ class TopBar extends StatelessWidget {
                   'assets/logo.svg',
                   semanticsLabel: 'IFTTT Like Logo',
                   alignment: Alignment.centerLeft,
-                  height: kIsWeb ? 50 : 37,
+                  height: kIsWeb ? 47 : 37,
+                  color: colorReverse ? Colors.white : Colors.black,
                 ),
                 if (kIsWeb)
                   SizedBox(
@@ -30,12 +36,12 @@ class TopBar extends StatelessWidget {
                     height: 50,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: const [
+                      children: [
                         Expanded(
-                          child: ExploreButton(),
+                          child: ExploreButton(colorReverse: colorReverse),
                         ),
                         Expanded(
-                          child: CreateButton(),
+                          child: CreateButton(colorReverse: colorReverse),
                         ),
                       ],
                     ),
@@ -46,7 +52,7 @@ class TopBar extends StatelessWidget {
           Expanded(
             child: Container(
               padding: const EdgeInsets.only(left: 9),
-              child: const Text(
+              child: Text(
                 'quentin.fringhian@gmail.com',
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.right,
@@ -55,6 +61,7 @@ class TopBar extends StatelessWidget {
                   fontWeight: FontWeight.w900,
                   decoration: TextDecoration.underline,
                   overflow: TextOverflow.ellipsis,
+                  color: colorReverse ? Colors.white : Colors.black,
                 ),
               ),
             ),
