@@ -1,4 +1,6 @@
 import { Controller, UseFilters, UseInterceptors, ValidationPipe } from '@nestjs/common';
+import { Payload, RpcException } from '@nestjs/microservices';
+
 import {
 	CreateWorkflowRequest,
 	DeleteWorkflowRequest,
@@ -9,12 +11,12 @@ import {
 	Workflow,
 	WorkflowServiceController,
 	WorkflowServiceControllerMethods
-} from '../protos/workflow/workflow';
+} from '@protos';
+import { TaskConvertor } from '@task';
+import { RpcExceptionInterceptor } from '@exception';
+import { LoggingInterceptor } from '@logger';
+
 import { WorkflowService, WorkflowWithTasks } from './workflow.service';
-import { TaskConvertor } from '../task/task.convertor';
-import { RpcExceptionInterceptor } from '../exception/catch.exception';
-import { Payload, RpcException } from '@nestjs/microservices';
-import { LoggingInterceptor } from '../logger/logger.interceptor';
 
 @Controller()
 @UseInterceptors(new LoggingInterceptor())

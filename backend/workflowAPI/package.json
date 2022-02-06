@@ -46,6 +46,7 @@
     "class-validator": "^0.13.2",
     "env-var": "^7.1.1",
     "lodash": "^4.17.21",
+    "module-alias": "^2.2.2",
     "prisma": "^3.8.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -88,5 +89,14 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "_moduleAliases": {
+    "@logger": "dist/logger/index.js",
+    "@config": "dist/config/index.js",
+    "@exception": "dist/exception/index.js",
+    "@protos": "dist/protos/index.js",
+    "@task": "dist/task/index.js",
+    "@workflow": "dist/workflow/index.js",
+    "@db": "dist/prisma/index.js"
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { Prisma, Workflow, Task } from '@prisma/client';
 
-import { PrismaService } from '../prisma';
+import { PrismaService } from '@db';
 
 export type WorkflowWithTasks = Workflow & { tasks: Task[] }
 

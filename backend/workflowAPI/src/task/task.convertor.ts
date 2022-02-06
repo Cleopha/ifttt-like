@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as Prisma from '@prisma/client';
 import * as _ from 'lodash';
-import { Task, TaskAction, TaskType } from '../protos/workflow/task';
+
+import { Task, TaskAction, TaskType } from '@protos';
 
 @Injectable()
 export class TaskConvertor {
