@@ -23,18 +23,26 @@ const redis = {
 	pass: env('REDIS_PASS').asString(),
 };
 
+const workflowAPI = {
+	host: env('WORKFLOW_API_HOST').asString(),
+	port: env('WORKFLOW_API_PORT').asPortNumber(),
+}
+
 // Config types
 export type IApiConfig = typeof api;
 export type IDBConfig = typeof db;
 export type IRedisConfig = typeof redis;
+export type IWorkflowAPIConfig =  typeof workflowAPI;
 export interface IConfig {
 	api: IApiConfig;
 	db: IDBConfig;
 	redis: IRedisConfig;
+	workflowAPI: IWorkflowAPIConfig;
 }
 
 export const config = (): IConfig => ({
 	api,
 	db,
 	redis,
+	workflowAPI,
 });
