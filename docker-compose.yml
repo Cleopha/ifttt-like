@@ -36,6 +36,8 @@ services:
       - REDIS_PASS
       - REDIS_HOST=redis
       - REDIS_PORT
+      - WORKFLOW_API_PORT
+      - WORKFLOW_API_HOST=workflow-api
     ports:
       - "${USER_API_PORT}:${USER_API_PORT}"
     networks:

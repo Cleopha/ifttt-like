@@ -18,6 +18,7 @@ COPY userAPI/nest-cli.json .
 COPY userAPI/tsconfig.json .
 COPY userAPI/tsconfig.build.json .
 COPY userAPI/prisma prisma
+COPY protos-ts /protos-ts
 
 # Buil application
 RUN yarn build
