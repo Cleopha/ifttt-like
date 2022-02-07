@@ -28,7 +28,11 @@
       "@user": ["src/user/index.js"],
       "@user/*": ["src/user/*"],
       "@db": ["src/prisma/index.js"],
-      "@error": ["src/error/index.js"]
+      "@error": ["src/error/index.js"],
+      "@task": ["src/task/index.js"],
+      "@workflow": ["src/workflow/index.js"],
+      "@util/*": ["src/util/*"],
+      "@protos": ["src/protos/index.js"]
     }
   },
   "include": ["src/**/*.ts"]

@@ -30,11 +30,13 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.5.4",
     "@nestjs/cli": "^8.0.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.6",
     "@nestjs/core": "^8.0.0",
     "@nestjs/mapped-types": "*",
+    "@nestjs/microservices": "^8.2.6",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.1.5",
     "@prisma/client": "^3.8.1",
@@ -110,6 +112,11 @@
     "@session": "dist/session/index.js",
     "@user": "dist/user/index.js",
     "@user/*": "dist/user/*",
-    "@db": "dist/prisma/index.js"
+    "@util/*": "dist/util/*",
+    "@error": "dist/error/index.js",
+    "@db": "dist/prisma/index.js",
+    "@task": "dist/task/index.js",
+    "@workflow": "dist/workflow/index.js",
+    "@protos": "dist/protos/index.js"
   }
 }

@@ -10,6 +10,9 @@
           "introspectComments": true
         }
       }
+    ],
+    "assets": [
+      "**/*.proto"
     ]
   }
 }
