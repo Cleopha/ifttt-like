@@ -16,7 +16,9 @@ import { User } from '@user/entities';
 
 import { RegisterDto, LoginDto } from './dto';
 import { AuthMiddleware } from './auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('auth')
 export class AuthController {
 	constructor(
