@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate {
 		request.user = await this.userService.getById(user.id);
 
 		const roles = this.reflector.get<string[]>('roles', context.getHandler());
-		if (!roles) {
+		if (!roles || !roles.length) {
 			// Any logged user can access the handler
 			return true;
 		}

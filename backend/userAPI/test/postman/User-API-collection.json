@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e388395f-b196-465f-93bd-89b54d2fb065",
+		"_postman_id": "5417a8ca-0d42-48dd-ba6f-2b40f4c0a75a",
 		"name": "User API",
 		"description": "Area API to manage users and their workflows",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -439,7 +439,20 @@
 					]
 				},
 				{
-					"name": "06.Auth Controller logout TODO",
+					"name": "06.Auth Controller logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -486,7 +499,92 @@
 					]
 				},
 				{
-					"name": "07.User Controller delete",
+					"name": "08.Auth Controller login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Success', function() {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Untitled Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"Duis adipisicing pariatur eu\",\n    \"password\": \"anim E\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "\"in dolore sed\""
+						}
+					]
+				},
+				{
+					"name": "09.User Controller delete",
 					"event": [
 						{
 							"listen": "test",
@@ -532,7 +630,7 @@
 					},
 					"response": [
 						{
-							"name": "Untitled Example",
+							"name": "response",
 							"originalRequest": {
 								"method": "DELETE",
 								"header": [],
