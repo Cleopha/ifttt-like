@@ -18,23 +18,13 @@ import { LoggingInterceptor } from '@logger';
 
 import { TaskConvertor } from './task.convertor';
 import { TaskService } from './task.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @Controller()
 @UseInterceptors(new LoggingInterceptor())
 @TaskServiceControllerMethods()
 export class TaskController implements TaskServiceController {
 	constructor(private taskService: TaskService, private taskConvertor: TaskConvertor) {
-	}
-
-	@UseFilters(new RpcExceptionInterceptor())
-	async createTask(@Payload(new ValidationPipe({ whitelist: true })) req: CreateTaskRequest): Promise<Task> {
-		const action = this.taskConvertor.grpcActionToPrismaAction(req.action);
-		const type = this.taskConvertor.grpcTypeToPrismaType(req.type);
-
-		const data = _.omit(req, [ 'action', 'type', 'workflowId' ]);
-
-		const task = await this.taskService.createTask({ ...data, action, type }, req.workflowId);
-		return this.taskConvertor.prismaTaskToGrpcTask(task);
 	}
 
 	@UseFilters(new RpcExceptionInterceptor())
@@ -47,10 +37,14 @@ export class TaskController implements TaskServiceController {
 			type: (filterType != undefined && this.taskConvertor.grpcTypeToPrismaType(filterType)) || undefined,
 		};
 
-		const tasks = await this.taskService.listTasks(filters);
-		return {
-			tasks: tasks.map((prismaTask) => this.taskConvertor.prismaTaskToGrpcTask(prismaTask)),
-		};
+		try {
+			const tasks = await this.taskService.listTasks(filters);
+			return {
+				tasks: tasks.map((prismaTask) => this.taskConvertor.prismaTaskToGrpcTask(prismaTask)),
+			};
+		} catch (e) {
+			throw new RpcException(e.message);
+		}
 	}
 
 	@UseFilters(new RpcExceptionInterceptor())
@@ -63,6 +57,21 @@ export class TaskController implements TaskServiceController {
 	}
 
 	@UseFilters(new RpcExceptionInterceptor())
+	async createTask(@Payload(new ValidationPipe({ whitelist: true })) req: CreateTaskRequest): Promise<Task> {
+		const action = this.taskConvertor.grpcActionToPrismaAction(req.action);
+		const type = this.taskConvertor.grpcTypeToPrismaType(req.type);
+
+		const data = _.omit(req, [ 'action', 'type', 'workflowId' ]);
+
+		try {
+			const task = await this.taskService.createTask({ ...data, action, type }, req.workflowId);
+			return this.taskConvertor.prismaTaskToGrpcTask(task);
+		} catch (e) {
+			throw new RpcException(e.message);
+		}
+	}
+
+	@UseFilters(new RpcExceptionInterceptor())
 	async updateTask(@Payload(new ValidationPipe({ whitelist: true })) req: UpdateTaskRequest): Promise<Task> {
 		const { id, type, action } = req;
 		const data = _.omit(req, [ 'type', 'action' ]);
@@ -71,12 +80,30 @@ export class TaskController implements TaskServiceController {
 			type: (type != undefined && this.taskConvertor.grpcTypeToPrismaType(type)) || undefined,
 		};
 
-		const task = await this.taskService.updateTask(id, { ...data, ...convertedGrpcEnum });
-		return this.taskConvertor.prismaTaskToGrpcTask(task);
+		try {
+			const task = await this.taskService.updateTask(id, { ...data, ...convertedGrpcEnum });
+			return this.taskConvertor.prismaTaskToGrpcTask(task);
+		} catch (e) {
+			if (e instanceof PrismaClientKnownRequestError) {
+				if (e.code == 'P2025') {
+					throw new RpcException('Workflow not found');
+				}
+			}
+			throw new RpcException(e.message);
+		}
 	}
 
 	@UseFilters(new RpcExceptionInterceptor())
 	async deleteTask(@Payload(new ValidationPipe({ whitelist: true })) req: DeleteTaskRequest): Promise<void> {
-		await this.taskService.deleteTask(req.id);
+		try {
+			await this.taskService.deleteTask(req.id);
+		} catch (e) {
+			if (e instanceof PrismaClientKnownRequestError) {
+				if (e.code == 'P2025') {
+					throw new RpcException('Workflow not found');
+				}
+			}
+			throw new RpcException(e.message);
+		}
 	}
 }

@@ -9,7 +9,7 @@ export class RpcExceptionInterceptor implements ExceptionFilter {
 	catch(exception: RpcException, host: ArgumentsHost): RpcException {
 		if (exception.message.includes('Prisma')) {
 			this.logger.error(exception)
-			return new RpcException(exception);
+			throw new RpcException(exception);
 		}
 
 		const ctx = host.getArgs()[2] as any;
@@ -21,13 +21,13 @@ export class RpcExceptionInterceptor implements ExceptionFilter {
 			if (parserException.response.message) {
 				this.logger.error(`${ handler } - ${ parserException.name }: ${ parserException.response.message }`);
 			}
-			return new RpcException(exception.getError());
+			throw new RpcException(exception.getError());
 		}
 
 		const data = host.switchToRpc().getData();
 		this.logger.error(`${ handler } with data '${ JSON.stringify(data) }' : ${ exception.getError() }`);
 
 		// Required to parse pipes exception
-		return new RpcException(exception.getError());
+		throw new RpcException(exception.getError());
 	}
 }
