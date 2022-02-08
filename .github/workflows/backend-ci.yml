@@ -39,10 +39,16 @@ jobs:
         run: |
           API_PORT=$USER_API_PORT ./backend/util/wait-for-api.sh
 
-      - name: Run Postman suite
+      - name: Run Postman suite for userAPI
         uses: matt-ball/newman-action@master
         with:
           collection: backend/userAPI/test/postman/User-API-collection.json
+          environment: backend/userAPI/test/postman/Area-environment.json
+
+      - name: Run Postman suite for workflow API gateway
+        uses: matt-ball/newman-action@master
+        with:
+          collection: backend/userAPI/test/postman/Workflow-gateway-collection.json
           environment: backend/userAPI/test/postman/Area-environment.json
 
       - name: Down docker
