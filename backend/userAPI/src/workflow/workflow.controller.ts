@@ -2,7 +2,9 @@ import { Controller, Get, Param } from '@nestjs/common';
 
 import { Workflow } from '@protos';
 import { WorkflowAPIClient } from './workflowAPI.client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('workflowAPI')
 @Controller('/user/:userId/workflow')
 export class WorkflowController {
 	constructor(private workflowClient: WorkflowAPIClient) {}
