@@ -24,6 +24,7 @@ export class CreateWorkflowRequest {
 
   @IsString()
   name: string;
+
   tasks: Task[];
 }
 

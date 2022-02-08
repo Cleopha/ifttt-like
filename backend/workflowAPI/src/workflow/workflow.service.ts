@@ -38,7 +38,7 @@ export class WorkflowService {
 		});
 	}
 
-	async updateTask(id: string, data: Omit<Prisma.WorkflowUpdateInput, 'tasks'>): Promise<WorkflowWithTasks> {
+	async updateWorkflow(id: string, data: Omit<Prisma.WorkflowUpdateInput, 'tasks'>): Promise<WorkflowWithTasks> {
 		return this.prisma.workflow.update({
 			data,
 			where: { id },
@@ -46,7 +46,7 @@ export class WorkflowService {
 		});
 	}
 
-	async deleteTask(id: string): Promise<WorkflowWithTasks> {
+	async deleteWorkflow(id: string): Promise<WorkflowWithTasks> {
 		return this.prisma.workflow.delete({
 			where: { id },
 			include: { tasks: true },

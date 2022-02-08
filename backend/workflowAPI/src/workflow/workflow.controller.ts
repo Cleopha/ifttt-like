@@ -17,12 +17,14 @@ import { RpcExceptionInterceptor } from '@exception';
 import { LoggingInterceptor } from '@logger';
 
 import { WorkflowService, WorkflowWithTasks } from './workflow.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @Controller()
 @UseInterceptors(new LoggingInterceptor())
 @WorkflowServiceControllerMethods()
 export class WorkflowController implements WorkflowServiceController {
-	constructor(private workflowService: WorkflowService, private taskConvertor: TaskConvertor) {}
+	constructor(private workflowService: WorkflowService, private taskConvertor: TaskConvertor) {
+	}
 
 	private formatWorkflow(workflow: WorkflowWithTasks): Workflow {
 		return {
@@ -33,10 +35,14 @@ export class WorkflowController implements WorkflowServiceController {
 
 	@UseFilters(new RpcExceptionInterceptor())
 	async listWorkflows(@Payload(new ValidationPipe({ whitelist: true })) req: ListWorkflowsRequest): Promise<ListWorkflowsResponse> {
-		const workflows = await this.workflowService.listWorkflows(req);
-		return {
-			workflows: workflows.map((workflow) => this.formatWorkflow(workflow))
-		};
+		try {
+			const workflows = await this.workflowService.listWorkflows(req);
+			return {
+				workflows: workflows.map((workflow) => this.formatWorkflow(workflow))
+			};
+		} catch (e) {
+			throw new RpcException(e.message);
+		}
 	}
 
 	@UseFilters(new RpcExceptionInterceptor())
@@ -51,19 +57,41 @@ export class WorkflowController implements WorkflowServiceController {
 	@UseFilters(new RpcExceptionInterceptor())
 	async createWorkflow(@Payload(new ValidationPipe({ whitelist: true })) req: CreateWorkflowRequest): Promise<Workflow> {
 		const { name, owner } = req;
-		const workflow = await this.workflowService.createWorkflow({ name, owner });
-		return this.formatWorkflow(workflow);
+		try {
+			const workflow = await this.workflowService.createWorkflow({ name, owner });
+			return this.formatWorkflow(workflow);
+		} catch (e) {
+			throw new RpcException(e.message);
+		}
 	}
 
 	@UseFilters(new RpcExceptionInterceptor())
 	async updateWorkflow(@Payload(new ValidationPipe({ whitelist: true })) req: UpdateWorkflowRequest): Promise<Workflow> {
 		const { name, owner, id } = req;
-		const workflow = await this.workflowService.updateTask(id, { name, owner });
-		return this.formatWorkflow(workflow);
+		try {
+			const workflow = await this.workflowService.updateWorkflow(id, { name, owner });
+			return this.formatWorkflow(workflow);
+		} catch (e) {
+			if (e instanceof PrismaClientKnownRequestError) {
+				if (e.code == 'P2025') {
+					throw new RpcException('Workflow not found');
+				}
+			}
+			throw new RpcException(e.message);
+		}
 	}
 
 	@UseFilters(new RpcExceptionInterceptor())
 	async deleteWorkflow(@Payload(new ValidationPipe({ whitelist: true })) req: DeleteWorkflowRequest): Promise<void> {
-		await this.workflowService.deleteTask(req.id);
+		try {
+			await this.workflowService.deleteWorkflow(req.id);
+		} catch (e) {
+			if (e instanceof PrismaClientKnownRequestError) {
+				if (e.code == 'P2025') {
+					throw new RpcException('Workflow not found');
+				}
+			}
+			throw new RpcException(e.message);
+		}
 	}
 }
