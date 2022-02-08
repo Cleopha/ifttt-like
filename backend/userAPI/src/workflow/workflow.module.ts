@@ -4,10 +4,14 @@ import { ClientGrpcProxy, ClientProxyFactory, Transport } from '@nestjs/microser
 import { IConfig, ConfigService } from '@config';
 import { WorkflowController } from './workflow.controller';
 import { WorkflowAPIClient } from './workflowAPI.client';
+import { UserService } from '@user';
+import { PrismaService } from '@db';
 
 @Module({
 	providers: [
 		WorkflowAPIClient,
+		UserService,
+		PrismaService,
 		{
 			provide: 'WORKFLOW_PACKAGE',
 			useFactory: (configService: ConfigService<IConfig>): ClientGrpcProxy => {
