@@ -21,6 +21,9 @@ async function bootstrap(): Promise<void> {
 			package: [ 'area.workflow', 'area.task' ],
 			protoPath: [ __dirname + '/protos/workflow.proto', __dirname + '/protos/task.proto' ],
 			url: `${host}:${port}`,
+			loader: {
+				objects: true
+			}
 		},
 	});
 
