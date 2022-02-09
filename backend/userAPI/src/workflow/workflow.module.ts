@@ -29,6 +29,7 @@ import { PrismaService } from '@db';
 			inject: [ ConfigService ]
 		}
 	],
-	controllers: [ WorkflowController ]
+	controllers: [ WorkflowController ],
+	exports: [ WorkflowAPIClient ],
 })
 export class WorkflowModule {}

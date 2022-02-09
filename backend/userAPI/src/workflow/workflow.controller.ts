@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	InternalServerErrorException,
+	NotFoundException,
+	Param,
+	Post,
+	Put
+} from '@nestjs/common';
 
 import { Empty, Workflow } from '@protos';
 import { WorkflowAPIClient } from './workflowAPI.client';
@@ -38,7 +48,7 @@ export class WorkflowController {
 		try {
 			return await this.workflowClient.createWorkflow({ owner, name: dto.name, tasks: [] });
 		} catch (e) {
-			throw new NotFoundException(e.message);
+			throw new InternalServerErrorException(e.message);
 		}
 	}
 
