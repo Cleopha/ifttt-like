@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class ReturnButton extends StatelessWidget {
   const ReturnButton({Key? key}) : super(key: key);
@@ -7,7 +8,7 @@ class ReturnButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () => Get.back(),
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 17,

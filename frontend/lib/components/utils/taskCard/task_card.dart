@@ -53,7 +53,7 @@ class TaskCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  task.title ?? task.formatedTitle(),
+                  task.title ?? task.formatedTitle(kIsWeb),
                   style: const TextStyle(
                     fontSize: kIsWeb ? 36 : 20,
                     fontWeight: FontWeight.w700,
@@ -125,7 +125,7 @@ class TaskCard extends StatelessWidget {
                     TaskCardBottom(
                       numberOfUsers: task.numberOfUsers,
                       tags: task.tagsGetter(),
-                    )
+                    ),
                   ],
                 ),
               ],

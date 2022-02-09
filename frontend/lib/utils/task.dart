@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:frontend/utils/services.dart';
 
 class Task {
@@ -19,7 +17,7 @@ class Task {
     required this.isActive,
   });
 
-  String formatedTitle() {
+  String formatedTitle(bool shorten) {
     String finalTitle = 'If ${action.name} Then ';
 
     for (int i = 0; i < reactions.length; i++) {
@@ -28,7 +26,7 @@ class Task {
         finalTitle += ' And ';
       }
     }
-    if (kIsWeb && finalTitle.length > 60) {
+    if (shorten && finalTitle.length > 60) {
       finalTitle = finalTitle.substring(0, 60) + '...';
     }
     return finalTitle;
