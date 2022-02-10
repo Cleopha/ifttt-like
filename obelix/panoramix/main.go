@@ -1,9 +1,15 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"log"
+	"panoramix/dispatcher"
 )
 
 func main() {
-	fmt.Println("Begin panoramix")
+	ctx := context.Background()
+	err := dispatcher.Run(ctx)
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
