@@ -6,22 +6,21 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"net/http"
+	"os"
 )
 
 var (
-	ClientId     = "776955438-tf5kc2tfnim174rmhsdugqi05dvm39ef.apps.googleusercontent.com"
-	ClientSecret = "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"
-	RedirectUrl  = "http://localhost:8080/"
+	ClientId     = ""
+	ClientSecret = ""
+	RedirectUrl  = ""
 )
 
-/*
 // TODO : Must be removed when the credentials API is up.
 func init() {
 	ClientId = os.Getenv("GOOGLE_CLIENT_ID")
 	ClientSecret = os.Getenv("GOOGLE_CLIENT_SECRET")
 	RedirectUrl = os.Getenv("GOOGLE_REDIRECT_URL")
 }
-*/
 
 // Client represents a minimal Google client able to make OAuth2.0 authenticated requests.
 type Client struct {
