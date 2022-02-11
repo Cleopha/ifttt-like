@@ -6,33 +6,36 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"net/http"
-	"os"
 )
 
 var (
-	CLIENT_ID     = ""
-	CLIENT_SECRET = ""
-	REDIRECT_URL  = ""
+	ClientId     = "776955438-tf5kc2tfnim174rmhsdugqi05dvm39ef.apps.googleusercontent.com"
+	ClientSecret = "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"
+	RedirectUrl  = "http://localhost:8080/"
 )
 
+/*
+// TODO : Must be removed when the credentials API is up.
 func init() {
-	CLIENT_ID = os.Getenv("GOOGLE_CLIENT_ID")
-	CLIENT_SECRET = os.Getenv("GOOGLE_CLIENT_SECRET")
-	REDIRECT_URL = os.Getenv("GOOGLE_REDIRECT_URL")
+	ClientId = os.Getenv("GOOGLE_CLIENT_ID")
+	ClientSecret = os.Getenv("GOOGLE_CLIENT_SECRET")
+	RedirectUrl = os.Getenv("GOOGLE_REDIRECT_URL")
 }
+*/
 
+// Client represents a minimal Google client able to make OAuth2.0 authenticated requests.
 type Client struct {
 	ctx context.Context
 	clt *http.Client
 }
 
-// New creates a new Google client
+// New creates a new Google client based on the given scopes/
 func New(ctx context.Context, scopes []string) (*Client, error) {
 	conf := &oauth2.Config{
-		ClientID:     CLIENT_ID,
-		ClientSecret: CLIENT_SECRET,
+		ClientID:     ClientId,
+		ClientSecret: ClientSecret,
 		Endpoint:     google.Endpoint,
-		RedirectURL:  REDIRECT_URL,
+		RedirectURL:  RedirectUrl,
 		Scopes:       scopes,
 	}
 
@@ -45,4 +48,14 @@ func New(ctx context.Context, scopes []string) (*Client, error) {
 		ctx: ctx,
 		clt: conf.Client(ctx, tok),
 	}, nil
+}
+
+// CreateNewDocument creates a new Google Docs document using the given title.
+func (c *Client) CreateNewDocument(title string) {
+	fmt.Println("Call from CreateNewDocument: ", title)
+}
+
+// CreateNewSheet creates a new Google Sheet document using the given title.
+func (c *Client) CreateNewSheet(title string) {
+	fmt.Println("Call from CreateNewSheet: ", title)
 }
