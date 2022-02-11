@@ -17,7 +17,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	d, err := dispatcher.NewDispatcher(ctx, conf)
+	d, err := dispatcher.New(ctx, conf)
 	if err != nil {
 		log.Fatalln(err)
 	}

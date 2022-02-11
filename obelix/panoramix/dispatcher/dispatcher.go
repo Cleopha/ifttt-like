@@ -33,9 +33,9 @@ type Dispatcher struct {
 	serviceMap map[string]*funcData
 }
 
-// NewDispatcher creates a new dispatcher which creates,
+// New creates a new dispatcher which creates,
 // verifies and registers the services and its corresponding methods.
-func NewDispatcher(ctx context.Context, conf *configuration.Configuration) (*Dispatcher, error) {
+func New(ctx context.Context, conf *configuration.Configuration) (*Dispatcher, error) {
 	d := Dispatcher{
 		serviceMap: make(map[string]*funcData),
 	}
