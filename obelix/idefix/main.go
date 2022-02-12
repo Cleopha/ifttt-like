@@ -34,7 +34,7 @@ func runGithub() {
 	}
 }
 
-func main() {
+func runGCalendar() {
 	kp, err := producer.New()
 	if err != nil {
 		log.Fatalf("failed to create new producer: %v", err)
@@ -59,4 +59,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func main() {
+	runGithub()
 }
