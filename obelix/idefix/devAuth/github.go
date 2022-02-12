@@ -40,5 +40,4 @@ func GithubAuth() *http.Client {
 
 	client := conf.Client(ctx, tok)
 	return client
-
 }
