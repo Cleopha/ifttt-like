@@ -62,5 +62,5 @@ func runGCalendar() {
 }
 
 func main() {
-	runGithub()
+	runGCalendar()
 }

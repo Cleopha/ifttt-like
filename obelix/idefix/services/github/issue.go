@@ -55,7 +55,6 @@ func (i *Issues) GetRedisState(rc *redis.Client, key string) (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("failed to set value in redis: %v", err)
 		}
-		fmt.Println("Create value in redis: ", elem.URL)
 
 	} else if err != nil {
 		return "", fmt.Errorf("failed to get value from redis: %v", err)
@@ -70,7 +69,6 @@ func (i *Issues) LookForChange(op *operator.IdefixOperator, key, old string) err
 	}
 
 	if old != newer.URL {
-		fmt.Println("That news :): ", newer.URL)
 		err := i.SendToKafka(op.KP, key)
 		if err != nil {
 			return fmt.Errorf("failed to send message to kafka: %v", err)
