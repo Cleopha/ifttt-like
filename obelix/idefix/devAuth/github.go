@@ -6,13 +6,19 @@ import (
 	"golang.org/x/oauth2"
 	"log"
 	"net/http"
+	"os"
 )
+
+func init() {
+	CLIENT_ID = os.Getenv("GITHUB_CLIENT_ID")
+	CLIENT_SECRET = os.Getenv("GITHUB_CLIENT_SECRET")
+}
 
 func GithubAuth() *http.Client {
 	ctx := context.Background()
 	conf := &oauth2.Config{
-		ClientID:     "3569cf3d4c2b88ddc23e",
-		ClientSecret: "6d47da5ddb50575977f2f7b32381b217ae8ff785",
+		ClientID:     CLIENT_ID,
+		ClientSecret: CLIENT_SECRET,
 		Scopes:       []string{"user", "repo"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://github.com/login/oauth/authorize",
