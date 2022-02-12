@@ -2,11 +2,10 @@ package main
 
 import (
 	"context"
-	"github.com/PtitLuca/go-dispatcher/dispatcher"
 	"log"
 	"panoramix/cli"
 	"panoramix/configuration"
-	"panoramix/services/google"
+	"panoramix/services"
 )
 
 func main() {
@@ -18,13 +17,8 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	gclient, err := google.New(ctx, conf.GoogleScopes)
+	d, err := services.RegisterServices(ctx, conf)
 	if err != nil {
-		log.Fatalln(err)
-	}
-
-	d := dispatcher.New()
-	if err := d.Register("google", gclient); err != nil {
 		log.Fatalln(err)
 	}
 
