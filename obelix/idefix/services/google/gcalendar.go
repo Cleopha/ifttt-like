@@ -22,11 +22,19 @@ type GCalendar struct {
 	date string
 }
 
-func (gc *GCalendar) Parse(srv *calendar.Service) error {
+func (gc *GCalendar) getEventsList(srv *calendar.Service) (*calendar.Events, error) {
 	t := time.Now().Format(time.RFC3339)
 	events, err := srv.Events.List("primary").ShowDeleted(false).SingleEvents(true).TimeMin(t).MaxResults(1).OrderBy("startTime").Do()
 	if err != nil {
-		return fmt.Errorf("failed to retrieve next event gcalendar: %v", err)
+		return nil, fmt.Errorf("failed to retrieve next event gcalendar: %v", err)
+	}
+	return events, nil
+}
+
+func (gc *GCalendar) Parse(srv *calendar.Service) error {
+	events, err := gc.getEventsList(srv)
+	if err != nil {
+		return fmt.Errorf("failed to get events list gcalendar: %v", err)
 	}
 
 	if len(events.Items) == 0 {
@@ -37,7 +45,6 @@ func (gc *GCalendar) Parse(srv *calendar.Service) error {
 			if gc.date == "" {
 				gc.date = item.Start.Date
 			}
-			fmt.Printf("%v (%v)\n", item.Summary, gc.date)
 		}
 	}
 	return nil
@@ -99,7 +106,6 @@ func (gc *GCalendar) GetRedisState(rc *redis.Client, key string) (string, error)
 		if err != nil {
 			return "", fmt.Errorf("failed to set value in redis: %v", err)
 		}
-		fmt.Println("Create value in redis: ", gc.date)
 
 	} else if err != nil {
 		return "", fmt.Errorf("failed to get value from redis: %v", err)

@@ -100,7 +100,7 @@ func (w *Watcher) Watch() error {
 	for {
 		select {
 		case <-ticker.C:
-			err := w.RunGithubIssue()
+			err := w.RunGCalendar()
 			if err != nil {
 				return fmt.Errorf("failed to run: %v", err)
 			}

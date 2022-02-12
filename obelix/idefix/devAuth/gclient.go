@@ -26,14 +26,6 @@ type Client struct {
 	Clt *http.Client
 }
 
-func (c *Client) GetCalendarList() (*http.Response, error) {
-	get, err := c.Clt.Get("https://www.googleapis.com/calendar/v3/users/me/calendarList")
-	if err != nil {
-		return nil, fmt.Errorf("failed to get calendar list: %v", err)
-	}
-	return get, nil
-}
-
 // New creates a new Google client
 func New(ctx context.Context, scopes []string) (*Client, error) {
 	conf := &oauth2.Config{
