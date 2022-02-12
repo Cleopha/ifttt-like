@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Shopify/sarama"
 	"os"
+	"time"
 )
 
 var brokers []string
@@ -29,8 +30,8 @@ func New() (sarama.SyncProducer, error) {
 func PreparePublish(topic string, data []byte) *sarama.ProducerMessage {
 	msg := &sarama.ProducerMessage{
 		Topic:     topic,
-		Partition: -1,
 		Value:     sarama.ByteEncoder(data),
+		Timestamp: time.Now(),
 	}
 
 	return msg
