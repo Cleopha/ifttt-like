@@ -8,8 +8,16 @@ import (
 	"idefix/redis"
 	"idefix/watcher"
 	"log"
+	"os"
+	"strconv"
 	"time"
 )
+
+var TIME_INTERVAL string
+
+func init() {
+	TIME_INTERVAL = os.Getenv("TIME_INTERVAL")
+}
 
 func runGithub() {
 	kp, err := producer.New()
@@ -19,13 +27,18 @@ func runGithub() {
 	rc := redis.NewClient(context.Background())
 	client := devAuth.GithubAuth()
 
+	t, err := strconv.Atoi(TIME_INTERVAL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	w := watcher.Watcher{
 		Requester: client,
 		Operator: &operator.IdefixOperator{
 			RC: rc,
 			KP: kp,
 		},
-		Interval: 2 * time.Second,
+		Interval: time.Duration(t) * time.Second,
 	}
 
 	err = w.Watch()
@@ -46,13 +59,18 @@ func runGCalendar() {
 		"https://www.googleapis.com/auth/calendar",
 	})
 
+	t, err := strconv.Atoi(TIME_INTERVAL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	w := watcher.Watcher{
 		Requester: client.Clt,
 		Operator: &operator.IdefixOperator{
 			RC: rc,
 			KP: kp,
 		},
-		Interval: 2 * time.Second,
+		Interval: time.Duration(t) * time.Second,
 	}
 
 	err = w.Watch()
