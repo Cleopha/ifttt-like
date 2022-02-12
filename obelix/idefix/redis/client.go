@@ -24,7 +24,7 @@ func (client *Client) SetKey(key, value string) error {
 	err := client.rdb.Set(client.ctx, key, value, 0).Err()
 
 	if err != nil {
-		return fmt.Errorf("failed to set key: %v", err)
+		return fmt.Errorf("failed to set key: %w", err)
 	}
 	return nil
 }
@@ -35,7 +35,7 @@ func (client *Client) GetKey(key string) (string, error) {
 	if err == redisv8.Nil {
 		return "", redisv8.Nil
 	} else if err != nil {
-		return "", fmt.Errorf("failed to get key: %v", err)
+		return "", fmt.Errorf("failed to get key: %w", err)
 	}
 	return value, nil
 }

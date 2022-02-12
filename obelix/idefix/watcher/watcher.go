@@ -36,17 +36,17 @@ func (w *Watcher) RunGithubIssue() error {
 	var issues github.Issues
 	get, err := w.Requester.Get("https://api.github.com/repos/Cleopha/ifttt-like-test/issues?filter=repos&state=all")
 	if err != nil {
-		return fmt.Errorf("failed to get issues from github: %v", err)
+		return fmt.Errorf("failed to get issues from github: %w", err)
 	}
 
 	data, err := trigger.ReadBody(get)
 	if err != nil {
-		return fmt.Errorf("failed to read body: %v", err)
+		return fmt.Errorf("failed to read body: %w", err)
 	}
 
 	err = issues.Parse(data)
 	if err != nil {
-		return fmt.Errorf("failed to parse body: %v", err)
+		return fmt.Errorf("failed to parse body: %w", err)
 	}
 
 	old, err := issues.GetRedisState(w.Operator.RC, "1")
@@ -54,12 +54,12 @@ func (w *Watcher) RunGithubIssue() error {
 		if errors.Is(err, github.ErrNoIssues) {
 			return nil
 		}
-		return fmt.Errorf("failed to update redis state: %v", err)
+		return fmt.Errorf("failed to update redis state: %w", err)
 	}
 
 	err = issues.LookForChange(w.Operator, "1", old)
 	if err != nil {
-		return fmt.Errorf("an error has occured while looking for changes: %v", err)
+		return fmt.Errorf("an error has occured while looking for changes: %w", err)
 	}
 
 	return nil
@@ -69,12 +69,12 @@ func (w *Watcher) RunGCalendar() error {
 	var gc google.GCalendar
 	srv, err := calendar.NewService(context.Background(), option.WithHTTPClient(w.Requester))
 	if err != nil {
-		log.Fatalf("Unable to retrieve Calendar client: %v", err)
+		log.Fatalf("Unable to retrieve Calendar client: %w", err)
 	}
 
 	err = gc.Parse(srv)
 	if err != nil {
-		return fmt.Errorf("failed to parse gcalendar data: %v", err)
+		return fmt.Errorf("failed to parse gcalendar data: %w", err)
 	}
 
 	old, err := gc.GetRedisState(w.Operator.RC, "2")
@@ -82,12 +82,12 @@ func (w *Watcher) RunGCalendar() error {
 		if errors.Is(err, github.ErrNoIssues) {
 			return nil
 		}
-		return fmt.Errorf("failed to update redis state: %v", err)
+		return fmt.Errorf("failed to update redis state: %w", err)
 	}
 
 	err = gc.LookForChange(w.Operator, "2", old)
 	if err != nil {
-		return fmt.Errorf("an error has occured while looking for changes: %v", err)
+		return fmt.Errorf("an error has occured while looking for changes: %w", err)
 	}
 
 	return nil
@@ -102,7 +102,7 @@ func (w *Watcher) Watch() error {
 		case <-ticker.C:
 			err := w.RunGCalendar()
 			if err != nil {
-				return fmt.Errorf("failed to run: %v", err)
+				return fmt.Errorf("failed to run: %w", err)
 			}
 		}
 	}

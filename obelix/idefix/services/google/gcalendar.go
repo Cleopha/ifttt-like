@@ -26,7 +26,7 @@ func (gc *GCalendar) getEventsList(srv *calendar.Service) (*calendar.Events, err
 	t := time.Now().Format(time.RFC3339)
 	events, err := srv.Events.List("primary").ShowDeleted(false).SingleEvents(true).TimeMin(t).MaxResults(1).OrderBy("startTime").Do()
 	if err != nil {
-		return nil, fmt.Errorf("failed to retrieve next event gcalendar: %v", err)
+		return nil, fmt.Errorf("failed to retrieve next event gcalendar: %w", err)
 	}
 	return events, nil
 }
@@ -34,7 +34,7 @@ func (gc *GCalendar) getEventsList(srv *calendar.Service) (*calendar.Events, err
 func (gc *GCalendar) Parse(srv *calendar.Service) error {
 	events, err := gc.getEventsList(srv)
 	if err != nil {
-		return fmt.Errorf("failed to get events list gcalendar: %v", err)
+		return fmt.Errorf("failed to get events list gcalendar: %w", err)
 	}
 
 	if len(events.Items) == 0 {
@@ -63,12 +63,12 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 	if (res.Minutes() >= 0 && res.Minutes() <= 10) && (old == string(rune(NO_ACTIVE))) {
 		err := gc.UpdateRedisState(op.RC, key, string(rune(ACTIVE)))
 		if err != nil {
-			return fmt.Errorf("failed to update redis state: %v", err)
+			return fmt.Errorf("failed to update redis state: %w", err)
 		}
 
 		err = gc.SendToKafka(op.KP, key)
 		if err != nil {
-			return fmt.Errorf("failed to send message to kafka: %v", err)
+			return fmt.Errorf("failed to send message to kafka: %w", err)
 		}
 		fmt.Println("Nice send kafka")
 	} else if (res.Minutes() >= 0 && res.Minutes() <= 10) && (old == string(rune(ACTIVE))) {
@@ -76,7 +76,7 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 	} else {
 		err := gc.UpdateRedisState(op.RC, key, string(rune(NO_ACTIVE)))
 		if err != nil {
-			return fmt.Errorf("failed to update redis state: %v", err)
+			return fmt.Errorf("failed to update redis state: %w", err)
 		}
 	}
 	return nil
@@ -85,14 +85,14 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 func (gc *GCalendar) SendToKafka(kp sarama.SyncProducer, workflowID string) error {
 	data, err := json.Marshal(Action{workflowID, 1})
 	if err != nil {
-		return fmt.Errorf("failed to marshal: %v", err)
+		return fmt.Errorf("failed to marshal: %w", err)
 	}
 
 	msg := producer.PreparePublish("google", data)
 
 	_, _, err = kp.SendMessage(msg)
 	if err != nil {
-		return fmt.Errorf("failed to send message to kafka: %v", err)
+		return fmt.Errorf("failed to send message to kafka: %w", err)
 	}
 	return nil
 }
@@ -104,11 +104,11 @@ func (gc *GCalendar) GetRedisState(rc *redis.Client, key string) (string, error)
 
 		err = rc.SetKey(key, string(rune(NO_ACTIVE)))
 		if err != nil {
-			return "", fmt.Errorf("failed to set value in redis: %v", err)
+			return "", fmt.Errorf("failed to set value in redis: %w", err)
 		}
 
 	} else if err != nil {
-		return "", fmt.Errorf("failed to get value from redis: %v", err)
+		return "", fmt.Errorf("failed to get value from redis: %w", err)
 	}
 	return state, nil
 }
@@ -116,7 +116,7 @@ func (gc *GCalendar) GetRedisState(rc *redis.Client, key string) (string, error)
 func (gc *GCalendar) UpdateRedisState(rc *redis.Client, key, newer string) error {
 	err := rc.SetKey(key, newer)
 	if err != nil {
-		return fmt.Errorf("failed to set key in redis: %v", err)
+		return fmt.Errorf("failed to set key in redis: %w", err)
 	}
 	return nil
 }
