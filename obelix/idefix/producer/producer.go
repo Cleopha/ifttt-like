@@ -21,7 +21,7 @@ func New() (sarama.SyncProducer, error) {
 	producer, err := sarama.NewSyncProducer(brokers, config)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to create sync producer: %v", err)
+		return nil, fmt.Errorf("failed to create sync producer: %w", err)
 	}
 
 	return producer, nil
