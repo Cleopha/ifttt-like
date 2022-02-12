@@ -3,6 +3,7 @@ module panoramix
 go 1.16
 
 require (
+	github.com/PtitLuca/go-dispatcher v1.0.0
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/net v0.0.0-20220105145211-5b0dc2dfae98 // indirect
