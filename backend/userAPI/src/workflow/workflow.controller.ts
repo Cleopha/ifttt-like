@@ -7,7 +7,7 @@ import {
 	NotFoundException,
 	Param,
 	Post,
-	Put
+	Put, UseInterceptors
 } from '@nestjs/common';
 
 import { Empty, Workflow } from '@protos';
@@ -16,9 +16,11 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateWorkflowDto } from './dto/create-workflow.dto';
 import { UpdateWorkflowDto } from './dto/update-workflow.dto';
 import { OwnerMiddleware } from '../auth';
+import { TransformWorkflowInterceptor } from './workflow.format';
 
 @ApiTags('workflowAPI')
 @Controller('/user/:userId/workflow')
+@UseInterceptors(TransformWorkflowInterceptor)
 export class WorkflowController {
 	constructor(private workflowClient: WorkflowAPIClient) {}
 
