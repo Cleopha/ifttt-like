@@ -23,12 +23,13 @@ export class TaskConvertor {
 
 	prismaActionToGrpcAction(action: Prisma.TaskAction): TaskAction {
 		const key = Object.keys(Prisma.TaskAction)[Object.values(Prisma.TaskAction).indexOf(action)];
-		return (TaskType as never)[key];
+		return (TaskAction as never)[key];
 	}
 
 	prismaTaskToGrpcTask(task: Prisma.Task): Task {
 		const { action, type, params } = task;
 		const data = _.omit(task, [ 'action', 'type', 'params' ]);
+
 		return {
 			...data,
 			action: this.prismaActionToGrpcAction(action),
