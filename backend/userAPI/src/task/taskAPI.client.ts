@@ -36,7 +36,6 @@ export class TaskAPIClient implements OnModuleInit {
 	}
 
 	async createTask(req: CreateTaskRequest): Promise<Task> {
-		console.log(req);
 		const res = this.workflowService.createTask(req);
 		return Convertor.extractFromObservable(res);
 	}
