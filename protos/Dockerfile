@@ -27,6 +27,19 @@ COPY workflow.proto /protos/workflow.proto
 RUN protoc -Iprotos --doc_out=/ protos/*.proto
 
 ###
+# Generation CredentialAPI documentation
+###
+FROM setup AS gen-credential-api-doc
+
+RUN chmod -R a+r /usr/local/include
+
+# Copy workflow API protobuf
+COPY credential.proto /protos/credential.proto
+
+# Generate documentation
+RUN protoc -Iprotos --doc_out=/ protos/*.proto
+
+###
 # Expose gRPC documentation with nginx
 ###
 FROM nginx:latest AS doc-server
@@ -34,3 +47,4 @@ FROM nginx:latest AS doc-server
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=gen-workflow-api-doc /index.html /usr/share/nginx/html/workflow/index.html
+COPY --from=gen-credential-api-doc /index.html /usr/share/nginx/html/credential/index.html
