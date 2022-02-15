@@ -18,8 +18,8 @@ func New() (sarama.SyncProducer, error) {
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Return.Successes = true
-	producer, err := sarama.NewSyncProducer(brokers, config)
 
+	producer, err := sarama.NewSyncProducer(brokers, config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create sync producer: %w", err)
 	}
