@@ -7,6 +7,10 @@ import (
 	"reflect"
 )
 
+/*
+** Used for the implementation of new services for which we want the event trigger
+ */
+
 type Dispatcher interface {
 	Parse(data []byte) (reflect.Value, error)
 	LookForChange(op *operator.IdefixOperator, key, old string) error
