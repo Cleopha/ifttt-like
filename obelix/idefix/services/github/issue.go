@@ -26,7 +26,6 @@ type Issue struct {
 
 func (i *Issues) Parse(data []byte) error {
 	err := json.Unmarshal(data, &i.Issues)
-
 	if err != nil {
 		return fmt.Errorf("failed to Unmarshal %w", err)
 	}
@@ -44,7 +43,6 @@ func (i *Issues) findLatestIssue() (*Issue, bool) {
 
 func (i *Issues) GetRedisState(rc *redis.Client, key string) (string, error) {
 	state, err := rc.GetKey(key)
-
 	if err == redisv8.Nil {
 		elem, ok := i.findLatestIssue()
 		if ok == false {
