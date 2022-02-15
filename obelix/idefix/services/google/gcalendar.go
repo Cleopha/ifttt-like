@@ -71,7 +71,6 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 			if err != nil {
 				return fmt.Errorf("failed to send message to kafka: %w", err)
 			}
-			fmt.Println("Nice send kafka")
 		} else if old == string(rune(ACTIVE)) {
 			return nil
 		}
