@@ -20,6 +20,16 @@ type Client struct {
 	rdb *redisv8.Client
 }
 
+func NewClient(ctx context.Context) *Client {
+	rdb := redisv8.NewClient(&redisv8.Options{
+		Addr:     addr,
+		Password: pass,
+		DB:       0, // use default DB
+	})
+
+	return &Client{ctx: ctx, rdb: rdb}
+}
+
 func (client *Client) SetKey(key, value string) error {
 	err := client.rdb.Set(client.ctx, key, value, 0).Err()
 
@@ -38,14 +48,4 @@ func (client *Client) GetKey(key string) (string, error) {
 		return "", fmt.Errorf("failed to get key: %w", err)
 	}
 	return value, nil
-}
-
-func NewClient(ctx context.Context) *Client {
-	rdb := redisv8.NewClient(&redisv8.Options{
-		Addr:     addr,
-		Password: pass,
-		DB:       0, // use default DB
-	})
-
-	return &Client{ctx: ctx, rdb: rdb}
 }
