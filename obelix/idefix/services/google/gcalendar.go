@@ -106,7 +106,6 @@ func (gc *GCalendar) SendToKafka(kp sarama.SyncProducer, workflowID string) erro
 
 func (gc *GCalendar) GetRedisState(rc *redis.Client, key string) (string, error) {
 	state, err := rc.GetKey(key)
-
 	if err == redisv8.Nil {
 		err = rc.SetKey(key, string(rune(NO_ACTIVE)))
 		if err != nil {
