@@ -101,7 +101,6 @@ func (gc *GCalendar) GetRedisState(rc *redis.Client, key string) (string, error)
 	state, err := rc.GetKey(key)
 
 	if err == redisv8.Nil {
-
 		err = rc.SetKey(key, string(rune(NO_ACTIVE)))
 		if err != nil {
 			return "", fmt.Errorf("failed to set value in redis: %w", err)
