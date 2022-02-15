@@ -28,11 +28,9 @@ func New() (sarama.SyncProducer, error) {
 }
 
 func PreparePublish(topic string, data []byte) *sarama.ProducerMessage {
-	msg := &sarama.ProducerMessage{
+	return &sarama.ProducerMessage{
 		Topic:     topic,
 		Value:     sarama.ByteEncoder(data),
 		Timestamp: time.Now(),
 	}
-
-	return msg
 }
