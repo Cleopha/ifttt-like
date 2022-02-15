@@ -32,10 +32,10 @@ func NewClient(ctx context.Context) *Client {
 
 func (client *Client) SetKey(key, value string) error {
 	err := client.rdb.Set(client.ctx, key, value, 0).Err()
-
 	if err != nil {
 		return fmt.Errorf("failed to set key: %w", err)
 	}
+
 	return nil
 }
 
