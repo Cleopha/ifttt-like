@@ -60,19 +60,21 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 	}
 
 	res := parse.Sub(now)
-	if (res.Minutes() >= 0 && res.Minutes() <= 10) && (old == string(rune(NO_ACTIVE))) {
-		err := gc.UpdateRedisState(op.RC, key, string(rune(ACTIVE)))
-		if err != nil {
-			return fmt.Errorf("failed to update redis state: %w", err)
-		}
+	if res.Minutes() >= 0 && res.Minutes() <= 10 {
+		if old == string(rune(NO_ACTIVE)) {
+			err := gc.UpdateRedisState(op.RC, key, string(rune(ACTIVE)))
+			if err != nil {
+				return fmt.Errorf("failed to update redis state: %w", err)
+			}
 
-		err = gc.SendToKafka(op.KP, key)
-		if err != nil {
-			return fmt.Errorf("failed to send message to kafka: %w", err)
+			err = gc.SendToKafka(op.KP, key)
+			if err != nil {
+				return fmt.Errorf("failed to send message to kafka: %w", err)
+			}
+			fmt.Println("Nice send kafka")
+		} else if old == string(rune(ACTIVE)) {
+			return nil
 		}
-		fmt.Println("Nice send kafka")
-	} else if (res.Minutes() >= 0 && res.Minutes() <= 10) && (old == string(rune(ACTIVE))) {
-		return nil
 	} else {
 		err := gc.UpdateRedisState(op.RC, key, string(rune(NO_ACTIVE)))
 		if err != nil {
