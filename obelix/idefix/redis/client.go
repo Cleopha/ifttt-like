@@ -41,11 +41,11 @@ func (client *Client) SetKey(key, value string) error {
 
 func (client *Client) GetKey(key string) (string, error) {
 	value, err := client.rdb.Get(client.ctx, key).Result()
-
 	if err == redisv8.Nil {
 		return "", redisv8.Nil
 	} else if err != nil {
 		return "", fmt.Errorf("failed to get key: %w", err)
 	}
+
 	return value, nil
 }
