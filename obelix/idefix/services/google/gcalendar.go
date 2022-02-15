@@ -24,7 +24,13 @@ type GCalendar struct {
 
 func (gc *GCalendar) getEventsList(srv *calendar.Service) (*calendar.Events, error) {
 	t := time.Now().Format(time.RFC3339)
-	events, err := srv.Events.List("primary").ShowDeleted(false).SingleEvents(true).TimeMin(t).MaxResults(1).OrderBy("startTime").Do()
+	events, err := srv.Events.List("primary").
+		ShowDeleted(false).
+		SingleEvents(true).
+		TimeMin(t).
+		MaxResults(1).
+		OrderBy("startTime").
+		Do()
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve next event gcalendar: %w", err)
 	}
