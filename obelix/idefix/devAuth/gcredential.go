@@ -24,10 +24,10 @@ func GetAccessToken(ctx context.Context, conf *oauth2.Config) (*oauth2.Token, er
 		return nil, fmt.Errorf("failed to parse code: %w", err)
 	}
 
-	tok, err := conf.Exchange(ctx, code)
+	token, err := conf.Exchange(ctx, code)
 	if err != nil {
 		return nil, fmt.Errorf("failed to exchange authoziation code for an access token: %w", err)
 	}
 
-	return tok, nil
+	return token, nil
 }

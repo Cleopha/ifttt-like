@@ -39,11 +39,11 @@ func GithubAuth() *http.Client {
 	if _, err := fmt.Scan(&code); err != nil {
 		log.Fatal(err)
 	}
-	tok, err := conf.Exchange(ctx, code)
+	token, err := conf.Exchange(ctx, code)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	client := conf.Client(ctx, tok)
+	client := conf.Client(ctx, token)
 	return client
 }
