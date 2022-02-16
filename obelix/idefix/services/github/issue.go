@@ -72,7 +72,7 @@ func (i *Issues) LookForChange(op *operator.IdefixOperator, key, old string) err
 			return fmt.Errorf("failed to send message to kafka: %w", err)
 		}
 
-		err = i.UpdateRedisState(op.RC, key, newer.URL)
+		err = i.updateRedisState(op.RC, key, newer.URL)
 		if err != nil {
 			return fmt.Errorf("failed to update value in redis: %w", err)
 		}
@@ -95,7 +95,7 @@ func (i *Issues) SendToKafka(kp sarama.SyncProducer, workflowID string) error {
 	return nil
 }
 
-func (i *Issues) UpdateRedisState(rc *redis.Client, key, newer string) error {
+func (i *Issues) updateRedisState(rc *redis.Client, key, newer string) error {
 	err := rc.SetKey(key, newer)
 	if err != nil {
 		return fmt.Errorf("failed to set key in redis: %w", err)

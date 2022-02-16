@@ -68,7 +68,7 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 	res := parse.Sub(now)
 	if res.Minutes() >= 0 && res.Minutes() <= 10 {
 		if old == string(rune(NO_ACTIVE)) {
-			err := gc.UpdateRedisState(op.RC, key, string(rune(ACTIVE)))
+			err := gc.updateRedisState(op.RC, key, string(rune(ACTIVE)))
 			if err != nil {
 				return fmt.Errorf("failed to update redis state: %w", err)
 			}
@@ -81,7 +81,7 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 			return nil
 		}
 	} else {
-		err := gc.UpdateRedisState(op.RC, key, string(rune(NO_ACTIVE)))
+		err := gc.updateRedisState(op.RC, key, string(rune(NO_ACTIVE)))
 		if err != nil {
 			return fmt.Errorf("failed to update redis state: %w", err)
 		}
@@ -118,7 +118,7 @@ func (gc *GCalendar) GetRedisState(rc *redis.Client, key string) (string, error)
 	return state, nil
 }
 
-func (gc *GCalendar) UpdateRedisState(rc *redis.Client, key, newer string) error {
+func (gc *GCalendar) updateRedisState(rc *redis.Client, key, newer string) error {
 	err := rc.SetKey(key, newer)
 	if err != nil {
 		return fmt.Errorf("failed to set key in redis: %w", err)
