@@ -16,5 +16,4 @@ type Dispatcher interface {
 	LookForChange(op *operator.IdefixOperator, key, old string) error
 	SendToKafka(kp sarama.SyncProducer, workflowID string) error
 	GetRedisState(rc *redis.Client, key string) (string, error)
-	UpdateRedisState(rc *redis.Client, key, newer string) error
 }
