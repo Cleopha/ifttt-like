@@ -36,13 +36,13 @@ func New(ctx context.Context, scopes []string) (*Client, error) {
 		Scopes:       scopes,
 	}
 
-	tok, err := GetAccessToken(ctx, conf)
+	token, err := GetAccessToken(ctx, conf)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get google access token: %w", err)
 	}
 
 	return &Client{
 		ctx: ctx,
-		Clt: conf.Client(ctx, tok),
+		Clt: conf.Client(ctx, token),
 	}, nil
 }
