@@ -36,8 +36,8 @@ func NewClient(ctx context.Context) *Client {
 	return &Client{ctx: ctx, rdb: rdb}
 }
 
-func (client *Client) SetKey(key, value string) error {
-	err := client.rdb.Set(client.ctx, key, value, 0).Err()
+func (c *Client) SetKey(key, value string) error {
+	err := c.rdb.Set(c.ctx, key, value, 0).Err()
 	if err != nil {
 		return fmt.Errorf("failed to set key: %w", err)
 	}
@@ -45,8 +45,8 @@ func (client *Client) SetKey(key, value string) error {
 	return nil
 }
 
-func (client *Client) GetKey(key string) (string, error) {
-	value, err := client.rdb.Get(client.ctx, key).Result()
+func (c *Client) GetKey(key string) (string, error) {
+	value, err := c.rdb.Get(c.ctx, key).Result()
 	if errors.Is(err, redisv8.Nil) {
 		return "", redisv8.Nil
 	}
@@ -56,4 +56,12 @@ func (client *Client) GetKey(key string) (string, error) {
 	}
 
 	return value, nil
+}
+
+func (c *Client) UpdateRedisState(key, newer string) error {
+	if err := c.SetKey(key, newer); err != nil {
+		return fmt.Errorf("failed to set key in redis: %w", err)
+	}
+
+	return nil
 }
