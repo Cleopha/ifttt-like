@@ -22,7 +22,7 @@ enum Service {
 
 model Storage {
     owner       String @id @unique
-    credentiels Credential[]
+    credentials Credential[]
 }
 
 model Credential {

@@ -37,6 +37,11 @@ export class CreateStorageRequest {
   owner: string;
 }
 
+export class GetStorageRequest {
+  @IsString()
+  owner: string;
+}
+
 export class DeleteStorageRequest {
   @IsString()
   owner: string;
@@ -88,20 +93,10 @@ export const AREA_CREDENTIAL_PACKAGE_NAME = "area.credential";
 /** Manage credentials */
 
 export interface CredentialServiceClient {
-  createStorage(
-    request: CreateStorageRequest,
-    metadata?: Metadata
-  ): Observable<Storage>;
-
-  deleteStorage(
-    request: DeleteStorageRequest,
-    metadata?: Metadata
-  ): Observable<Empty>;
-
   insertCredential(
     request: InsertCredentialRequest,
     metadata?: Metadata
-  ): Observable<Storage>;
+  ): Observable<Credential>;
 
   getCredential(
     request: GetCredentialRequest,
@@ -116,23 +111,16 @@ export interface CredentialServiceClient {
   removeCredential(
     request: RemoveCredentialRequest,
     metadata?: Metadata
-  ): Observable<Storage>;
+  ): Observable<Credential>;
 }
 
 /** Manage credentials */
 
 export interface CredentialServiceController {
-  createStorage(
-    request: CreateStorageRequest,
-    metadata?: Metadata
-  ): Promise<Storage> | Observable<Storage> | Storage;
-
-  deleteStorage(request: DeleteStorageRequest, metadata?: Metadata): void;
-
   insertCredential(
     request: InsertCredentialRequest,
     metadata?: Metadata
-  ): Promise<Storage> | Observable<Storage> | Storage;
+  ): Promise<Credential> | Observable<Credential> | Credential;
 
   getCredential(
     request: GetCredentialRequest,
@@ -147,14 +135,12 @@ export interface CredentialServiceController {
   removeCredential(
     request: RemoveCredentialRequest,
     metadata?: Metadata
-  ): Promise<Storage> | Observable<Storage> | Storage;
+  ): Promise<Credential> | Observable<Credential> | Credential;
 }
 
 export function CredentialServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "createStorage",
-      "deleteStorage",
       "insertCredential",
       "getCredential",
       "updateCredential",
@@ -187,6 +173,72 @@ export function CredentialServiceControllerMethods() {
 }
 
 export const CREDENTIAL_SERVICE_NAME = "CredentialService";
+
+export interface StorageServiceClient {
+  createStorage(
+    request: CreateStorageRequest,
+    metadata?: Metadata
+  ): Observable<Storage>;
+
+  getStorage(
+    request: GetStorageRequest,
+    metadata?: Metadata
+  ): Observable<Storage>;
+
+  deleteStorage(
+    request: DeleteStorageRequest,
+    metadata?: Metadata
+  ): Observable<Empty>;
+}
+
+export interface StorageServiceController {
+  createStorage(
+    request: CreateStorageRequest,
+    metadata?: Metadata
+  ): Promise<Storage> | Observable<Storage> | Storage;
+
+  getStorage(
+    request: GetStorageRequest,
+    metadata?: Metadata
+  ): Promise<Storage> | Observable<Storage> | Storage;
+
+  deleteStorage(request: DeleteStorageRequest, metadata?: Metadata): void;
+}
+
+export function StorageServiceControllerMethods() {
+  return function (constructor: Function) {
+    const grpcMethods: string[] = [
+      "createStorage",
+      "getStorage",
+      "deleteStorage",
+    ];
+    for (const method of grpcMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(
+        constructor.prototype,
+        method
+      );
+      GrpcMethod("StorageService", method)(
+        constructor.prototype[method],
+        method,
+        descriptor
+      );
+    }
+    const grpcStreamMethods: string[] = [];
+    for (const method of grpcStreamMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(
+        constructor.prototype,
+        method
+      );
+      GrpcStreamMethod("StorageService", method)(
+        constructor.prototype[method],
+        method,
+        descriptor
+      );
+    }
+  };
+}
+
+export const STORAGE_SERVICE_NAME = "StorageService";
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

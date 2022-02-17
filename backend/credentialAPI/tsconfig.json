@@ -21,6 +21,10 @@
     "paths": {
       "@config": ["src/config/index.js"],
       "@protos": ["src/protos/index.js"],
+      "@logger": ["src/logger/index.js"],
+      "@storage": ["src/storage/index.js"],
+      "@credential": ["src/credential/index.js"],
+      "@exception": ["src/exception/index.js"],
       "@db": ["src/prisma/index.js"]
     }
   }
