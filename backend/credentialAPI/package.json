@@ -9,7 +9,7 @@
     "clean": "rm -rf dist",
     "clean:hard": "rm -rf dist node_modules",
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "yarn db:generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "infra:dev:up": "docker-compose -f docker-compose.dev.yaml up -d",
     "infra:dev:down": "docker-compose -f docker-compose.dev.yaml down -v",
@@ -39,6 +39,7 @@
     "@nestjs/microservices": "^8.3.0",
     "@nestjs/platform-express": "^8.0.0",
     "@prisma/client": "^3.9.2",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "env-var": "^7.1.1",
     "module-alias": "^2.2.2",
@@ -89,6 +90,10 @@
   "_moduleAliases": {
     "@config": "dist/config/index.js",
     "@protos": "dist/protos/index.js",
+    "@logger": "dist/logger/index.js",
+    "@credential": "dist/credential/index.js",
+    "@storage": "dist/storage/index.js",
+    "@exception": "dist/exception/index.js",
     "@db": "dist/prisma/index.js"
   }
 }
