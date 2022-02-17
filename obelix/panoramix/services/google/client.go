@@ -8,6 +8,7 @@ import (
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/docs/v1"
 	"google.golang.org/api/option"
+	"google.golang.org/api/sheets/v4"
 	"net/http"
 	"os"
 	"time"
@@ -93,6 +94,20 @@ func (c *Client) CreateNewDocument(title string) error {
 }
 
 // CreateNewSheet creates a new Google Sheet document using the given title.
-func (c *Client) CreateNewSheet(title string) {
-	fmt.Println("Call from CreateNewSheet: ", title)
+func (c *Client) CreateNewSheet(title string) error {
+	srv, err := sheets.NewService(c.ctx, option.WithHTTPClient(c.clt))
+	if err != nil {
+		return fmt.Errorf("failed to create google sheet service: %w", err)
+	}
+
+	_, err = srv.Spreadsheets.Create(&sheets.Spreadsheet{
+		Properties: &sheets.SpreadsheetProperties{
+			Title: title,
+		},
+	}).Do()
+	if err != nil {
+		return fmt.Errorf("failed to create new google sheet: %w", err)
+	}
+
+	return nil
 }
