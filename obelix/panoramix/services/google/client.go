@@ -6,6 +6,7 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/calendar/v3"
+	"google.golang.org/api/docs/v1"
 	"google.golang.org/api/option"
 	"net/http"
 	"os"
@@ -77,8 +78,18 @@ func (c *Client) CreateNewEvent(title string, start time.Time, duration time.Dur
 }
 
 // CreateNewDocument creates a new Google Docs document using the given title.
-func (c *Client) CreateNewDocument(title string) {
-	fmt.Println("Call from CreateNewDocument: ", title)
+func (c *Client) CreateNewDocument(title string) error {
+	srv, err := docs.NewService(c.ctx, option.WithHTTPClient(c.clt))
+	if err != nil {
+		return fmt.Errorf("failed to create google docs service: %w", err)
+	}
+
+	_, err = srv.Documents.Create(&docs.Document{Title: title}).Do()
+	if err != nil {
+		return fmt.Errorf("failed to create new google document: %w", err)
+	}
+
+	return nil
 }
 
 // CreateNewSheet creates a new Google Sheet document using the given title.
