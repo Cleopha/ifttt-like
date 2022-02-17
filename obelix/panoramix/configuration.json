@@ -1,6 +1,7 @@
 {
   "google_scopes": [
     "https://www.googleapis.com/auth/bigquery",
-    "https://www.googleapis.com/auth/blogger"
+    "https://www.googleapis.com/auth/blogger",
+    "https://www.googleapis.com/auth/calendar.events"
   ]
 }

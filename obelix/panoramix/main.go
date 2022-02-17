@@ -6,6 +6,7 @@ import (
 	"panoramix/cli"
 	"panoramix/configuration"
 	"panoramix/services"
+	"time"
 )
 
 func main() {
@@ -22,7 +23,8 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	if _, err := d.Run("google", "CreateNewDocument", "MyDocumentTitle"); err != nil {
+	if _, err := d.Run("google", "CreateNewEvent", "New test Event", time.Now().Add(time.Second*30),
+		time.Minute*15); err != nil {
 		log.Fatalln(err)
 	}
 }
