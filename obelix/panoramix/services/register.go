@@ -19,5 +19,6 @@ func RegisterServices(ctx context.Context, conf *configuration.Configuration) (*
 	if err := d.Register("google", googleClient); err != nil {
 		return nil, fmt.Errorf("failed to register Google service: %w", err)
 	}
+
 	return d, nil
 }

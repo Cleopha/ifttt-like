@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+//nolint:structcheck,unused
 type Client struct {
 	ctx context.Context
 	clt *http.Client

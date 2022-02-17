@@ -15,6 +15,7 @@ func GetAccessToken(ctx context.Context, conf *oauth2.Config) (*oauth2.Token, er
 
 	rawCode := ""
 	_, err := fmt.Scanf("%s", &rawCode)
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to read code: %w", err)
 	}
