@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+	"google.golang.org/api/calendar/v3"
+	"google.golang.org/api/option"
 	"net/http"
 	"os"
+	"time"
 )
 
 var (
@@ -47,6 +50,30 @@ func New(ctx context.Context, scopes []string) (*Client, error) {
 		ctx: ctx,
 		clt: conf.Client(ctx, token),
 	}, nil
+}
+
+// CreateNewEvent creates a new Google Calendar event using the specified parameters.
+func (c *Client) CreateNewEvent(title string, start time.Time, duration time.Duration) error {
+	srv, err := calendar.NewService(c.ctx, option.WithHTTPClient(c.clt))
+	if err != nil {
+		return fmt.Errorf("failed to create google calendar service: %w", err)
+	}
+
+	_, err = srv.Events.Insert("primary", &calendar.Event{
+		Summary: title,
+		Start: &calendar.EventDateTime{
+			DateTime: start.Format(time.RFC3339),
+		},
+		End: &calendar.EventDateTime{
+			DateTime: start.Add(duration).Format(time.RFC3339),
+		},
+	}).Do()
+
+	if err != nil {
+		return fmt.Errorf("failed to create new google calendar event: %w", err)
+	}
+
+	return nil
 }
 
 // CreateNewDocument creates a new Google Docs document using the given title.
