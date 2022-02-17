@@ -10,16 +10,16 @@ import (
 )
 
 var (
-	ClientId     = ""
+	ClientID     = ""
 	ClientSecret = ""
-	RedirectUrl  = ""
+	RedirectURL  = ""
 )
 
 // TODO : Must be removed when the credentials API is up.
 func init() {
-	ClientId = os.Getenv("GOOGLE_CLIENT_ID")
+	ClientID = os.Getenv("GOOGLE_CLIENT_ID")
 	ClientSecret = os.Getenv("GOOGLE_CLIENT_SECRET")
-	RedirectUrl = os.Getenv("GOOGLE_REDIRECT_URL")
+	RedirectURL = os.Getenv("GOOGLE_REDIRECT_URL")
 }
 
 // Client represents a minimal Google client able to make OAuth2.0 authenticated requests.
@@ -31,10 +31,10 @@ type Client struct {
 // New creates a new Google client based on the given scopes/
 func New(ctx context.Context, scopes []string) (*Client, error) {
 	conf := &oauth2.Config{
-		ClientID:     ClientId,
+		ClientID:     ClientID,
 		ClientSecret: ClientSecret,
 		Endpoint:     google.Endpoint,
-		RedirectURL:  RedirectUrl,
+		RedirectURL:  RedirectURL,
 		Scopes:       scopes,
 	}
 
