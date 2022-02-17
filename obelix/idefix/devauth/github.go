@@ -1,7 +1,8 @@
-package devAuth
+package devauth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"golang.org/x/oauth2"
 	"log"
@@ -9,16 +10,25 @@ import (
 	"os"
 )
 
+var (
+	GithubClientID     = ""
+	GithubClientSecret = ""
+)
+
 func init() {
-	CLIENT_ID = os.Getenv("GITHUB_CLIENT_ID")
-	CLIENT_SECRET = os.Getenv("GITHUB_CLIENT_SECRET")
+	GithubClientID = os.Getenv("GITHUB_CLIENT_ID")
+	GithubClientSecret = os.Getenv("GITHUB_CLIENT_SECRET")
+
+	if GithubClientID == "" || GithubClientSecret == "" {
+		log.Fatal(errors.New("github credentials are not set"))
+	}
 }
 
 func GithubAuth() *http.Client {
 	ctx := context.Background()
 	conf := &oauth2.Config{
-		ClientID:     CLIENT_ID,
-		ClientSecret: CLIENT_SECRET,
+		ClientID:     GithubClientID,
+		ClientSecret: GithubClientSecret,
 		Scopes:       []string{"user", "repo"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://github.com/login/oauth/authorize",
@@ -39,11 +49,13 @@ func GithubAuth() *http.Client {
 	if _, err := fmt.Scan(&code); err != nil {
 		log.Fatal(err)
 	}
+
 	token, err := conf.Exchange(ctx, code)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	client := conf.Client(ctx, token)
+
 	return client
 }

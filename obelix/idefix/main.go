@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"idefix/devAuth"
+	"idefix/devauth"
 	"idefix/operator"
 	"idefix/producer"
 	"idefix/redis"
@@ -13,10 +13,10 @@ import (
 	"time"
 )
 
-var TIME_INTERVAL string
+var TimeInterval string
 
 func init() {
-	TIME_INTERVAL = os.Getenv("TIME_INTERVAL")
+	TimeInterval = os.Getenv("TIME_INTERVAL")
 }
 
 func runGithub() {
@@ -24,10 +24,11 @@ func runGithub() {
 	if err != nil {
 		log.Fatalf("failed to create new producer: %v", err)
 	}
-	rc := redis.NewClient(context.Background())
-	client := devAuth.GithubAuth()
 
-	t, err := strconv.Atoi(TIME_INTERVAL)
+	rc := redis.NewClient(context.Background())
+	client := devauth.GithubAuth()
+
+	t, err := strconv.Atoi(TimeInterval)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -52,14 +53,20 @@ func runGCalendar() {
 	if err != nil {
 		log.Fatalf("failed to create new producer: %v", err)
 	}
+
 	rc := redis.NewClient(context.Background())
-	client, err := devAuth.New(context.Background(), []string{
+
+	client, err := devauth.New(context.Background(), []string{
 		"https://www.googleapis.com/auth/bigquery",
 		"https://www.googleapis.com/auth/blogger",
 		"https://www.googleapis.com/auth/calendar",
 	})
 
-	t, err := strconv.Atoi(TIME_INTERVAL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	t, err := strconv.Atoi(TimeInterval)
 	if err != nil {
 		log.Fatal(err)
 	}

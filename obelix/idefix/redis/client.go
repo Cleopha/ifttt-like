@@ -2,8 +2,10 @@ package redis
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	redisv8 "github.com/go-redis/redis/v8"
+	"log"
 	"os"
 )
 
@@ -13,6 +15,10 @@ var pass string
 func init() {
 	addr = os.Getenv("REDIS_ADDR")
 	pass = os.Getenv("REDIS_PASS")
+
+	if addr == "" || pass == "" {
+		log.Fatal(errors.New("redis credentials are not set"))
+	}
 }
 
 type Client struct {
@@ -41,9 +47,10 @@ func (client *Client) SetKey(key, value string) error {
 
 func (client *Client) GetKey(key string) (string, error) {
 	value, err := client.rdb.Get(client.ctx, key).Result()
-	if err == redisv8.Nil {
+	if errors.Is(err, redisv8.Nil) {
 		return "", redisv8.Nil
 	}
+
 	if err != nil {
 		return "", fmt.Errorf("failed to get key: %w", err)
 	}

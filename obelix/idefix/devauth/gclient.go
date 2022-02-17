@@ -1,24 +1,30 @@
-package devAuth
+package devauth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+	"log"
 	"net/http"
 	"os"
 )
 
 var (
-	CLIENT_ID     = ""
-	CLIENT_SECRET = ""
-	REDIRECT_URL  = ""
+	GoogleClientID     = ""
+	GoogleClientSecret = ""
+	GoogleRedirectURL  = ""
 )
 
 func init() {
-	CLIENT_ID = os.Getenv("GOOGLE_CLIENT_ID")
-	CLIENT_SECRET = os.Getenv("GOOGLE_CLIENT_SECRET")
-	REDIRECT_URL = os.Getenv("GOOGLE_REDIRECT_URL")
+	GoogleClientID = os.Getenv("GOOGLE_CLIENT_ID")
+	GoogleClientSecret = os.Getenv("GOOGLE_CLIENT_SECRET")
+	GoogleRedirectURL = os.Getenv("GOOGLE_REDIRECT_URL")
+
+	if GoogleClientID == "" || GoogleClientSecret == "" || GoogleRedirectURL == "" {
+		log.Fatal(errors.New("google credentials are not set"))
+	}
 }
 
 type Client struct {
@@ -29,10 +35,10 @@ type Client struct {
 // New creates a new Google client
 func New(ctx context.Context, scopes []string) (*Client, error) {
 	conf := &oauth2.Config{
-		ClientID:     CLIENT_ID,
-		ClientSecret: CLIENT_SECRET,
+		ClientID:     GoogleClientID,
+		ClientSecret: GoogleClientSecret,
 		Endpoint:     google.Endpoint,
-		RedirectURL:  REDIRECT_URL,
+		RedirectURL:  GoogleRedirectURL,
 		Scopes:       scopes,
 	}
 
