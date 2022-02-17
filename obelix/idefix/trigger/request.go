@@ -11,5 +11,6 @@ func ReadBody(res *http.Response) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to read body: %w", err)
 	}
+
 	return body, nil
 }

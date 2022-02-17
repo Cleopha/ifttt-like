@@ -34,6 +34,7 @@ type Action struct {
 
 func (w *Watcher) RunGithubIssue() error {
 	var issues github.Issues
+
 	get, err := w.Requester.Get("https://api.github.com/repos/Cleopha/ifttt-like-test/issues?filter=repos&state=all")
 	if err != nil {
 		return fmt.Errorf("failed to get issues from github: %w", err)
@@ -54,12 +55,13 @@ func (w *Watcher) RunGithubIssue() error {
 		if errors.Is(err, github.ErrNoIssues) {
 			return nil
 		}
+
 		return fmt.Errorf("failed to update redis state: %w", err)
 	}
 
 	err = issues.LookForChange(w.Operator, "1", old)
 	if err != nil {
-		return fmt.Errorf("an error has occured while looking for changes: %w", err)
+		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
 	}
 
 	return nil
@@ -67,9 +69,10 @@ func (w *Watcher) RunGithubIssue() error {
 
 func (w *Watcher) RunGCalendar() error {
 	var gc google.GCalendar
+
 	srv, err := calendar.NewService(context.Background(), option.WithHTTPClient(w.Requester))
 	if err != nil {
-		log.Fatalf("Unable to retrieve Calendar client: %w", err)
+		log.Fatalf("Unable to retrieve Calendar client: %v", err)
 	}
 
 	err = gc.Parse(srv)
@@ -82,12 +85,13 @@ func (w *Watcher) RunGCalendar() error {
 		if errors.Is(err, github.ErrNoIssues) {
 			return nil
 		}
+
 		return fmt.Errorf("failed to update redis state: %w", err)
 	}
 
 	err = gc.LookForChange(w.Operator, "2", old)
 	if err != nil {
-		return fmt.Errorf("an error has occured while looking for changes: %w", err)
+		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
 	}
 
 	return nil
@@ -98,12 +102,10 @@ func (w *Watcher) Watch() error {
 	defer ticker.Stop()
 
 	for {
-		select {
-		case <-ticker.C:
-			err := w.RunGCalendar()
-			if err != nil {
-				return fmt.Errorf("failed to run: %w", err)
-			}
+		<-ticker.C
+
+		if err := w.RunGCalendar(); err != nil {
+			return fmt.Errorf("failed to run: %w", err)
 		}
 	}
 }
