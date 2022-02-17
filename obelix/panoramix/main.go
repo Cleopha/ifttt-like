@@ -22,7 +22,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	if _, err := d.Run("google", "CreateNewDocument", "New test Document"); err != nil {
+	if _, err := d.Run("google", "CreateNewSheet", "NewSheet"); err != nil {
 		log.Fatalln(err)
 	}
 }
