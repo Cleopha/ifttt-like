@@ -37,6 +37,24 @@ services:
     depends_on:
       - database
 
+  credential-api:
+    image: area/credential-api
+    build:
+      context: ../
+      dockerfile: credentialAPI/Dockerfile
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=$CREDENTIAL_API_PORT
+      - DB_HOST=database
+      - DB_PORT
+      - DB_URL=postgresql://$DB_USER:$DB_PASS@database:$DB_PORT/$DB_NAME?schema=$DB_CREDENTIAL_SCHEMA
+    ports:
+      - "${CREDENTIAL_API_PORT}:${CREDENTIAL_API_PORT}"
+    networks:
+      - backend
+    depends_on:
+      - database
+
   grpc-doc:
     image: area/grpc-doc
     build:
