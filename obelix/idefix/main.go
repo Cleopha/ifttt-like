@@ -19,7 +19,6 @@ func init() {
 	TimeInterval = os.Getenv("TIME_INTERVAL")
 }
 
-// nolint
 func runGithub() {
 	kp, err := producer.New()
 	if err != nil {
@@ -49,6 +48,7 @@ func runGithub() {
 	}
 }
 
+// nolint
 func runGCalendar() {
 	kp, err := producer.New()
 	if err != nil {
