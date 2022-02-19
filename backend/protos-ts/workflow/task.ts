@@ -30,7 +30,7 @@ export enum TaskAction {
   /** TIMER_INTERVAL - Action */
   TIMER_INTERVAL = 3,
   /** GOOGLE_CALENDAR_NEW_EVENT - Reaction */
-  GOOGLE_CALENDAR_NEW_EVENT = 4,
+  GOOGLE_NEW_CALENDAR_EVENT = 4,
   /** GOOGLE_NEW_DOC - Reaction */
   GOOGLE_NEW_DOC = 5,
   /** GOOGLE_NEW_SHEET - Reaction */
