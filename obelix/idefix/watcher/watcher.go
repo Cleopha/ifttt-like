@@ -17,6 +17,7 @@ import (
 )
 
 type Watcher struct {
+	//nolint
 	wg        sync.WaitGroup
 	Requester *http.Client
 	Operator  *operator.IdefixOperator
@@ -76,7 +77,7 @@ func (w *Watcher) RunGCalendar() error {
 	}
 
 	err = gc.Parse(srv)
-	if err != nil {
+	if err != nil || !errors.Is(err, google.ErrNoUpcomingEvent) {
 		return fmt.Errorf("failed to parse gcalendar data: %w", err)
 	}
 
