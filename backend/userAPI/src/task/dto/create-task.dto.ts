@@ -6,10 +6,13 @@ export enum TaskType {
 }
 
 export enum TaskAction {
-	GITHUB_PR_MERGE = 'GITHUB_PR_MERGE',
-	GITHUB_ISSUE_CLOSE = 'GITHUB_ISSUE_CLOSE',
+	GITHUB_PR_OPEN = 'GITHUB_PR_OPEN',
+	GITHUB_ISSUE_OPEN = 'GITHUB_ISSUE_OPEN',
 	TIMER_DATE = 'TIMER_DATE',
 	TIMER_INTERVAL = 'TIMER_INTERVAL',
+	GOOGLE_CALENDAR_NEW_EVENT = 'GOOGLE_CALENDAR_NEW_EVENT',
+	GOOGLE_NEW_DOC = 'GOOGLE_NEW_DOC',
+	GOOGLE_NEW_SHEET = 'GOOGLE_NEW_SHEET'
 }
 
 export type Param = { [key: string]: any };
@@ -22,11 +25,11 @@ export class CreateTaskDto {
 	type: TaskType;
 
 	@IsEnum(TaskAction)
-	action: TaskAction
+	action: TaskAction;
 
 	@IsString()
 	nextTask: string;
 
 	@IsObject()
-	params: Param
+	params: Param;
 }
