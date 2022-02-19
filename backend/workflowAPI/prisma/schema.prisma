@@ -16,13 +16,13 @@ enum TaskType {
 }
 
 enum TaskAction {
-  GITHUB_PR_OPEN            // Action
-  GITHUB_ISSUE_OPEN         // Action
-  TIMER_DATE                // Action
-  TIMER_INTERVAL            // Action
-  GOOGLE_NEW_CALENDAR_EVENT // Reaction
-  GOOGLE_NEW_DOC            // Reaction
-  GOOGLE_NEW_SHEET          // Reaction
+  GITHUB_PR_OPEN             // Action
+  GITHUB_ISSUE_OPEN          // Action
+  TIMER_DATE                 // Action
+  TIMER_INTERVAL             // Action
+  GOOGLE_CREATE_NEW_EVENT    // Reaction
+  GOOGLE_CREATE_NEW_DOCUMENT // Reaction
+  GOOGLE_CREATE_NEW_SHEET    // Reaction
 }
 
 model Workflow {

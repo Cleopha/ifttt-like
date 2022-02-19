@@ -24,9 +24,9 @@ enum TaskAction {
   GITHUB_ISSUE_OPEN = 1;         // Action
   TIMER_DATE = 2;                // Action
   TIMER_INTERVAL = 3;            // Action
-  GOOGLE_NEW_CALENDAR_EVENT = 4; // Reaction
-  GOOGLE_NEW_DOC = 5;            // Reaction
-  GOOGLE_NEW_SHEET = 6;          // Reaction
+  GOOGLE_CREATE_NEW_EVENT = 4;   // Reaction
+  GOOGLE_CREATE_NEW_DOCUMENT = 5; // Reaction
+  GOOGLE_CREATE_NEW_SHEET = 6;    // Reaction
 }
 
 // Task correspond to an action or reaction
