@@ -113,6 +113,7 @@ func (o *Operator) consumeService(topic string) error {
 
 			// Spawn one goroutine per workflow execution.
 			wg.Add(1)
+
 			go func() {
 				defer wg.Done()
 
