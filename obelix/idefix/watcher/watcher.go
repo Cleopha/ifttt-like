@@ -105,7 +105,7 @@ func (w *Watcher) Watch() error {
 	for {
 		<-ticker.C
 
-		if err := w.RunGCalendar(); err != nil {
+		if err := w.RunGithubIssue(); err != nil {
 			return fmt.Errorf("failed to run: %w", err)
 		}
 	}

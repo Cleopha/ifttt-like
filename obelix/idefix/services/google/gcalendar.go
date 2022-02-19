@@ -98,8 +98,8 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 	return nil
 }
 
-func (gc *GCalendar) SendToKafka(kp sarama.SyncProducer, workflowID string) error {
-	data, err := json.Marshal(Action{workflowID, 1})
+func (gc *GCalendar) SendToKafka(kp sarama.SyncProducer, taskID string) error {
+	data, err := json.Marshal(operator.Action{TaskID: taskID})
 	if err != nil {
 		return fmt.Errorf("failed to marshal: %w", err)
 	}

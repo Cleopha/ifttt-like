@@ -3,26 +3,23 @@ package main
 import (
 	"context"
 	"log"
-	"panoramix/cli"
-	"panoramix/configuration"
-	"panoramix/services"
+	"panoramix/consumer"
 )
 
 func main() {
 	ctx := context.Background()
-	cliFlags := cli.Parse()
+	operator, err := consumer.New(ctx)
 
-	conf, err := configuration.ExtractConfiguration(cliFlags.ConfigurationPath)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	d, err := services.RegisterServices(ctx, conf)
-	if err != nil {
-		log.Fatalln(err)
+	topics := []string{
+		"google",
+		"github",
 	}
 
-	if _, err := d.Run("google", "CreateNewSheet", "NewSheet"); err != nil {
+	if err = operator.ConsumeTopics(topics); err != nil {
 		log.Fatalln(err)
 	}
 }

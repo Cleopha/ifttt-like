@@ -3,6 +3,7 @@ module idefix
 go 1.16
 
 require (
+	github.com/PtitLuca/go-dispatcher v1.0.0
 	github.com/Shopify/sarama v1.31.0
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
