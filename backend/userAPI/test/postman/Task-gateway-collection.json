@@ -28,28 +28,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/user/:userId/workflow/:workflowId/task",
+							"raw": "{{baseUrl}}/user/{{:userId}}/workflow/{{:workflowId}}/task",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"user",
-								":userId",
+								"{{:userId}}",
 								"workflow",
-								":workflowId",
+								"{{:workflowId}}",
 								"task"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": "reprehenderit",
-									"description": "(Required) "
-								},
-								{
-									"key": "workflowId",
-									"value": "reprehenderit",
-									"description": "(Required) "
-								}
 							]
 						}
 					},
@@ -428,7 +416,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"test\",\n    \"type\": \"ACTION\",\n    \"action\": \"GITHUB_ISSUE_CLOSE\",\n    \"nextTask\": \"\",\n    \"params\": {\n        \"foo\": \"bar\",\n        \"baz\": 4\n    }\n}",
+							"raw": "{\n    \"name\": \"test\",\n    \"type\": \"ACTION\",\n    \"action\": \"GITHUB_ISSUE_OPEN\",\n    \"nextTask\": \"\",\n    \"params\": {\n        \"foo\": \"bar\",\n        \"baz\": 4\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -548,7 +536,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"ullamco cillum\",\n    \"type\": \"REACTION\",\n    \"action\": \"GITHUB_ISSUE_CLOSE\",\n    \"nextTask\": \"nisi non dolor\",\n    \"params\": {\n        \"foo\": \"bar\"\n    }\n}",
+							"raw": "{\n    \"name\": \"ullamco cillum\",\n    \"type\": \"REACTION\",\n    \"action\": \"GOOGLE_CALENDAR_NEW_EVENT\",\n    \"nextTask\": \"nisi non dolor\",\n    \"params\": {\n        \"foo\": \"bar\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
