@@ -13,7 +13,7 @@ defaults:
 jobs:
   linter:
     name: Run linter on Idefix and Panoramix
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         subfolder: [./obelix/idefix, ./obelix/panoramix]

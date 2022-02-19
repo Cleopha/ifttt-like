@@ -4,6 +4,9 @@
 
 # Environement
 .env
+obelix/.envrc
+obelix/panoramix/.envrc
+obelix/idefix/.envrc
 
 # Dependencies
 node_modules/
