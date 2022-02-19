@@ -14,6 +14,10 @@ import (
 	"time"
 )
 
+var (
+	ErrNoUpcomingEvent = errors.New("no upcoming event")
+)
+
 const (
 	ACTIVE = iota
 	NoActive
@@ -47,13 +51,13 @@ func (gc *GCalendar) Parse(srv *calendar.Service) error {
 	}
 
 	if len(events.Items) == 0 {
-		fmt.Println("No upcoming events found.")
-	} else {
-		for _, item := range events.Items {
-			gc.date = item.Start.DateTime
-			if gc.date == "" {
-				gc.date = item.Start.Date
-			}
+		return ErrNoUpcomingEvent
+	}
+
+	for _, item := range events.Items {
+		gc.date = item.Start.DateTime
+		if gc.date == "" {
+			gc.date = item.Start.Date
 		}
 	}
 
