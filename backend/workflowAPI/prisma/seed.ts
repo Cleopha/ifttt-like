@@ -94,7 +94,7 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 			data: {
 				name: 'Google calendar Reaction 2',
 				type: TaskType.REACTION,
-				action: TaskAction.GOOGLE_CALENDAR_NEW_EVENT,
+				action: TaskAction.GOOGLE_NEW_CALENDAR_EVENT,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {

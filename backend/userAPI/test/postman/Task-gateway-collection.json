@@ -536,7 +536,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"ullamco cillum\",\n    \"type\": \"REACTION\",\n    \"action\": \"GOOGLE_CALENDAR_NEW_EVENT\",\n    \"nextTask\": \"nisi non dolor\",\n    \"params\": {\n        \"foo\": \"bar\"\n    }\n}",
+							"raw": "{\n    \"name\": \"ullamco cillum\",\n    \"type\": \"REACTION\",\n    \"action\": \"GOOGLE_NEW_CALENDAR_EVENT\",\n    \"nextTask\": \"nisi non dolor\",\n    \"params\": {\n        \"foo\": \"bar\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"

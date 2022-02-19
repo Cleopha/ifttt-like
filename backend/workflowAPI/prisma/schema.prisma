@@ -20,7 +20,7 @@ enum TaskAction {
   GITHUB_ISSUE_OPEN         // Action
   TIMER_DATE                // Action
   TIMER_INTERVAL            // Action
-  GOOGLE_CALENDAR_NEW_EVENT // Reaction
+  GOOGLE_NEW_CALENDAR_EVENT // Reaction
   GOOGLE_NEW_DOC            // Reaction
   GOOGLE_NEW_SHEET          // Reaction
 }
