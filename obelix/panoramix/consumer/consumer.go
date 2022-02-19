@@ -63,6 +63,9 @@ func New(ctx context.Context) (*Operator, error) {
 	}, nil
 }
 
+// getNextTask uses the workflow API to get the task following the action.
+// It returns the next task's namespace, associated method name and parameters.
+// e.g.: GOOGLE_CREATE_NEW_EVENT becomes google CreateNewEvent with its associated parameters.
 func (o *Operator) getNextTask(initialActionID string) (string, string, []interface{}, error) {
 	client, err := protos.NewClient("9000")
 	if err != nil {
