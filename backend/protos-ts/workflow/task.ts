@@ -21,14 +21,20 @@ export enum TaskType {
  * It will be completed with time
  */
 export enum TaskAction {
-  /** GITHUB_PR_MERGE - Action */
-  GITHUB_PR_MERGE = 0,
-  /** GITHUB_ISSUE_CLOSE - Action & reaction */
-  GITHUB_ISSUE_CLOSE = 1,
+  /** GITHUB_PR_OPEN - Action */
+  GITHUB_PR_OPEN = 0,
+  /** GITHUB_ISSUE_OPEN - Action */
+  GITHUB_ISSUE_OPEN = 1,
   /** TIMER_DATE - Action */
   TIMER_DATE = 2,
   /** TIMER_INTERVAL - Action */
   TIMER_INTERVAL = 3,
+  /** GOOGLE_CALENDAR_NEW_EVENT - Reaction */
+  GOOGLE_CALENDAR_NEW_EVENT = 4,
+  /** GOOGLE_NEW_DOC - Reaction */
+  GOOGLE_NEW_DOC = 5,
+  /** GOOGLE_NEW_SHEET - Reaction */
+  GOOGLE_NEW_SHEET = 6,
   UNRECOGNIZED = -1,
 }
 

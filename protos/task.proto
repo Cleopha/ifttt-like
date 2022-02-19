@@ -20,10 +20,13 @@ enum TaskType {
 // Available action in the project
 // It will be completed with time
 enum TaskAction {
-  GITHUB_PR_MERGE = 0;    // Action
-  GITHUB_ISSUE_CLOSE = 1; // Action & reaction
-  TIMER_DATE = 2;         // Action
-  TIMER_INTERVAL = 3;     // Action
+  GITHUB_PR_OPEN = 0;            // Action
+  GITHUB_ISSUE_OPEN = 1;         // Action
+  TIMER_DATE = 2;                // Action
+  TIMER_INTERVAL = 3;            // Action
+  GOOGLE_CALENDAR_NEW_EVENT = 4; // Reaction
+  GOOGLE_NEW_DOC = 5;            // Reaction
+  GOOGLE_NEW_SHEET = 6;          // Reaction
 }
 
 // Task correspond to an action or reaction
