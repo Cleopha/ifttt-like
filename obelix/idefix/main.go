@@ -88,5 +88,5 @@ func runGCalendar() {
 }
 
 func main() {
-	runGCalendar()
+	runGithub()
 }
