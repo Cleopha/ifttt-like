@@ -51,7 +51,7 @@ func (w *Watcher) RunGithubIssue() error {
 		return fmt.Errorf("failed to parse body: %w", err)
 	}
 
-	old, err := issues.GetRedisState(w.Operator.RC, "1")
+	old, err := issues.GetRedisState(w.Operator.RC, "c19f488d-0a16-46e0-9e3a-7d65c3bed5d8")
 	if err != nil {
 		if errors.Is(err, github.ErrNoIssues) {
 			return nil
@@ -60,7 +60,7 @@ func (w *Watcher) RunGithubIssue() error {
 		return fmt.Errorf("failed to update redis state: %w", err)
 	}
 
-	err = issues.LookForChange(w.Operator, "1", old)
+	err = issues.LookForChange(w.Operator, "c19f488d-0a16-46e0-9e3a-7d65c3bed5d8", old)
 	if err != nil {
 		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
 	}

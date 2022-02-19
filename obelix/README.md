@@ -18,7 +18,7 @@ docker-compose -f docker-compose.dev.yaml up
 
 ```shell
 # Open shell in container
-docker exec -it obelix-workflow-api-1 /bin/sh
+docker exec -it ifttt-like-workflow-api-1 /bin/sh
 
 # Install dev dependencies
 yarn

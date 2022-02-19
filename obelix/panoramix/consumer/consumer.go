@@ -10,6 +10,8 @@ import (
 	"os"
 	"panoramix/cli"
 	"panoramix/configuration"
+	"panoramix/protos"
+	__ "panoramix/protos/protos"
 	"panoramix/services"
 	"sync"
 )
@@ -18,21 +20,11 @@ var (
 	ErrEmptyBrokerAddress = errors.New("kafka broker address cannot be empty")
 )
 
-type Action struct {
-	TaskID string
-}
-
 type Operator struct {
-	c  sarama.Consumer
-	d  *dispatcher.Dispatcher
-	wg sync.WaitGroup
-}
-
-// TODO: Use the workflow API to get the next task
-func (o *Operator) getNextTask(initialActionID string) (string, string, []interface{}, error) {
-	return "google", "CreateNewDocument", []interface{}{
-		"This is a new document",
-	}, nil
+	c   sarama.Consumer
+	d   *dispatcher.Dispatcher
+	wg  sync.WaitGroup
+	ctx context.Context
 }
 
 // New creates a new Operator containing a sarama consumer.
@@ -65,13 +57,37 @@ func New(ctx context.Context) (*Operator, error) {
 	}
 
 	return &Operator{
-		c: consumer,
-		d: d,
+		c:   consumer,
+		d:   d,
+		ctx: ctx,
+	}, nil
+}
+
+func (o *Operator) getNextTask(initialActionID string) (string, string, []interface{}, error) {
+	client, err := protos.NewClient("9000")
+	if err != nil {
+		return "", "", nil, fmt.Errorf("failed to create new gRPC client: %w", err)
+	}
+
+	t, err := client.GetTask(o.ctx, &__.GetTaskRequest{Id: initialActionID})
+	if err != nil {
+		return "", "", nil, fmt.Errorf("failed to get current task: %w", err)
+	}
+
+	_, err = client.GetTask(o.ctx, &__.GetTaskRequest{Id: t.NextTask})
+	if err != nil {
+		return "", "", nil, fmt.Errorf("failed to get next task: %w", err)
+	}
+
+	// TODO: Use t.Action.String() to parse the namespace and method, retrieve the arguments and return them !
+
+	return "google", "CreateNewDocument", []interface{}{
+		"This is a new document",
 	}, nil
 }
 
 // runWorkflow uses the action at the beginning of the workflow to execute the following reactions.
-func (o *Operator) runWorkflow(a Action) error {
+func (o *Operator) runWorkflow(a protos.Action) error {
 	n, m, p, err := o.getNextTask(a.TaskID)
 	if err != nil {
 		return fmt.Errorf("failed to get next task from the Workflow API: %w", err)
@@ -106,7 +122,7 @@ func (o *Operator) consumeService(topic string) error {
 
 		// Read all messages.
 		for msg := range messages {
-			a := Action{}
+			a := protos.Action{}
 			if err := json.Unmarshal(msg.Value, &a); err != nil {
 				return fmt.Errorf("failed to decode kafka message: %w", err)
 			}

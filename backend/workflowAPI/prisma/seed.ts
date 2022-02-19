@@ -18,7 +18,7 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 			data: {
 				name: 'Google calendar Reaction 2',
 				type: TaskType.REACTION,
-				action: TaskAction.GOOGLE_NEW_DOC,
+				action: TaskAction.GOOGLE_CREATE_NEW_DOCUMENT,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {
@@ -41,7 +41,7 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 			data: {
 				name: 'Google calendar Reaction',
 				type: TaskType.REACTION,
-				action: TaskAction.GOOGLE_CALENDAR_NEW_EVENT,
+				action: TaskAction.GOOGLE_CREATE_NEW_EVENT,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {
@@ -94,7 +94,7 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 			data: {
 				name: 'Google calendar Reaction 2',
 				type: TaskType.REACTION,
-				action: TaskAction.GOOGLE_NEW_CALENDAR_EVENT,
+				action: TaskAction.GOOGLE_CREATE_NEW_EVENT,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {
@@ -117,7 +117,7 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 			data: {
 				name: 'Google sheet Reaction',
 				type: TaskType.REACTION,
-				action: TaskAction.GOOGLE_NEW_SHEET,
+				action: TaskAction.GOOGLE_CREATE_NEW_SHEET,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {
