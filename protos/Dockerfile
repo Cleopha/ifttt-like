@@ -1,7 +1,7 @@
 ###
 # Install latest version of protoc
 ###
-FROM pseudomuto/protoc-gen-doc AS setup
+FROM pseudomuto/protoc-gen-doc:1.5.0 AS setup
 
 # Update protoc version to use optional in protobuf
 ADD https://github.com/google/protobuf/releases/download/v3.18.1/protoc-3.18.1-linux-x86_64.zip ./
