@@ -1,4 +1,4 @@
-package consumer
+package operator
 
 import (
 	"context"
@@ -27,19 +27,19 @@ type Operator struct {
 	ctx context.Context
 }
 
-// New creates a new Operator containing a sarama consumer.
+// New creates a new Operator containing a sarama operator.
 func New(ctx context.Context) (*Operator, error) {
 	brokerAddress := os.Getenv("BROKER_ADDRESS")
 	if brokerAddress == "" {
 		return nil, ErrEmptyBrokerAddress
 	}
 
-	// Creates the sarama consumer
+	// Creates the sarama operator
 	config := sarama.NewConfig()
 	consumer, err := sarama.NewConsumer([]string{brokerAddress}, config)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to create sarama consumer: %w", err)
+		return nil, fmt.Errorf("failed to create sarama operator: %w", err)
 	}
 
 	// Creates the services configuration

@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"log"
-	"panoramix/consumer"
+	"panoramix/operator"
 )
 
 func main() {
 	ctx := context.Background()
-	operator, err := consumer.New(ctx)
+	operator, err := operator.New(ctx)
 
 	if err != nil {
 		log.Fatalln(err)
