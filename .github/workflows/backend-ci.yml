@@ -38,6 +38,7 @@ jobs:
         run: docker compose up -d
 
       - name: Wait for User API
+        timeout-minutes: 360
         run: |
           API_PORT=$USER_API_PORT ./backend/util/wait-for-api.sh
 
