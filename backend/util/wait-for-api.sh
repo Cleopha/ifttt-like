@@ -6,5 +6,6 @@ do
   if [ $? -eq 0 ]; then
     break
   fi
+  docker compose logs
   sleep 2
 done
