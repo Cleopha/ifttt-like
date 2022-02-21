@@ -2,72 +2,61 @@ package watcher
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"google.golang.org/api/calendar/v3"
-	"google.golang.org/api/option"
-	"idefix/operator"
-	"idefix/services/github"
-	"idefix/services/google"
-	"idefix/trigger"
-	"log"
-	"net/http"
+	"github.com/PtitLuca/go-dispatcher/dispatcher"
+	"idefix/protos"
+	__ "idefix/protos/protos"
+	"idefix/services"
+	"os"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
 
-type Watcher struct {
-	//nolint
-	wg        sync.WaitGroup
-	Requester *http.Client
-	Operator  *operator.IdefixOperator
-	Interval  time.Duration
+var TimeInterval string
+
+func init() {
+	TimeInterval = os.Getenv("TIME_INTERVAL")
 }
 
-const (
-	GITHUB = iota
-	DISCORD
-)
+type Watcher struct {
+	ctx      context.Context
+	wg       sync.WaitGroup
+	clt      *protos.Client
+	d        *dispatcher.Dispatcher
+	Interval time.Duration
+}
 
 type Action struct {
 	Type int
 }
 
-func (w *Watcher) RunGithubIssue() error {
-	var issues github.Issues
-
-	get, err := w.Requester.Get("https://api.github.com/repos/Cleopha/ifttt-like-test/issues?filter=repos&state=all")
+func New(ctx context.Context) (*Watcher, error) {
+	client, err := protos.NewClient("9000")
 	if err != nil {
-		return fmt.Errorf("failed to get issues from github: %w", err)
+		return nil, fmt.Errorf("failed to create grpc client: %w", err)
 	}
 
-	data, err := trigger.ReadBody(get)
+	d, err := services.RegisterServices(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to read body: %w", err)
+		return nil, fmt.Errorf("failed to register services: %w", err)
 	}
 
-	err = issues.Parse(data)
+	t, err := strconv.Atoi(TimeInterval)
 	if err != nil {
-		return fmt.Errorf("failed to parse body: %w", err)
+		return nil, fmt.Errorf("failed to format time interval: %w", err)
 	}
 
-	old, err := issues.GetRedisState(w.Operator.RC, "c19f488d-0a16-46e0-9e3a-7d65c3bed5d8")
-	if err != nil {
-		if errors.Is(err, github.ErrNoIssues) {
-			return nil
-		}
-
-		return fmt.Errorf("failed to update redis state: %w", err)
-	}
-
-	err = issues.LookForChange(w.Operator, "c19f488d-0a16-46e0-9e3a-7d65c3bed5d8", old)
-	if err != nil {
-		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
-	}
-
-	return nil
+	return &Watcher{
+		ctx:      ctx,
+		clt:      client,
+		d:        d,
+		Interval: time.Duration(t) * time.Second,
+	}, nil
 }
 
+/*
 func (w *Watcher) RunGCalendar() error {
 	var gc google.GCalendar
 
@@ -97,16 +86,56 @@ func (w *Watcher) RunGCalendar() error {
 
 	return nil
 }
+*/
+
+func (w *Watcher) parseAction(str string) (string, string) {
+	tmp := strings.Split(str, "_")
+	method := ""
+	namespace := strings.ToLower(tmp[0])
+
+	for _, elem := range tmp[1:] {
+		method += string(elem[0]) + strings.ToLower(elem[1:])
+	}
+
+	return namespace, method
+}
 
 func (w *Watcher) Watch() error {
 	ticker := time.NewTicker(w.Interval)
 	defer ticker.Stop()
 
 	for {
-		<-ticker.C
-
-		if err := w.RunGithubIssue(); err != nil {
-			return fmt.Errorf("failed to run: %w", err)
+		workflows, err := w.clt.ListWorkflows(w.ctx, &__.ListWorkflowsRequest{Owner: "f1352b9d-3a91-496e-9179-ae9e32429d9a"})
+		if err != nil {
+			return fmt.Errorf("failed to get list of workflows: %w", err)
 		}
+
+		for _, elem := range workflows.Workflows {
+			w.wg.Add(1)
+
+			go func(elem *__.Workflow) {
+				defer w.wg.Done()
+
+				for _, task := range elem.Tasks {
+					if task.Type != __.TaskType_ACTION {
+						continue
+					}
+
+					taskID := task.Id
+					action := task.Action.String()
+					namespace, method := w.parseAction(action)
+					fmt.Println(namespace, method)
+
+					_, err := w.d.Run(namespace, method, taskID, task.Params)
+					if err != nil {
+						fmt.Println(err)
+						// TODO log error
+						return
+					}
+				}
+			}(elem)
+		}
+
+		<-ticker.C
 	}
 }

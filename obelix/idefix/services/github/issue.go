@@ -34,9 +34,11 @@ func (i *Issues) Parse(data []byte) error {
 	return nil
 }
 
-func (i *Issues) findLatestIssue() (*Issue, bool) {
+func (i *Issues) findLatestIssue(isPR bool) (*Issue, bool) {
 	for _, elem := range i.Issues {
-		if elem.PullRequest == nil {
+		if !isPR && elem.PullRequest == nil {
+			return &elem, true
+		} else if isPR && elem.PullRequest != nil {
 			return &elem, true
 		}
 	}
@@ -44,10 +46,10 @@ func (i *Issues) findLatestIssue() (*Issue, bool) {
 	return nil, false
 }
 
-func (i *Issues) GetRedisState(rc *redis.Client, key string) (string, error) {
+func (i *Issues) GetRedisState(rc *redis.Client, key string, isPR bool) (string, error) {
 	state, err := rc.GetKey(key)
 	if errors.Is(err, redisv8.Nil) {
-		elem, ok := i.findLatestIssue()
+		elem, ok := i.findLatestIssue(isPR)
 		if !ok {
 			return "", ErrNoIssues
 		}
@@ -65,8 +67,8 @@ func (i *Issues) GetRedisState(rc *redis.Client, key string) (string, error) {
 	return state, nil
 }
 
-func (i *Issues) LookForChange(op *operator.IdefixOperator, key, old string) error {
-	newer, ok := i.findLatestIssue()
+func (i *Issues) LookForChange(op *operator.IdefixOperator, key, old string, isPR bool) error {
+	newer, ok := i.findLatestIssue(isPR)
 	if !ok {
 		return ErrNoIssues
 	}
@@ -94,8 +96,7 @@ func (i *Issues) SendToKafka(kp sarama.SyncProducer, taskID string) error {
 
 	msg := producer.PreparePublish("github", data)
 
-	_, _, err = kp.SendMessage(msg)
-	if err != nil {
+	if _, _, err = kp.SendMessage(msg); err != nil {
 		return fmt.Errorf("failed to send message to kafka: %w", err)
 	}
 
