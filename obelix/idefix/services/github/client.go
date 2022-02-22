@@ -37,7 +37,7 @@ func (c *Client) parseParams(prm *structpb.Struct) *params {
 	}
 }
 
-func (c Client) preprocessIssue(taskID string, prm *structpb.Struct) (*Issues, error) {
+func (c *Client) preprocessIssue(taskID string, prm *structpb.Struct) (*Issues, error) {
 	var issues Issues
 
 	p := c.parseParams(prm)
@@ -67,25 +67,25 @@ func (c Client) preprocessIssue(taskID string, prm *structpb.Struct) (*Issues, e
 }
 
 func (c *Client) PrOpen(taskID string, prm *structpb.Struct) error {
-	/*	issues, err := c.preprocessIssue(taskID, prm)
-		if err != nil {
-			return fmt.Errorf("failed to preprecess issue: %w", err)
+	issues, err := c.preprocessIssue(taskID, prm)
+	if err != nil {
+		return fmt.Errorf("failed to preprecess issue: %w", err)
+	}
+
+	old, err := issues.GetRedisState(c.Operator.RC, taskID, true)
+	if err != nil {
+		if errors.Is(err, ErrNoIssues) {
+			return nil
 		}
 
-		old, err := issues.GetRedisState(c.Operator.RC, taskID, true)
-		if err != nil {
-			if errors.Is(err, ErrNoIssues) {
-				return nil
-			}
+		return fmt.Errorf("failed to update redis state: %w", err)
+	}
 
-			return fmt.Errorf("failed to update redis state: %w", err)
-		}
+	err = issues.LookForChange(c.Operator, taskID, old, true)
+	if err != nil {
+		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
+	}
 
-		err = issues.LookForChange(c.Operator, taskID, old, true)
-		if err != nil {
-			return fmt.Errorf("an error has occurred while looking for changes: %w", err)
-		}
-	*/
 	return nil
 }
 
