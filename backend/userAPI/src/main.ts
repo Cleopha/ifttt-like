@@ -15,6 +15,13 @@ import AppDoc from '@doc';
 async function bootstrap(): Promise<void> {
 	const app = await NestFactory.create(AppModule);
 
+	// Enable cors
+	// Default cors should allow any origin with any methods and headers
+	// TODO: Improve security with selected host and headers
+	app.enableCors({
+		credentials: true,
+	});
+
 	// Use winston logger
 	app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 	const logger = new Logger('Request');
