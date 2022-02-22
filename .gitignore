@@ -1,12 +1,16 @@
+# IDE
 .idea/
 .vscode/
 
+# Environement
 .env
 
+# Dependencies
 node_modules/
 /.pnp
 .pnp.js
 
-*.js
-
+# Build
 dist/
+
+.DS_STORE

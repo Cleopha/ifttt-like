@@ -1,0 +1,60 @@
+name: Lint
+
+on:
+  push:
+    branches: ["master", "main", "develop"]
+  pull_request:
+    branches: ["master", "main", "develop"]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  linter:
+    name: Run linter on Idefix and Panoramix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        subfolder: [./obelix/idefix, ./obelix/panoramix]
+    steps:
+      - name: Install Golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.x
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run linter
+        uses: golangci/golangci-lint-action@v2
+        with:
+          working-directory: ${{ matrix.subfolder }}
+          version: latest
+          args:
+            --timeout=3m
+            -E whitespace
+            -E wsl
+            -E wastedassign
+            -E unconvert
+            -E tparallel
+            -E thelper
+            -E stylecheck
+            -E prealloc
+            -E predeclared
+            -E nolintlint
+            -E nlreturn
+            -E misspell
+            -E makezero
+            -E lll
+            -E importas
+            -E ifshort
+            -E gosec
+            -E gofmt
+            -E goconst
+            -E forcetypeassert
+            -E dogsled
+            -E dupl
+            -E errname
+            -E errorlint
+          skip-go-installation: true

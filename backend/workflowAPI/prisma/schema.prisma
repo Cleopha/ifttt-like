@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+enum TaskType {
+    ACTION
+    REACTION
+}
+
+enum TaskAction {
+  GITHUB_PR_OPEN             // Action
+  GITHUB_ISSUE_OPEN          // Action
+  TIMER_DATE                 // Action
+  TIMER_INTERVAL             // Action
+  GOOGLE_CREATE_NEW_EVENT    // Reaction
+  GOOGLE_CREATE_NEW_DOCUMENT // Reaction
+  GOOGLE_CREATE_NEW_SHEET    // Reaction
+}
+
+model Workflow {
+    id     String @id @default(uuid())
+    owner  String
+    name   String
+    tasks  Task[]
+}
+
+model Task {
+    id         String @id @default(uuid())
+    name       String?
+    type       TaskType
+    action     TaskAction
+    nextTask   String?
+    params     Json
+    workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+    workflowId String
+}

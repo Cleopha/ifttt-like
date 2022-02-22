@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+
+    "paths": {
+      "@logger": ["src/logger/index.js"],
+      "@doc": ["src/app.doc.js"],
+      "@auth": ["src/auth/index.js"],
+      "@config": ["src/config/index.js"],
+      "@redis": ["src/redis/index.js"],
+      "@session": ["src/session/index.js"],
+      "@user": ["src/user/index.js"],
+      "@user/*": ["src/user/*"],
+      "@db": ["src/prisma/index.js"],
+      "@error": ["src/error/index.js"],
+      "@task": ["src/task/index.js"],
+      "@workflow": ["src/workflow/index.js"],
+      "@util/*": ["src/util/*"],
+      "@protos": ["src/protos/index.js"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}
