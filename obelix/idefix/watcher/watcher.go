@@ -2,11 +2,13 @@ package watcher
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/PtitLuca/go-dispatcher/dispatcher"
 	"idefix/protos"
 	__ "idefix/protos/protos"
 	"idefix/services"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -14,10 +16,18 @@ import (
 	"time"
 )
 
-var TimeInterval string
+var (
+	TimeInterval    = ""
+	WorkflowApiPort = ""
+)
 
 func init() {
 	TimeInterval = os.Getenv("TIME_INTERVAL")
+	WorkflowApiPort = os.Getenv("WORKFLOW_API_PORT")
+
+	if TimeInterval == "" || WorkflowApiPort == "" {
+		log.Fatal(errors.New("watcher credentials are not set"))
+	}
 }
 
 type Watcher struct {
@@ -33,7 +43,7 @@ type Action struct {
 }
 
 func New(ctx context.Context) (*Watcher, error) {
-	client, err := protos.NewClient("9000")
+	client, err := protos.NewClient(WorkflowApiPort)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create grpc client: %w", err)
 	}
