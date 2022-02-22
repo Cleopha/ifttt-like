@@ -58,8 +58,7 @@ func (c *Client) preprocessIssue(taskID string, prm *structpb.Struct) (*Issues, 
 		return nil, fmt.Errorf("failed to read body: %w", err)
 	}
 
-	err = issues.Parse(data)
-	if err != nil {
+	if err = issues.Parse(data); err != nil {
 		return nil, fmt.Errorf("failed to parse body: %w", err)
 	}
 
