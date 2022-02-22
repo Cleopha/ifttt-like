@@ -76,7 +76,7 @@ func (i *Issues) LookForChange(op *operator.IdefixOperator, key, old string, isP
 	if old != newer.URL {
 		err := i.SendToKafka(op.KP, key)
 		if err != nil {
-			return fmt.Errorf("failed to send message to kafka: %w", err)
+			return fmt.Errorf("failed to send message to task: %w", err)
 		}
 
 		err = op.RC.UpdateRedisState(key, newer.URL)
@@ -97,7 +97,7 @@ func (i *Issues) SendToKafka(kp sarama.SyncProducer, taskID string) error {
 	msg := producer.PreparePublish("github", data)
 
 	if _, _, err = kp.SendMessage(msg); err != nil {
-		return fmt.Errorf("failed to send message to kafka: %w", err)
+		return fmt.Errorf("failed to send message to task: %w", err)
 	}
 
 	return nil

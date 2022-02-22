@@ -83,7 +83,7 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 
 			err = gc.SendToKafka(op.KP, key)
 			if err != nil {
-				return fmt.Errorf("failed to send message to kafka: %w", err)
+				return fmt.Errorf("failed to send message to task: %w", err)
 			}
 		} else if old == string(rune(ACTIVE)) {
 			return nil
@@ -108,7 +108,7 @@ func (gc *GCalendar) SendToKafka(kp sarama.SyncProducer, taskID string) error {
 
 	_, _, err = kp.SendMessage(msg)
 	if err != nil {
-		return fmt.Errorf("failed to send message to kafka: %w", err)
+		return fmt.Errorf("failed to send message to task: %w", err)
 	}
 
 	return nil
