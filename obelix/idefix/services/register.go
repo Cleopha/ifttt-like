@@ -28,7 +28,7 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 		},
 	}
 
-	if err := d.Register("github", githubClient); err != nil {
+	if err = d.Register("github", githubClient); err != nil {
 		return nil, fmt.Errorf("failed to register Github services: %w", err)
 	}
 
