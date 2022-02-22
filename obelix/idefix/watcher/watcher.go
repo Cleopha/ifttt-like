@@ -18,14 +18,14 @@ import (
 
 var (
 	TimeInterval    = ""
-	WorkflowApiPort = ""
+	WorkflowAPIPort = ""
 )
 
 func init() {
 	TimeInterval = os.Getenv("TIME_INTERVAL")
-	WorkflowApiPort = os.Getenv("WORKFLOW_API_PORT")
+	WorkflowAPIPort = os.Getenv("WORKFLOW_API_PORT")
 
-	if TimeInterval == "" || WorkflowApiPort == "" {
+	if TimeInterval == "" || WorkflowAPIPort == "" {
 		log.Fatal(errors.New("watcher credentials are not set"))
 	}
 }
@@ -43,7 +43,7 @@ type Action struct {
 }
 
 func New(ctx context.Context) (*Watcher, error) {
-	client, err := protos.NewClient(WorkflowApiPort)
+	client, err := protos.NewClient(WorkflowAPIPort)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create grpc client: %w", err)
 	}
