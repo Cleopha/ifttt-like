@@ -4,14 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/Cleopha/ifttt-like-common/common"
+	"github.com/Cleopha/ifttt-like-common/protos"
 	"github.com/PtitLuca/go-dispatcher/dispatcher"
-	"idefix/protos"
-	__ "idefix/protos/protos"
 	"idefix/services"
+	"idefix/workflow"
 	"log"
 	"os"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 )
@@ -33,7 +33,7 @@ func init() {
 type Watcher struct {
 	ctx      context.Context
 	wg       sync.WaitGroup
-	clt      *protos.Client
+	clt      *workflow.Client
 	d        *dispatcher.Dispatcher
 	Interval time.Duration
 }
@@ -43,7 +43,7 @@ type Action struct {
 }
 
 func New(ctx context.Context) (*Watcher, error) {
-	client, err := protos.NewClient(WorkflowAPIPort)
+	client, err := workflow.NewClient(WorkflowAPIPort)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create grpc client: %w", err)
 	}
@@ -98,24 +98,13 @@ func (w *Watcher) RunGCalendar() error {
 }
 */
 
-func (w *Watcher) parseAction(str string) (string, string) {
-	tmp := strings.Split(str, "_")
-	method := ""
-	namespace := strings.ToLower(tmp[0])
-
-	for _, elem := range tmp[1:] {
-		method += string(elem[0]) + strings.ToLower(elem[1:])
-	}
-
-	return namespace, method
-}
-
 func (w *Watcher) Watch() error {
 	ticker := time.NewTicker(w.Interval)
 	defer ticker.Stop()
 
 	for {
-		workflows, err := w.clt.ListWorkflows(w.ctx, &__.ListWorkflowsRequest{Owner: "f1352b9d-3a91-496e-9179-ae9e32429d9a"})
+		workflows, err := w.clt.ListWorkflows(w.ctx,
+			&protos.ListWorkflowsRequest{Owner: "f1352b9d-3a91-496e-9179-ae9e32429d9a"})
 		if err != nil {
 			return fmt.Errorf("failed to get list of workflows: %w", err)
 		}
@@ -123,20 +112,23 @@ func (w *Watcher) Watch() error {
 		for _, elem := range workflows.Workflows {
 			w.wg.Add(1)
 
-			go func(elem *__.Workflow) {
+			go func(elem *protos.Workflow) {
 				defer w.wg.Done()
 
 				for _, task := range elem.Tasks {
-					if task.Type != __.TaskType_ACTION {
+					if task.Type != protos.TaskType_ACTION {
 						continue
 					}
 
 					taskID := task.Id
-					action := task.Action.String()
-					namespace, method := w.parseAction(action)
-					fmt.Println(namespace, method)
 
-					_, err := w.d.Run(namespace, method, taskID, task.Params)
+					service, method, params, err := common.ParseAction(task)
+					if err != nil {
+						// TODO: log error
+						return
+					}
+
+					_, err = w.d.Run(service, method, taskID, params)
 					if err != nil {
 						fmt.Println(err)
 						// TODO log error

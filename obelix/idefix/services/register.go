@@ -15,7 +15,7 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 	kp, err := producer.New()
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to create kafka producer: %w", err)
+		return nil, fmt.Errorf("failed to create task producer: %w", err)
 	}
 
 	rc := redis.NewClient(ctx)
