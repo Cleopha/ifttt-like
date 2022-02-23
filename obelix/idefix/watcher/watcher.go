@@ -70,39 +70,6 @@ func New(ctx context.Context) (*Watcher, error) {
 	}, nil
 }
 
-/*
-func (w *Watcher) RunGCalendar() error {
-	var gc google.GCalendar
-
-	srv, err := calendar.NewService(context.Background(), option.WithHTTPClient(w.Requester))
-	if err != nil {
-		log.Fatalf("Unable to retrieve Calendar client: %v", err)
-	}
-
-	err = gc.Parse(srv)
-	if err != nil || !errors.Is(err, google.ErrNoUpcomingEvent) {
-		return fmt.Errorf("failed to parse gcalendar data: %w", err)
-	}
-
-	old, err := gc.GetRedisState(w.Operator.RC, "2")
-	if err != nil {
-		if errors.Is(err, github.ErrNoIssues) {
-			return nil
-		}
-
-		return fmt.Errorf("failed to update redis state: %w", err)
-	}
-
-	err = gc.LookForChange(w.Operator, "2", old)
-	if err != nil {
-		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
-	}
-
-	return nil
-}
-*/
-
-//nolint:nolintlint,staticcheck
 func (w *Watcher) Watch() error {
 	ticker := time.NewTicker(w.Interval)
 	defer ticker.Stop()
