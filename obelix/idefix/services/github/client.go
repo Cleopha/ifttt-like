@@ -41,7 +41,7 @@ func (c *Client) parseParams(prm *structpb.Struct) *params {
 	}
 }
 
-// preprocessIssue initalize action before get data
+// preprocessIssue initialize action before get data
 func (c *Client) preprocessIssue(prm *structpb.Struct) (*Issues, error) {
 	var issues Issues
 
