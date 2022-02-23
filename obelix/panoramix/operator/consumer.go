@@ -5,14 +5,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/Cleopha/ifttt-like-common/protos"
 	"github.com/PtitLuca/go-dispatcher/dispatcher"
 	"github.com/Shopify/sarama"
 	"os"
 	"panoramix/cli"
 	"panoramix/configuration"
-	"panoramix/protos"
-	__ "panoramix/protos/protos"
 	"panoramix/services"
+	"panoramix/task"
 	"sync"
 )
 
@@ -67,17 +67,17 @@ func New(ctx context.Context) (*Operator, error) {
 // It returns the next task's namespace, associated method name and parameters.
 // e.g.: GOOGLE_CREATE_NEW_EVENT becomes google CreateNewEvent with its associated parameters.
 func (o *Operator) getNextTask(initialActionID string) (string, string, []interface{}, error) {
-	client, err := protos.NewClient("9000")
+	client, err := task.NewClient("9000")
 	if err != nil {
 		return "", "", nil, fmt.Errorf("failed to create new gRPC client: %w", err)
 	}
 
-	t, err := client.GetTask(o.ctx, &__.GetTaskRequest{Id: initialActionID})
+	t, err := client.GetTask(o.ctx, &protos.GetTaskRequest{Id: initialActionID})
 	if err != nil {
 		return "", "", nil, fmt.Errorf("failed to get current task: %w", err)
 	}
 
-	_, err = client.GetTask(o.ctx, &__.GetTaskRequest{Id: t.NextTask})
+	_, err = client.GetTask(o.ctx, &protos.GetTaskRequest{Id: t.NextTask})
 	if err != nil {
 		return "", "", nil, fmt.Errorf("failed to get next task: %w", err)
 	}
@@ -90,7 +90,7 @@ func (o *Operator) getNextTask(initialActionID string) (string, string, []interf
 }
 
 // runWorkflow uses the action at the beginning of the workflow to execute the following reactions.
-func (o *Operator) runWorkflow(a protos.Action) error {
+func (o *Operator) runWorkflow(a task.Action) error {
 	n, m, p, err := o.getNextTask(a.TaskID)
 	if err != nil {
 		return fmt.Errorf("failed to get next task from the Workflow API: %w", err)
@@ -125,7 +125,7 @@ func (o *Operator) consumeService(topic string) error {
 
 		// Read all messages.
 		for msg := range messages {
-			a := protos.Action{}
+			a := task.Action{}
 			if err := json.Unmarshal(msg.Value, &a); err != nil {
 				return fmt.Errorf("failed to decode kafka message: %w", err)
 			}

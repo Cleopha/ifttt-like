@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "5417a8ca-0d42-48dd-ba6f-2b40f4c0a75a",
-		"name": "User API",
+		"_postman_id": "02365f00-ed75-4ec1-af93-8fa7ed48d1df",
+		"name": "01.User API",
 		"description": "Area API to manage users and their workflows",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -10,7 +10,60 @@
 			"name": "Flow auth-user",
 			"item": [
 				{
-					"name": "01.Auth Controller register",
+					"name": "01.User controller me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"me"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "01.User controller me",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/me",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"me"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "02.Auth Controller register",
 					"event": [
 						{
 							"listen": "test",
@@ -117,7 +170,7 @@
 					]
 				},
 				{
-					"name": "02.Auth Controller login",
+					"name": "03.Auth Controller login",
 					"event": [
 						{
 							"listen": "test",
@@ -202,7 +255,69 @@
 					]
 				},
 				{
-					"name": "03.User Controller list",
+					"name": "04.User controller me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Verify response attributes\", function () {",
+									"    var jsonData = pm.response.json();",
+									"",
+									"    pm.expect(jsonData.id).to.be.a('string');",
+									"    pm.expect(jsonData.email).to.be.a('string');",
+									"    pm.expect(jsonData.password).to.be.a('string');",
+									"    pm.expect(jsonData.role).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"me"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "User controller me",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/me",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"me"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "05.User Controller list",
 					"event": [
 						{
 							"listen": "test",
@@ -260,7 +375,7 @@
 					]
 				},
 				{
-					"name": "04.User Controller get by id",
+					"name": "06.User Controller get by id",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -355,7 +470,7 @@
 					]
 				},
 				{
-					"name": "05.User Controller update TODO",
+					"name": "07.User Controller update TODO",
 					"request": {
 						"method": "PATCH",
 						"header": [
@@ -439,7 +554,7 @@
 					]
 				},
 				{
-					"name": "06.Auth Controller logout",
+					"name": "08.Auth Controller logout",
 					"event": [
 						{
 							"listen": "test",
@@ -499,7 +614,7 @@
 					]
 				},
 				{
-					"name": "08.Auth Controller login",
+					"name": "09.Auth Controller login",
 					"event": [
 						{
 							"listen": "test",
@@ -584,7 +699,7 @@
 					]
 				},
 				{
-					"name": "09.User Controller delete",
+					"name": "10.User Controller delete",
 					"event": [
 						{
 							"listen": "test",
@@ -684,7 +799,9 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					""
+					"pm.test(\"Response time is less than 200ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(350);",
+					"});"
 				]
 			}
 		}
