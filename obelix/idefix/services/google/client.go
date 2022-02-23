@@ -14,20 +14,17 @@ import (
 	"net/http"
 )
 
-// Client represents a minimal GitHub client able to make OAuth2.0 authenticated requests.
+// Client represents a minimal Google client able to make OAuth2.0 authenticated requests.
 type Client struct {
 	Requester *http.Client
+	Scope     []string
 	Operator  *operator.IdefixOperator
 }
 
-// configure get credentials to connect to GitHub API
+// configure get credentials to connect to Google API
 func (c *Client) configure() error {
 	//TODO Credentials API
-	client, err := devauth.New(context.Background(), []string{
-		"https://www.googleapis.com/auth/bigquery",
-		"https://www.googleapis.com/auth/blogger",
-		"https://www.googleapis.com/auth/calendar",
-	})
+	client, err := devauth.New(context.Background(), c.Scope)
 
 	if err != nil {
 		return fmt.Errorf("failed to configure google client")
