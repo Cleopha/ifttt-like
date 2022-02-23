@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	ErrEmptyBrokerAddress = errors.New("task broker address cannot be empty")
+	ErrEmptyBrokerAddress = errors.New("kafka broker address cannot be empty")
 )
 
 type Operator struct {
@@ -127,7 +127,7 @@ func (o *Operator) consumeService(topic string) error {
 		for msg := range messages {
 			a := task.Action{}
 			if err := json.Unmarshal(msg.Value, &a); err != nil {
-				return fmt.Errorf("failed to decode task message: %w", err)
+				return fmt.Errorf("failed to decode kafka message: %w", err)
 			}
 
 			// Spawn one goroutine per workflow execution.
