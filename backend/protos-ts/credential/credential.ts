@@ -7,8 +7,6 @@ import { Metadata } from "@grpc/grpc-js";
 import { Empty } from "./google/protobuf/empty";
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
-export const protobufPackage = "area.credential";
-
 export enum Service {
   GITHUB = 0,
   GOOGLE = 1,

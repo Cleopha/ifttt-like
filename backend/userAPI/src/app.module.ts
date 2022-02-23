@@ -8,6 +8,7 @@ import { Session as SessionModule } from '@session';
 import { Logger as LoggerModule } from '@logger';
 import { TaskModule } from '@task';
 import { WorkflowModule } from '@workflow';
+import { CredentialModule } from '@credential';
 
 @Module({
 	imports: [
@@ -19,6 +20,7 @@ import { WorkflowModule } from '@workflow';
 		LoggerModule,
 		TaskModule,
 		WorkflowModule,
+		CredentialModule,
 	],
 })
 export class AppModule {
