@@ -9,6 +9,7 @@ import (
 	"idefix/producer"
 	"idefix/redis"
 	"idefix/services/github"
+	"idefix/services/google"
 )
 
 func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
@@ -29,8 +30,20 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 		},
 	}
 
+	googleClient := &google.Client{
+		Requester: nil,
+		Operator: &operator.IdefixOperator{
+			RC: rc,
+			KP: kp,
+		},
+	}
+
 	if err = d.Register("github", githubClient); err != nil {
 		return nil, fmt.Errorf("failed to register Github services: %w", err)
+	}
+
+	if err = d.Register("google", googleClient); err != nil {
+		return nil, fmt.Errorf("failed to register Google services: %w", err)
 	}
 
 	zap.S().Info("Services are now loaded into idefix")
