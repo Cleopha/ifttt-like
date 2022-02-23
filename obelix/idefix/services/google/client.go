@@ -28,17 +28,23 @@ func (c *Client) configure() error {
 		"https://www.googleapis.com/auth/blogger",
 		"https://www.googleapis.com/auth/calendar",
 	})
+
 	if err != nil {
 		return fmt.Errorf("failed to configure google client")
 	}
 
 	c.Requester = client.Clt
+
 	return nil
 }
 
 // CalendarNearestEvent check if event's calendar begin before 10 minutes
 func (c *Client) CalendarNearestEvent(taskID string, prm *structpb.Struct) error {
 	var gc GCalendar
+
+	if err := c.configure(); err != nil {
+		return fmt.Errorf("failed to configure github client: %w", err)
+	}
 
 	srv, err := calendar.NewService(context.Background(), option.WithHTTPClient(c.Requester))
 	if err != nil {
