@@ -48,8 +48,7 @@ func (c *Client) CalendarNearestEvent(taskID string, prm *structpb.Struct) error
 		log.Fatalf("Unable to retrieve Calendar client: %v", err)
 	}
 
-	err = gc.Parse(srv)
-	if err != nil || !errors.Is(err, ErrNoUpcomingEvent) {
+	if err = gc.Parse(srv); err != nil || !errors.Is(err, ErrNoUpcomingEvent) {
 		return fmt.Errorf("failed to parse gcalendar data: %w", err)
 	}
 
