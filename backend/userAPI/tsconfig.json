@@ -31,6 +31,7 @@
       "@error": ["src/error/index.js"],
       "@task": ["src/task/index.js"],
       "@workflow": ["src/workflow/index.js"],
+      "@credential": ["src/credential/index.js"],
       "@util/*": ["src/util/*"],
       "@protos": ["src/protos/index.js"]
     }

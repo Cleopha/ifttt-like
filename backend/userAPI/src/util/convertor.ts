@@ -1,8 +1,9 @@
 import { Observable } from 'rxjs';
-import { NullValue, Task, TaskAction, TaskType } from '@protos';
+import { NullValue, Task, TaskAction, TaskType, Service, Credential } from '@protos';
 
 import { AllowedObject, AllowedValue, IStruct, IValue, PrimitiveAllowedValue } from '@util/struct';
 import { TsTaskAction, TsTaskType } from '@task';
+import { TsService } from '@credential';
 
 
 export class Convertor {
@@ -12,6 +13,21 @@ export class Convertor {
 		} catch (e) {
 			throw new Error(e.message);
 		}
+	}
+
+	static grpcServiceToTsService(service: Service): TsService {
+		const key = Object.keys(Service)[Object.values(Service).indexOf(service)];
+		return (TsService as never)[key];
+	}
+
+	static tsServiceToGrpcService(service: TsService): Service {
+		const key = Object.keys(TsService)[Object.values(TsService).indexOf(service)];
+		return (Service as never)[key];
+	}
+
+	static formatGrpcCredentialToTypescript(credential: Credential): Credential {
+		credential.service = this.grpcServiceToTsService(credential.service) as unknown as Service;
+		return credential;
 	}
 
 	static grpcActionToTsAction(action: TaskAction): TsTaskAction {

@@ -120,6 +120,7 @@
     "@db": "dist/prisma/index.js",
     "@task": "dist/task/index.js",
     "@workflow": "dist/workflow/index.js",
+    "@credential": "dist/credential/index.js",
     "@protos": "dist/protos/index.js"
   }
 }
