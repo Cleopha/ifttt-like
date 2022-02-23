@@ -32,6 +32,11 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 
 	googleClient := &google.Client{
 		Requester: nil,
+		Scope: []string{
+			"https://www.googleapis.com/auth/bigquery",
+			"https://www.googleapis.com/auth/blogger",
+			"https://www.googleapis.com/auth/calendar",
+		},
 		Operator: &operator.IdefixOperator{
 			RC: rc,
 			KP: kp,
