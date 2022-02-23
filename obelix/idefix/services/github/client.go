@@ -10,6 +10,7 @@ import (
 	"net/http"
 )
 
+// Client represents a minimal GitHub client able to make OAuth2.0 authenticated requests.
 type Client struct {
 	Requester *http.Client
 	Operator  *operator.IdefixOperator
@@ -22,12 +23,15 @@ type params struct {
 	state  string
 }
 
+// configure get credentials to connect to GitHub API
 func (c *Client) configure() error {
+	//TODO Credentials API
 	c.Requester = devauth.GithubAuth()
 
 	return nil
 }
 
+// parseParams get params of gRPC
 func (c *Client) parseParams(prm *structpb.Struct) *params {
 	return &params{
 		user:   prm.Fields["user"].GetStringValue(),
@@ -37,7 +41,8 @@ func (c *Client) parseParams(prm *structpb.Struct) *params {
 	}
 }
 
-func (c *Client) preprocessIssue(taskID string, prm *structpb.Struct) (*Issues, error) {
+// preprocessIssue initalize action before get data
+func (c *Client) preprocessIssue(prm *structpb.Struct) (*Issues, error) {
 	var issues Issues
 
 	p := c.parseParams(prm)
@@ -65,8 +70,9 @@ func (c *Client) preprocessIssue(taskID string, prm *structpb.Struct) (*Issues, 
 	return &issues, nil
 }
 
+// PrOpen check if new pull-request is open
 func (c *Client) PrOpen(taskID string, prm *structpb.Struct) error {
-	issues, err := c.preprocessIssue(taskID, prm)
+	issues, err := c.preprocessIssue(prm)
 	if err != nil {
 		return fmt.Errorf("failed to preprecess issue: %w", err)
 	}
@@ -88,8 +94,9 @@ func (c *Client) PrOpen(taskID string, prm *structpb.Struct) error {
 	return nil
 }
 
+// IssueOpen check if new issue is open
 func (c *Client) IssueOpen(taskID string, prm *structpb.Struct) error {
-	issues, err := c.preprocessIssue(taskID, prm)
+	issues, err := c.preprocessIssue(prm)
 	if err != nil {
 		return fmt.Errorf("failed to preprecess issue: %w", err)
 	}
