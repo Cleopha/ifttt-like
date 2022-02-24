@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/Cleopha/ifttt-like-common/common"
 	"github.com/Cleopha/ifttt-like-common/protos"
 	"github.com/PtitLuca/go-dispatcher/dispatcher"
 	"github.com/Shopify/sarama"
+	"google.golang.org/protobuf/types/known/structpb"
 	"os"
 	"panoramix/cli"
 	"panoramix/configuration"
@@ -66,7 +68,7 @@ func New(ctx context.Context) (*Operator, error) {
 // getNextTask uses the workflow API to get the task following the action.
 // It returns the next task's namespace, associated method name and parameters.
 // e.g.: GOOGLE_CREATE_NEW_EVENT becomes google CreateNewEvent with its associated parameters.
-func (o *Operator) getNextTask(initialActionID string) (string, string, []interface{}, error) {
+func (o *Operator) getNextTask(initialActionID string) (string, string, *structpb.Struct, error) {
 	client, err := task.NewClient("9000")
 	if err != nil {
 		return "", "", nil, fmt.Errorf("failed to create new gRPC client: %w", err)
@@ -77,26 +79,28 @@ func (o *Operator) getNextTask(initialActionID string) (string, string, []interf
 		return "", "", nil, fmt.Errorf("failed to get current task: %w", err)
 	}
 
-	_, err = client.GetTask(o.ctx, &protos.GetTaskRequest{Id: t.NextTask})
+	t, err = client.GetTask(o.ctx, &protos.GetTaskRequest{Id: t.NextTask})
 	if err != nil {
 		return "", "", nil, fmt.Errorf("failed to get next task: %w", err)
 	}
 
-	// TODO: Use t.Action.String() to parse the namespace and method, retrieve the arguments and return them !
+	service, method, params, err := common.ParseAction(t)
+	if err != nil {
+		return "", "", nil, fmt.Errorf("failed to parse action: %w", err)
+	}
 
-	return "google", "CreateNewDocument", []interface{}{
-		"This is a new document",
-	}, nil
+	return service, method, params, nil
 }
 
 // runWorkflow uses the action at the beginning of the workflow to execute the following reactions.
+// TODO: Loop in the reactions.
 func (o *Operator) runWorkflow(a task.Action) error {
 	n, m, p, err := o.getNextTask(a.TaskID)
 	if err != nil {
 		return fmt.Errorf("failed to get next task from the Workflow API: %w", err)
 	}
 
-	if _, err = o.d.Run(n, m, p...); err != nil {
+	if _, err = o.d.Run(n, m, p); err != nil {
 		return fmt.Errorf("failed to run reaction: %w", err)
 	}
 
