@@ -11,9 +11,9 @@ export enum Service {
   GITHUB = 0,
   GOOGLE = 1,
   SCALEWAY = 2,
-  COIN_MARKET = 3,
+  COINMARKET = 3,
   DOCKER = 4,
-  ONE_DRIVE = 5,
+  ONEDRIVE = 5,
   NOTION = 6,
   UNRECOGNIZED = -1,
 }

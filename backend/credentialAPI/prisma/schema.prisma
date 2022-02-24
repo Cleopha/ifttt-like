@@ -14,9 +14,9 @@ enum Service {
     GITHUB
     GOOGLE
     SCALEWAY
-    COIN_MARKET
+    COINMARKET
     DOCKER
-    ONE_DRIVE
+    ONEDRIVE
     NOTION
 }
 
