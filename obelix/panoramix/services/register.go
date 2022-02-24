@@ -11,10 +11,7 @@ import (
 func RegisterServices(ctx context.Context, conf *configuration.Configuration) (*dispatcher.Dispatcher, error) {
 	d := dispatcher.New()
 
-	googleClient, err := google.New(ctx, conf.GoogleScopes)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create google client: %w", err)
-	}
+	googleClient := google.New(ctx, conf.GoogleScopes)
 
 	if err := d.Register("google", googleClient); err != nil {
 		return nil, fmt.Errorf("failed to register Google service: %w", err)
