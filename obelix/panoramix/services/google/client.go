@@ -59,6 +59,7 @@ func (c *Client) configure() error {
 	}
 
 	c.clt = conf.Client(c.ctx, token)
+
 	return nil
 }
 
