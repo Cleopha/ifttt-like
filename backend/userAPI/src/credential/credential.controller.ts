@@ -61,7 +61,7 @@ export class CredentialController {
 	@Put()
 	async updateCredential(@Body() dto: UpdateCredentialDto, @Param('userId') owner: string, @Query('service') service: TsService): Promise<Credential> {
 		try {
-			return await this.credentialClient.insertCredential({
+			return await this.credentialClient.updateCredential({
 					...dto,
 					service: Convertor.tsServiceToGrpcService(service),
 					owner,
