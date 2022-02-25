@@ -60,6 +60,7 @@ func main() {
 		zap.S().Fatal(err)
 	}
 
+	//nolint:nolintlint,staticcheck
 	if err := w.Watch(); err != nil {
 		zap.S().Fatal(err)
 	}
