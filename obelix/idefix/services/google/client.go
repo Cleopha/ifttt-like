@@ -10,7 +10,6 @@ import (
 	"idefix/devauth"
 	"idefix/operator"
 	"idefix/services/github"
-	"log"
 	"net/http"
 )
 
@@ -45,7 +44,7 @@ func (c *Client) CalendarNearestEvent(taskID string, prm *structpb.Struct) error
 
 	srv, err := calendar.NewService(context.Background(), option.WithHTTPClient(c.Requester))
 	if err != nil {
-		log.Fatalf("Unable to retrieve Calendar client: %v", err)
+		return fmt.Errorf("unable to retrieve Calendar client: %w", err)
 	}
 
 	if err = gc.Parse(srv); err != nil || !errors.Is(err, ErrNoUpcomingEvent) {
