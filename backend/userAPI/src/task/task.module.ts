@@ -7,6 +7,7 @@ import { UserService } from '@user/user.service';
 import { PrismaService } from '@db';
 import { TaskController } from './task.controller';
 import { WorkflowModule } from '@workflow';
+import { TaskOwnerController } from './taskOwner.controller';
 
 @Module({
 	imports: [ WorkflowModule ],
@@ -30,7 +31,7 @@ import { WorkflowModule } from '@workflow';
 			},
 			inject: [ ConfigService ]
 		} ],
-	controllers: [ TaskController ]
+	controllers: [ TaskController, TaskOwnerController ]
 })
 export class TaskModule {
 }
