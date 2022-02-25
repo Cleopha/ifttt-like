@@ -102,6 +102,7 @@ func (w *Watcher) RunGCalendar() error {
 }
 */
 
+//nolint:nolintlint,staticcheck
 func (w *Watcher) Watch() error {
 	ticker := time.NewTicker(w.Interval)
 	defer ticker.Stop()
