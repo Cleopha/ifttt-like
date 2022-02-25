@@ -7,6 +7,7 @@ import (
 	flexibleip "github.com/scaleway/scaleway-sdk-go/api/flexibleip/v1alpha1"
 	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
 	"github.com/scaleway/scaleway-sdk-go/api/rdb/v1"
+	"github.com/scaleway/scaleway-sdk-go/api/registry/v1"
 	"github.com/scaleway/scaleway-sdk-go/scw"
 	"go.uber.org/zap"
 )
@@ -128,9 +129,20 @@ func (c *Client) CreateNewKubernetesCluster() error {
 	return nil
 }
 
-func (c *Client) CreateNewContainerRegistry() error {
+func (c *Client) CreateNewContainerRegistry(region scw.Region, name string, projectID string) error {
 	if err := c.configure(); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
+	}
+
+	api := registry.NewAPI(c.clt)
+	_, err := api.CreateNamespace(&registry.CreateNamespaceRequest{
+		Region:    region,
+		Name:      name,
+		ProjectID: &projectID,
+	})
+
+	if err != nil {
+		return fmt.Errorf("failed to create container registry: %w", err)
 	}
 
 	return nil
