@@ -6,13 +6,15 @@ import (
 	"fmt"
 	flexibleip "github.com/scaleway/scaleway-sdk-go/api/flexibleip/v1alpha1"
 	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
+	"github.com/scaleway/scaleway-sdk-go/api/rdb/v1"
 	"github.com/scaleway/scaleway-sdk-go/scw"
 	"go.uber.org/zap"
 )
 
 var (
-	ErrDefaultProjectIDDoesNotExist = errors.New("default project ID not found")
-	ErrInvalidServerCommercialType  = errors.New("can only DEV1-S and DEV1-M servers for money reasons")
+	ErrDefaultProjectIDDoesNotExist  = errors.New("default project ID not found")
+	ErrInvalidServerCommercialType   = errors.New("can only DEV1-S and DEV1-M servers for money reasons")
+	ErrInvalidDatabaseInstanceEngine = errors.New("only support PostgreSQL-14 and MySQL-8")
 )
 
 type Client struct {
@@ -92,9 +94,28 @@ func (c *Client) CreateNewInstance(projectID string, zone scw.Zone, name string,
 	return nil
 }
 
-func (c *Client) CreateNewDatabase() error {
+func (c *Client) CreateNewDatabase(projectID, name, username, password, engine string) error {
 	if err := c.configure(); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
+	}
+
+	if engine != "PostgreSQL-14" && engine != "MySQL-8" {
+		return ErrInvalidDatabaseInstanceEngine
+	}
+
+	api := rdb.NewAPI(c.clt)
+	_, err := api.CreateInstance(&rdb.CreateInstanceRequest{
+		Region:    scw.RegionFrPar,
+		ProjectID: &projectID,
+		Name:      name,
+		Engine:    engine,
+		UserName:  username,
+		Password:  password,
+		NodeType:  "DB-DEV-S",
+	})
+
+	if err != nil {
+		return fmt.Errorf("failed to create database instance: %w", err)
 	}
 
 	return nil
