@@ -34,8 +34,8 @@ func (c *Client) configure() error {
 	return nil
 }
 
-// CalendarNearestEvent check if event's calendar begin before 10 minutes
-func (c *Client) CalendarNearestEvent(taskID string, prm *structpb.Struct) error {
+// NewIncomingEvent check if event's calendar begin before 10 minutes
+func (c *Client) NewIncomingEvent(taskID string, prm *structpb.Struct) error {
 	var gc GCalendar
 
 	if err := c.configure(); err != nil {

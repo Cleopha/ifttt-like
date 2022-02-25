@@ -71,7 +71,7 @@ func (c *Client) preprocessIssue(prm *structpb.Struct) (*Issues, error) {
 }
 
 // PrOpen check if new pull-request is open
-func (c *Client) PrOpen(taskID string, prm *structpb.Struct) error {
+func (c *Client) NewPrDetected(taskID string, prm *structpb.Struct) error {
 	issues, err := c.preprocessIssue(prm)
 	if err != nil {
 		return fmt.Errorf("failed to preprecess issue: %w", err)
@@ -95,7 +95,7 @@ func (c *Client) PrOpen(taskID string, prm *structpb.Struct) error {
 }
 
 // IssueOpen check if new issue is open
-func (c *Client) IssueOpen(taskID string, prm *structpb.Struct) error {
+func (c *Client) NewIssueDetected(taskID string, prm *structpb.Struct) error {
 	issues, err := c.preprocessIssue(prm)
 	if err != nil {
 		return fmt.Errorf("failed to preprecess issue: %w", err)
@@ -112,6 +112,22 @@ func (c *Client) IssueOpen(taskID string, prm *structpb.Struct) error {
 
 	if err = issues.LookForChange(c.Operator, taskID, old, false); err != nil {
 		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
+	}
+
+	return nil
+}
+
+func (c *Client) NewAssignationDetected(taskID string, prm *structpb.Struct) error {
+	if err := c.NewIssueDetected(taskID, prm); err != nil {
+		return fmt.Errorf("failed to call new issue detected: %w", err)
+	}
+
+	return nil
+}
+
+func (c *Client) NewIssueClosedDetected(taskID string, prm *structpb.Struct) error {
+	if err := c.NewIssueDetected(taskID, prm); err != nil {
+		return fmt.Errorf("failed to call new issue detected: %w", err)
 	}
 
 	return nil
