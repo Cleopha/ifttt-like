@@ -5,12 +5,14 @@ import (
 	"errors"
 	"fmt"
 	flexibleip "github.com/scaleway/scaleway-sdk-go/api/flexibleip/v1alpha1"
+	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
 	"github.com/scaleway/scaleway-sdk-go/scw"
 	"go.uber.org/zap"
 )
 
 var (
 	ErrDefaultProjectIDDoesNotExist = errors.New("default project ID not found")
+	ErrInvalidServerCommercialType  = errors.New("can only DEV1-S and DEV1-M servers for money reasons")
 )
 
 type Client struct {
@@ -62,10 +64,30 @@ func (c *Client) CreateNewFlexibleIp(projectID string) error {
 	return nil
 }
 
-func (c *Client) CreateNewInstance() error {
+// CreateNewInstance creates a new instance (either a DEV1-S or DEV1-M) with the given name in the specified zone.
+func (c *Client) CreateNewInstance(projectID string, zone scw.Zone, name string, commercialType string) error {
 	if err := c.configure(); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
+
+	if commercialType != "DEV1-S" && commercialType != "DEV1-M" {
+		return ErrInvalidServerCommercialType
+	}
+
+	api := instance.NewAPI(c.clt)
+	_, err := api.CreateServer(&instance.CreateServerRequest{
+		Zone:           zone,
+		Name:           name,
+		CommercialType: commercialType,
+		Project:        &projectID,
+		Image:          "ubuntu_focal",
+	})
+
+	if err != nil {
+		return fmt.Errorf("failed to create server: %w", err)
+	}
+
+	zap.S().Info("New server successfully created")
 
 	return nil
 }
