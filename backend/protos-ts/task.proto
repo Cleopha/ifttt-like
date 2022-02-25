@@ -20,13 +20,25 @@ enum TaskType {
 // Available action in the project
 // It will be completed with time
 enum TaskAction {
-  GITHUB_PR_OPEN = 0;            // Action
-  GITHUB_ISSUE_OPEN = 1;         // Action
-  TIMER_DATE = 2;                // Action
-  TIMER_INTERVAL = 3;            // Action
-  GOOGLE_CREATE_NEW_EVENT = 4;   // Reaction
-  GOOGLE_CREATE_NEW_DOCUMENT = 5; // Reaction
-  GOOGLE_CREATE_NEW_SHEET = 6;    // Reaction
+  GITHUB_NEW_PR_DETECTED = 0;                  // Action
+  GITHUB_NEW_ISSUE_DETECTED = 1;               // Action
+  GITHUB_NEW_ISSUE_ASSIGNATION_DETECTED = 2;   // Action
+  GITHUB_NEW_ISSUE_CLOSED_DETECTED = 3;        // Action
+  GOOGLE_NEW_INCOMING_EVENT = 4;               // Action
+  SCALEWAY_VOLUME_EXCEEDS_LIMIT = 5;           // Action
+  COINMARKETCAP_ASSET_VARIATION_DETECTED = 6;  // Action
+  NIST_NEW_CVE_DETECTED = 7;                   // Action
+  GOOGLE_CREATE_NEW_EVENT = 8;                 // Reaction
+  GOOGLE_CREATE_NEW_DOCUMENT = 9;              // Reaction
+  GOOGLE_CREATE_NEW_SHEET = 10;                // Reaction
+  SCALEWAY_CREATE_NEW_FLEXIBLE_IP = 11;        // Reaction
+  SCALEWAY_CREATE_NEW_INSTANCE = 12;           // Reaction
+  SCALEWAY_CREATE_NEW_DATABASE = 13;           // Reaction
+  SCALEWAY_CREATE_NEW_KUBERNETES_CLUSTER = 14; // Reaction
+  SCALEWAY_CREATE_NEW_CONTAINER_REGISTRY = 15; // Reaction
+  ONEDRIVE_CREATE_NEW_POWER_POINT = 16;        // Reaction
+  ONEDRIVE_CREATE_NEW_FORM = 17;               // Reaction
+  NOTION_CREATE_NEW_PAGE = 18;                 // Reaction
 }
 
 // Task correspond to an action or reaction
