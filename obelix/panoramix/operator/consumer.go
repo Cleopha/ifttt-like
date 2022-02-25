@@ -9,9 +9,8 @@ import (
 	"github.com/Cleopha/ifttt-like-common/protos"
 	"github.com/PtitLuca/go-dispatcher/dispatcher"
 	"github.com/Shopify/sarama"
-	"google.golang.org/protobuf/types/known/structpb"
+	"go.uber.org/zap"
 	"os"
-	"panoramix/cli"
 	"panoramix/configuration"
 	"panoramix/services"
 	"panoramix/task"
@@ -19,7 +18,9 @@ import (
 )
 
 var (
-	ErrEmptyBrokerAddress = errors.New("kafka broker address cannot be empty")
+	ErrEmptyBrokerAddress           = errors.New("kafka broker address cannot be empty")
+	ErrEmptyOutReactionRun          = errors.New("reaction run should have return a status")
+	ErrFailedToExtractReactionError = errors.New("failed to extract reaction error")
 )
 
 type Operator struct {
@@ -30,7 +31,7 @@ type Operator struct {
 }
 
 // New creates a new Operator containing a sarama operator.
-func New(ctx context.Context) (*Operator, error) {
+func New(ctx context.Context, conf *configuration.Configuration) (*Operator, error) {
 	brokerAddress := os.Getenv("BROKER_ADDRESS")
 	if brokerAddress == "" {
 		return nil, ErrEmptyBrokerAddress
@@ -44,19 +45,15 @@ func New(ctx context.Context) (*Operator, error) {
 		return nil, fmt.Errorf("failed to create sarama operator: %w", err)
 	}
 
-	// Creates the services configuration
-	cliFlags := cli.Parse()
-	conf, err := configuration.ExtractConfiguration(cliFlags.ConfigurationPath)
-
-	if err != nil {
-		return nil, fmt.Errorf("failed to extract configuration: %w", err)
-	}
+	zap.S().Info("Panoramix is connected to kafka")
 
 	// Registers the services
 	d, err := services.RegisterServices(ctx, conf)
 	if err != nil {
 		return nil, fmt.Errorf("failed to register services: %w", err)
 	}
+
+	zap.S().Info("Panoramix services are now loaded")
 
 	return &Operator{
 		c:   consumer,
@@ -65,44 +62,67 @@ func New(ctx context.Context) (*Operator, error) {
 	}, nil
 }
 
-// getNextTask uses the workflow API to get the task following the action.
-// It returns the next task's namespace, associated method name and parameters.
-// e.g.: GOOGLE_CREATE_NEW_EVENT becomes google CreateNewEvent with its associated parameters.
-func (o *Operator) getNextTask(initialActionID string) (string, string, *structpb.Struct, error) {
-	client, err := task.NewClient("9000")
-	if err != nil {
-		return "", "", nil, fmt.Errorf("failed to create new gRPC client: %w", err)
-	}
-
-	t, err := client.GetTask(o.ctx, &protos.GetTaskRequest{Id: initialActionID})
-	if err != nil {
-		return "", "", nil, fmt.Errorf("failed to get current task: %w", err)
-	}
-
-	t, err = client.GetTask(o.ctx, &protos.GetTaskRequest{Id: t.NextTask})
-	if err != nil {
-		return "", "", nil, fmt.Errorf("failed to get next task: %w", err)
-	}
-
+func (o *Operator) runReaction(t *protos.Task) error {
 	service, method, params, err := common.ParseAction(t)
 	if err != nil {
-		return "", "", nil, fmt.Errorf("failed to parse action: %w", err)
+		return fmt.Errorf("failed to parse action: %w", err)
 	}
 
-	return service, method, params, nil
+	zap.S().Infof("Executing method %s from service %s", method, service)
+
+	out, err := o.d.Run(service, method, params)
+
+	if err != nil {
+		return fmt.Errorf("failed to run reaction: %w", err)
+	}
+
+	if len(out) == 0 {
+		return ErrEmptyOutReactionRun
+	}
+
+	// If the internal call has failed
+	if !out[0].IsNil() {
+		err, ok := out[0].Interface().(error)
+
+		if !ok {
+			return ErrFailedToExtractReactionError
+		}
+
+		if err != nil {
+			return fmt.Errorf("failed to run method %s from server %s: %w", method, service, err)
+		}
+	}
+
+	return nil
 }
 
 // runWorkflow uses the action at the beginning of the workflow to execute the following reactions.
-// TODO: Loop in the reactions.
-func (o *Operator) runWorkflow(a task.Action) error {
-	n, m, p, err := o.getNextTask(a.TaskID)
+func (o *Operator) runWorkflow(initialAction task.Action) error {
+	// Creates the task client, used to retrieve a workflow's tasks one after the other.
+	client, err := task.NewClient("9000")
 	if err != nil {
-		return fmt.Errorf("failed to get next task from the Workflow API: %w", err)
+		return fmt.Errorf("failed to create new gRPC client: %w", err)
 	}
 
-	if _, err = o.d.Run(n, m, p); err != nil {
-		return fmt.Errorf("failed to run reaction: %w", err)
+	t, err := client.GetTask(o.ctx, &protos.GetTaskRequest{Id: initialAction.TaskID})
+	if err != nil {
+		return fmt.Errorf("failed to get first reaction: %w", err)
 	}
+
+	zap.S().Info("Starting workflow execution", zap.String("task_id", t.Id))
+
+	for t.NextTask != "" {
+		t, err = client.GetTask(o.ctx, &protos.GetTaskRequest{Id: t.NextTask})
+		if err != nil {
+			return fmt.Errorf("failed to get reaction: %w", err)
+		}
+
+		if err = o.runReaction(t); err != nil {
+			return fmt.Errorf("failed to run reaction: %w", err)
+		}
+	}
+
+	zap.S().Info("Workflow execution is done", zap.String("task_id", t.Id))
 
 	return nil
 }
@@ -141,7 +161,7 @@ func (o *Operator) consumeService(topic string) error {
 				defer wg.Done()
 
 				if err := o.runWorkflow(a); err != nil {
-					fmt.Fprintln(os.Stderr, err)
+					zap.S().Errorf("Worflow failed to run: %s", err.Error())
 				}
 			}()
 		}
@@ -162,8 +182,10 @@ func (o *Operator) ConsumeTopics(topics []string) error {
 		go func(t string) {
 			defer o.wg.Done()
 
+			zap.S().Infof("Consuming topic %s", t)
+
 			if err := o.consumeService(t); err != nil {
-				fmt.Fprint(os.Stderr, err)
+				zap.S().Errorf(err.Error())
 			}
 		}(topic)
 	}
