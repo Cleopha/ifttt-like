@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/PtitLuca/go-dispatcher/dispatcher"
+	"go.uber.org/zap"
 	"idefix/operator"
 	"idefix/producer"
 	"idefix/redis"
@@ -31,6 +32,8 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 	if err = d.Register("github", githubClient); err != nil {
 		return nil, fmt.Errorf("failed to register Github services: %w", err)
 	}
+
+	zap.S().Info("Services are now loaded into idefix")
 
 	return d, nil
 }
