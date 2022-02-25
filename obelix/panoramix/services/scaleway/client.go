@@ -6,6 +6,7 @@ import (
 	"fmt"
 	flexibleip "github.com/scaleway/scaleway-sdk-go/api/flexibleip/v1alpha1"
 	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
+	"github.com/scaleway/scaleway-sdk-go/api/k8s/v1"
 	"github.com/scaleway/scaleway-sdk-go/api/rdb/v1"
 	"github.com/scaleway/scaleway-sdk-go/api/registry/v1"
 	"github.com/scaleway/scaleway-sdk-go/scw"
@@ -121,9 +122,31 @@ func (c *Client) CreateNewDatabase(projectID, name, username, password, engine s
 	return nil
 }
 
-func (c *Client) CreateNewKubernetesCluster() error {
+func (c *Client) CreateNewKubernetesCluster(projectID, name string, region scw.Region,
+	cni k8s.CNI, ingress k8s.Ingress) error {
 	if err := c.configure(); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
+	}
+
+	api := k8s.NewAPI(c.clt)
+
+	versions, err := api.ListVersions(&k8s.ListVersionsRequest{
+		Region: region,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to get available k8s versions: %w", err)
+	}
+
+	_, err = api.CreateCluster(&k8s.CreateClusterRequest{
+		Region:    region,
+		ProjectID: &projectID,
+		Name:      name,
+		Version:   versions.Versions[0].Name,
+		Cni:       cni,
+		Ingress:   ingress,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create k8s cluster: %w", err)
 	}
 
 	return nil
