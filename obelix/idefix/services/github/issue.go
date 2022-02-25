@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/Cleopha/ifttt-like-common/kafka"
 	"github.com/Shopify/sarama"
 	redisv8 "github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
@@ -90,7 +91,7 @@ func (i *Issues) LookForChange(op *operator.IdefixOperator, key, old string, isP
 }
 
 func (i *Issues) SendToKafka(kp sarama.SyncProducer, taskID string) error {
-	data, err := json.Marshal(operator.Action{TaskID: taskID})
+	data, err := json.Marshal(kafka.Action{TaskID: taskID})
 	if err != nil {
 		return fmt.Errorf("failed to marshal: %w", err)
 	}

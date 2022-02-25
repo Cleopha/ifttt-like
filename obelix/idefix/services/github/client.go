@@ -70,7 +70,7 @@ func (c *Client) preprocessIssue(prm *structpb.Struct) (*Issues, error) {
 	return &issues, nil
 }
 
-// PrOpen check if new pull-request is open
+// NewPrDetected check if new pull-request is open
 func (c *Client) NewPrDetected(taskID string, prm *structpb.Struct) error {
 	issues, err := c.preprocessIssue(prm)
 	if err != nil {
@@ -94,7 +94,7 @@ func (c *Client) NewPrDetected(taskID string, prm *structpb.Struct) error {
 	return nil
 }
 
-// IssueOpen check if new issue is open
+// NewIssueDetected check if new issue is open
 func (c *Client) NewIssueDetected(taskID string, prm *structpb.Struct) error {
 	issues, err := c.preprocessIssue(prm)
 	if err != nil {
