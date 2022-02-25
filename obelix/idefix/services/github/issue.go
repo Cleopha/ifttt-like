@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/Shopify/sarama"
 	redisv8 "github.com/go-redis/redis/v8"
+	"go.uber.org/zap"
 	"idefix/operator"
 	"idefix/producer"
 	"idefix/redis"
@@ -99,6 +100,8 @@ func (i *Issues) SendToKafka(kp sarama.SyncProducer, taskID string) error {
 	if _, _, err = kp.SendMessage(msg); err != nil {
 		return fmt.Errorf("failed to send message to task: %w", err)
 	}
+
+	zap.S().Infof("Message has been sent to Kafka: %s", taskID)
 
 	return nil
 }
