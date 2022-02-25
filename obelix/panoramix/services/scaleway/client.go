@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	ErrDefaultProjectIDDoesNotExist  = errors.New("default project ID not found")
 	ErrInvalidServerCommercialType   = errors.New("can only DEV1-S and DEV1-M servers for money reasons")
 	ErrInvalidDatabaseInstanceEngine = errors.New("only support PostgreSQL-14 and MySQL-8")
 )
