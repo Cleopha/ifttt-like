@@ -60,5 +60,11 @@ jobs:
           collection: backend/userAPI/test/postman/Task-gateway-collection.json
           environment: backend/userAPI/test/postman/Area-environment.json
 
+      - name: Run Postman suite for credential API gateway
+        uses: matt-ball/newman-action@master
+        with:
+          collection: backend/userAPI/test/postman/Credential-gateway-collection.json
+          environment: backend/userAPI/test/postman/Area-environment.json
+
       - name: Down docker
         run: docker compose stop

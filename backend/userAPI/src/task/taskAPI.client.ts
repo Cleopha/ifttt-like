@@ -14,39 +14,39 @@ import { Convertor } from '@util/convertor';
 
 @Injectable()
 export class TaskAPIClient implements OnModuleInit {
-	private workflowService: TaskServiceClient;
+	private taskService: TaskServiceClient;
 
 	constructor(@Inject('TASK_PACKAGE') private client: ClientGrpc) {
 	}
 
 	onModuleInit(): void {
-		this.workflowService = this.client.getService<TaskServiceClient>('TaskService');
+		this.taskService = this.client.getService<TaskServiceClient>('TaskService');
 	}
 
 	async listTasks(req: ListTasksRequest): Promise<Task[]> {
-		const res = this.workflowService.listTasks(req);
+		const res = this.taskService.listTasks(req);
 		const data = await Convertor.extractFromObservable(res);
 
 		return data.tasks ?? [];
 	}
 
 	async getTask(req: GetTaskRequest): Promise<Task | undefined> {
-		const res = this.workflowService.getTask(req);
+		const res = this.taskService.getTask(req);
 		return Convertor.extractFromObservable(res);
 	}
 
 	async createTask(req: CreateTaskRequest): Promise<Task> {
-		const res = this.workflowService.createTask(req);
+		const res = this.taskService.createTask(req);
 		return Convertor.extractFromObservable(res);
 	}
 
 	async updateTask(req: UpdateTaskRequest): Promise<Task> {
-		const res = this.workflowService.updateTask(req);
+		const res = this.taskService.updateTask(req);
 		return Convertor.extractFromObservable(res);
 	}
 
 	async deleteTask(req: DeleteTaskRequest): Promise<Empty> {
-		const res = this.workflowService.deleteTask(req);
+		const res = this.taskService.deleteTask(req);
 		return Convertor.extractFromObservable(res);
 	}
 }

@@ -7,15 +7,13 @@ import { Metadata } from "@grpc/grpc-js";
 import { Empty } from "./google/protobuf/empty";
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
-export const protobufPackage = "area.credential";
-
 export enum Service {
   GITHUB = 0,
   GOOGLE = 1,
   SCALEWAY = 2,
-  COIN_MARKET = 3,
+  COINMARKET = 3,
   DOCKER = 4,
-  ONE_DRIVE = 5,
+  ONEDRIVE = 5,
   NOTION = 6,
   UNRECOGNIZED = -1,
 }
