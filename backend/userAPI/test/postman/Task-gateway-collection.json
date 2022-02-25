@@ -416,7 +416,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"test\",\n    \"type\": \"ACTION\",\n    \"action\": \"GITHUB_ISSUE_OPEN\",\n    \"nextTask\": \"\",\n    \"params\": {\n        \"foo\": \"bar\",\n        \"baz\": 4\n    }\n}",
+							"raw": "{\n    \"name\": \"test\",\n    \"type\": \"ACTION\",\n    \"action\": \"GITHUB_NEW_PR_DETECTED\",\n    \"nextTask\": \"\",\n    \"params\": {\n        \"foo\": \"bar\",\n        \"baz\": 4\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"

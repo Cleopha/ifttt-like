@@ -16,13 +16,25 @@ enum TaskType {
 }
 
 enum TaskAction {
-  GITHUB_PR_OPEN             // Action
-  GITHUB_ISSUE_OPEN          // Action
-  TIMER_DATE                 // Action
-  TIMER_INTERVAL             // Action
-  GOOGLE_CREATE_NEW_EVENT    // Reaction
-  GOOGLE_CREATE_NEW_DOCUMENT // Reaction
-  GOOGLE_CREATE_NEW_SHEET    // Reaction
+  GITHUB_NEW_PR_DETECTED                   // Action
+  GITHUB_NEW_ISSUE_DETECTED                // Action
+  GITHUB_NEW_ISSUE_ASSIGNATION_DETECTED    // Action
+  GITHUB_NEW_ISSUE_CLOSED_DETECTED         // Action
+  GOOGLE_NEW_INCOMING_EVENT                // Action
+  SCALEWAY_VOLUME_EXCEEDS_LIMIT            // Action
+  COINMARKETCAP_ASSET_VARIATION_DETECTED   // Action
+  NIST_NEW_CVE_DETECTED                    // Action
+  GOOGLE_CREATE_NEW_EVENT                  // Reaction
+  GOOGLE_CREATE_NEW_DOCUMENT               // Reaction
+  GOOGLE_CREATE_NEW_SHEET                  // Reaction
+  SCALEWAY_CREATE_NEW_FLEXIBLE_IP          // Reaction
+  SCALEWAY_CREATE_NEW_INSTANCE             // Reaction
+  SCALEWAY_CREATE_NEW_DATABASE             // Reaction
+  SCALEWAY_CREATE_NEW_KUBERNETES_CLUSTER   // Reaction
+  SCALEWAY_CREATE_NEW_CONTAINER_REGISTRY   // Reaction
+  ONEDRIVE_CREATE_NEW_POWER_POINT          // Reaction
+  ONEDRIVE_CREATE_NEW_FORM                 // Reaction
+  NOTION_CREATE_NEW_PAGE                   // Reaction
 }
 
 model Workflow {
