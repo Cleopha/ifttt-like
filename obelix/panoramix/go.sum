@@ -54,6 +54,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/Cleopha/ifttt-like-common v1.0.3 h1:qiah05yvfh1r+bRXk2ldx2yfCV3q6ApNNvQYjO0wMzU=
 github.com/Cleopha/ifttt-like-common v1.0.3/go.mod h1:ugrBl+b8qRsr36DyC/lIPegtJ7ck/vMooXb8YXCdaN0=
+github.com/Cleopha/ifttt-like-common v1.0.4 h1:J70GOEK1DlsgXvanxXloGdkbtWg2WXv+J1tOB2FxY9U=
+github.com/Cleopha/ifttt-like-common v1.0.4/go.mod h1:67ddh7VRHbhYWb/XtV+sTXINK2vSp4cRqqMIcaOoAXk=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/PtitLuca/go-dispatcher v1.0.0 h1:ci6Rfw0BP8ANSaxyPe3wzoBEPYPmfdvB+31q+7uUjzQ=
 github.com/PtitLuca/go-dispatcher v1.0.0/go.mod h1:LnUEx7yU8cM//F/NT31Fb+cMoDffuCJLKIOi5opAUfk=
