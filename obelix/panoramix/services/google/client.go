@@ -3,6 +3,7 @@ package google
 import (
 	"context"
 	"fmt"
+	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/calendar/v3"
@@ -110,6 +111,8 @@ func (c *Client) CreateNewEvent(p *structpb.Struct) error {
 		return fmt.Errorf("failed to create new google calendar event: %w", err)
 	}
 
+	zap.S().Info("New google event successfully created")
+
 	return nil
 }
 
@@ -136,6 +139,8 @@ func (c *Client) CreateNewDocument(p *structpb.Struct) error {
 	if err != nil {
 		return fmt.Errorf("failed to create new google document: %w", err)
 	}
+
+	zap.S().Info("New google document successfully created")
 
 	return nil
 }
@@ -167,6 +172,8 @@ func (c *Client) CreateNewSheet(p *structpb.Struct) error {
 	if err != nil {
 		return fmt.Errorf("failed to create new google sheet: %w", err)
 	}
+
+	zap.S().Info("New google sheet successfully created")
 
 	return nil
 }
