@@ -16,21 +16,15 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 	{
 		const t3 = await prisma.task.create({
 			data: {
-				name: 'Google calendar Reaction 2',
+				name: 'Reaction - Google create new document',
 				type: TaskType.REACTION,
 				action: TaskAction.GOOGLE_CREATE_NEW_DOCUMENT,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {
-						'foo': {
-							'stringValue': 'test'
+						'title': {
+							'stringValue': 'This is a document'
 						},
-						'bar': {
-							'numberValue': 4
-						},
-						'baz': {
-							'boolValue': true
-						}
 					}
 				},
 				workflow: { connect: { id: workflows[0].id } }
@@ -39,21 +33,21 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 
 		const t2 = await prisma.task.create({
 			data: {
-				name: 'Google calendar Reaction',
+				name: 'Reaction - Google create new event',
 				type: TaskType.REACTION,
 				action: TaskAction.GOOGLE_CREATE_NEW_EVENT,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {
-						'foo': {
-							'stringValue': 'test'
+						'title': {
+							'stringValue': 'This is a new event'
 						},
-						'bar': {
-							'numberValue': 4
+						'start': {
+							'stringValue': '2022-02-26T20:00:00+01:00'
 						},
-						'baz': {
-							'boolValue': true
-						}
+						'duration': {
+							'stringValue': '2h0m0s'
+						},
 					}
 				},
 				nextTask: t3.id,
@@ -63,20 +57,23 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 
 		const t1 = await prisma.task.create({
 			data: {
-				name: 'Google calendar Action',
+				name: 'Action - When a new GitHub issue is open',
 				type: TaskType.ACTION,
-				action: TaskAction.GITHUB_ISSUE_OPEN,
+				action: TaskAction.GITHUB_NEW_ISSUE_DETECTED,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {
-						'foo': {
-							'stringValue': 'test'
+						'repo': {
+							'stringValue': 'ifttt-like-test'
 						},
-						'bar': {
-							'numberValue': 4
+						'user': {
+							'stringValue': 'Cleopha'
 						},
-						'baz': {
-							'boolValue': true
+						'state': {
+							'stringValue': 'all'
+						},
+						'filter': {
+							'stringValue': 'repos'
 						}
 					}
 				},
@@ -92,21 +89,21 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 	{
 		const t3 = await prisma.task.create({
 			data: {
-				name: 'Google calendar Reaction 2',
+				name: 'Reaction - Create a new Google event',
 				type: TaskType.REACTION,
 				action: TaskAction.GOOGLE_CREATE_NEW_EVENT,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {
-						'foo': {
-							'stringValue': 'test'
+						'title': {
+							'stringValue': 'This is a new event'
 						},
-						'bar': {
-							'numberValue': 4
+						'start': {
+							'stringValue': '2022-02-26T20:00:00+01:00'
 						},
-						'baz': {
-							'boolValue': true
-						}
+						'duration': {
+							'stringValue': '2h0m0s'
+						},
 					}
 				},
 				workflow: { connect: { id: workflows[0].id } }
@@ -115,21 +112,15 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 
 		const t2 = await prisma.task.create({
 			data: {
-				name: 'Google sheet Reaction',
+				name: 'Reaction - Create new Google sheet',
 				type: TaskType.REACTION,
 				action: TaskAction.GOOGLE_CREATE_NEW_SHEET,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {
-						'foo': {
-							'stringValue': 'test'
+						'title': {
+							'stringValue': 'This is a new sheet'
 						},
-						'bar': {
-							'numberValue': 4
-						},
-						'baz': {
-							'boolValue': true
-						}
 					}
 				},
 				nextTask: t3.id,
@@ -139,20 +130,23 @@ async function createTasks(workflows: Workflow[]): Promise<void> {
 
 		const t1 = await prisma.task.create({
 			data: {
-				name: 'Github pr opened',
+				name: 'Action - When a new GitHub PR is open',
 				type: TaskType.ACTION,
-				action: TaskAction.GITHUB_PR_OPEN,
+				action: TaskAction.GITHUB_NEW_PR_DETECTED,
 				params: {
 					// https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Struct
 					fields: {
-						'foo': {
-							'stringValue': 'test'
+						'repo': {
+							'stringValue': 'ifttt-like-test'
 						},
-						'bar': {
-							'numberValue': 4
+						'user': {
+							'stringValue': 'Cleopha'
 						},
-						'baz': {
-							'boolValue': true
+						'state': {
+							'stringValue': 'all'
+						},
+						'filter': {
+							'stringValue': 'repos'
 						}
 					}
 				},

@@ -11,7 +11,7 @@ import (
 // TODO: Use the credential API to get the token
 func GetAccessToken(ctx context.Context, conf *oauth2.Config) (*oauth2.Token, error) {
 	accessURL := conf.AuthCodeURL("state")
-	fmt.Printf("Visit the URL for the auth dialog: %v", accessURL)
+	fmt.Printf("Visit the URL for the auth dialog: %v\n", accessURL)
 
 	rawCode := ""
 	_, err := fmt.Scanf("%s", &rawCode)
