@@ -20,6 +20,9 @@ func TestExtractConfiguration(t *testing.T) {
 				GoogleScopes: []string{
 					"https://www.googleapis.com/auth/bigquery",
 					"https://www.googleapis.com/auth/blogger",
+					"https://www.googleapis.com/auth/calendar.events",
+					"https://www.googleapis.com/auth/documents",
+					"https://www.googleapis.com/auth/spreadsheets",
 				},
 			},
 		},
