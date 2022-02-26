@@ -184,6 +184,32 @@ class UserAPI {
       throw e;
     }
   }
+
+  Future<List> githubRepos(String token) async {
+    Dio dio = Dio(new BaseOptions(
+      baseUrl: 'https://api.github.com/',
+      connectTimeout: 15000,
+      receiveTimeout: 13000,
+      headers: {
+        "Authorization": "token " + token
+      },
+    ));
+    
+    try {
+      String reposUrl = "user/repos";
+
+      Response response = await dio.get(reposUrl);
+
+      if (response.statusCode != 200) {
+        throw Exception("Error getting user repos");
+      }
+
+      return response.data;
+
+    } catch (e) {
+      throw e;
+    }
+  }
 }
 
 class Workflow {
