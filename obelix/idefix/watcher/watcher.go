@@ -108,16 +108,12 @@ func (w *Watcher) Watch() error {
 						return
 					}
 
-					zap.S().Info(service, method)
-
-					out, err := w.d.Run(service, method, taskID, params)
+					_, err = w.d.Run(service, method, taskID, params)
 					if err != nil {
 						zap.S().Error(err)
 
 						return
 					}
-
-					zap.S().Info(out[0])
 				}
 			}(elem)
 		}
