@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/Cleopha/ifttt-like-common/credentials"
 	"github.com/Cleopha/ifttt-like-common/protos"
-	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/operator"
@@ -54,11 +53,6 @@ type params struct {
 
 // configure get credentials to connect to GitHub API
 func (c *Client) configure(owner string) error {
-	/*
-		//TODO Credentials API
-		c.Requester = devauth.GithubAuth()
-	*/
-
 	conf := &oauth2.Config{
 		ClientID:     ClientID,
 		ClientSecret: ClientSecret,
@@ -86,7 +80,6 @@ func (c *Client) configure(owner string) error {
 	token.AccessToken = credential.GetToken()
 	c.Requester = conf.Client(c.ctx, token)
 
-	zap.S().Info("client configured")
 	return nil
 }
 
@@ -131,27 +124,25 @@ func (c *Client) preprocessIssue(prm *structpb.Struct, owner string) (*Issues, e
 
 // NewPrDetected check if new pull-request is open
 func (c *Client) NewPrDetected(taskID string, prm *structpb.Struct, owner string) error {
-	/*
-		issues, err := c.preprocessIssue(prm, owner)
-		if err != nil {
-			return fmt.Errorf("failed to preprecess issue: %w", err)
+	issues, err := c.preprocessIssue(prm, owner)
+	if err != nil {
+		return fmt.Errorf("failed to preprecess issue: %w", err)
+	}
+
+	old, err := issues.GetRedisState(c.Operator.RC, taskID, true)
+	if err != nil {
+		if errors.Is(err, ErrNoIssues) {
+			return nil
 		}
 
-		old, err := issues.GetRedisState(c.Operator.RC, taskID, true)
-		if err != nil {
-			if errors.Is(err, ErrNoIssues) {
-				return nil
-			}
+		return fmt.Errorf("failed to update redis state: %w", err)
+	}
 
-			return fmt.Errorf("failed to update redis state: %w", err)
-		}
+	err = issues.LookForChange(c.Operator, taskID, old, true, owner)
+	if err != nil {
+		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
+	}
 
-		err = issues.LookForChange(c.Operator, taskID, old, true, owner)
-		if err != nil {
-			return fmt.Errorf("an error has occurred while looking for changes: %w", err)
-		}
-
-	*/
 	return nil
 }
 
