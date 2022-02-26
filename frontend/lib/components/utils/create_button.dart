@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
+
+import 'package:frontend/routes/create_task.dart';
 
 class CreateButton extends StatelessWidget {
   const CreateButton({
@@ -12,7 +15,12 @@ class CreateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () {
+        Get.to(
+          CreateTask(),
+          transition: kIsWeb ? Transition.noTransition : Transition.rightToLeft,
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(43),

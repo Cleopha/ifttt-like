@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:frontend/routes/task_setting.dart';
 import 'package:get/get.dart';
 
 import 'package:frontend/components/home/top_bar.dart';
@@ -20,81 +21,87 @@ class TaskCardAbout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: kIsWeb
-          ? null
-          : AppBar(
-              backgroundColor: task.action.service.color,
-              elevation: 0,
-              leading: TextButton(
-                child: SvgPicture.asset(
-                  'assets/icons/left-arrow.svg',
-                  semanticsLabel: 'personna icon',
-                  alignment: Alignment.centerLeft,
-                  color: Colors.white,
-                  width: 20,
-                ),
-                onPressed: () => Get.back(),
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () => print('settings'),
-                ),
-              ],
-            ),
-      body: ListView(
-        children: [
-          Container(
-            color: task.action.service.color,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+    return task.action != null
+        ? Scaffold(
+            appBar: kIsWeb
+                ? null
+                : AppBar(
+                    backgroundColor: task.action!.service.color,
+                    elevation: 0,
+                    leading: TextButton(
+                      child: SvgPicture.asset(
+                        'assets/icons/left-arrow.svg',
+                        semanticsLabel: 'personna icon',
+                        alignment: Alignment.centerLeft,
+                        color: Colors.white,
+                        width: 20,
+                      ),
+                      onPressed: () => Get.back(),
+                    ),
+                    actions: [
+                      IconButton(
+                        icon: const Icon(Icons.settings),
+                        onPressed: () => Get.to(
+                          TaskSetting(task: task),
+                          transition: kIsWeb
+                              ? Transition.noTransition
+                              : Transition.rightToLeft,
+                        ),
+                      ),
+                    ],
+                  ),
+            body: ListView(
               children: [
-                if (kIsWeb) const _WebAppBar(),
-                TaskAboutCore(
-                  task: task,
+                Container(
+                  color: task.action!.service.color,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (kIsWeb) const _WebAppBar(),
+                      TaskAboutCore(
+                        task: task,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal:
+                        kIsWeb ? (MediaQuery.of(context).size.width / 2.7) : 45,
+                    vertical: 32,
+                  ),
+                  child: FlutterSwitch(
+                    height: kIsWeb ? 115 : 80,
+                    width: double.infinity,
+                    value: task.isActive,
+                    borderRadius: kIsWeb ? 60 : 45,
+                    padding: 4,
+                    activeText: 'Connecté',
+                    inactiveText: 'Connecter',
+                    activeTextColor: Colors.white,
+                    valueFontSize: 32,
+                    inactiveTextColor: Colors.white,
+                    activeTextFontWeight: FontWeight.w600,
+                    inactiveTextFontWeight: FontWeight.w600,
+                    activeColor: Colors.black,
+                    inactiveColor: Colors.black,
+                    toggleColor: task.isActive
+                        ? task.action!.service.color
+                        : Colors.grey[500]!,
+                    showOnOff: true,
+                    onToggle: (bool value) {},
+                    toggleSize: kIsWeb ? 111 : 76,
+                  ),
                 ),
               ],
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal:
-                  kIsWeb ? (MediaQuery.of(context).size.width / 2.7) : 45,
-              vertical: 32,
-            ),
-            child: FlutterSwitch(
-              height: kIsWeb ? 115 : 80,
-              width: double.infinity,
-              value: task.isActive,
-              borderRadius: kIsWeb ? 60 : 45,
-              padding: 4,
-              activeText: 'Connecté',
-              inactiveText: 'Connecter',
-              activeTextColor: Colors.white,
-              valueFontSize: 32,
-              inactiveTextColor: Colors.white,
-              activeTextFontWeight: FontWeight.w600,
-              inactiveTextFontWeight: FontWeight.w600,
-              activeColor: Colors.black,
-              inactiveColor: Colors.black,
-              toggleColor:
-                  task.isActive ? task.action.service.color : Colors.grey[500]!,
-              showOnOff: true,
-              onToggle: (bool value) {},
-              toggleSize: kIsWeb ? 111 : 76,
-            ),
-          ),
-        ],
-      ),
-    );
+          )
+        : Container();
   }
 }
 
 class _WebAppBar extends StatelessWidget {
-  const _WebAppBar({
-    Key? key,
-  }) : super(key: key);
+  const _WebAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

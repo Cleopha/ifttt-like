@@ -70,7 +70,7 @@ class TaskAboutCore extends StatelessWidget {
                 ],
               ),
               Text(
-                task.author,
+                task.author ?? 'IFTTT Like',
                 style: TextStyle(
                   fontSize: kIsWeb ? 19 : null,
                   fontWeight: FontWeight.w600,

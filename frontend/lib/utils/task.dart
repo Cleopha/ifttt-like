@@ -2,23 +2,24 @@ import 'package:frontend/utils/services.dart';
 
 class Task {
   final String? title;
-  final String author;
-  final int numberOfUsers;
-  final ActionInfo action;
+  final ActionInfo? action;
+  final String? author;
   final List<ReactionInfo> reactions;
+  final int numberOfUsers;
   final bool isActive;
 
   Task({
     this.title,
-    required this.author,
-    required this.numberOfUsers,
-    required this.action,
+    this.action,
+    this.author,
     required this.reactions,
+    required this.numberOfUsers,
     required this.isActive,
   });
 
   String formatedTitle(bool shorten) {
-    String finalTitle = 'If ${action.name} Then ';
+    if (action == null) return '';
+    String finalTitle = 'If ${action!.name} Then ';
 
     for (int i = 0; i < reactions.length; i++) {
       finalTitle += reactions[i].name;
@@ -33,7 +34,8 @@ class Task {
   }
 
   List<String> tagsGetter() {
-    return [action.service.iconPath] +
+    if (action == null) return [];
+    return [action!.service.iconPath] +
         reactions.map((reaction) => reaction.service.iconPath).toList();
   }
 }
