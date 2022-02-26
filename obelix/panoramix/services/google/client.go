@@ -3,12 +3,14 @@ package google
 import (
 	"context"
 	"fmt"
+	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/docs/v1"
 	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"
+	"google.golang.org/protobuf/types/known/structpb"
 	"net/http"
 	"os"
 	"time"
@@ -29,45 +31,79 @@ func init() {
 
 // Client represents a minimal Google client able to make OAuth2.0 authenticated requests.
 type Client struct {
-	ctx context.Context
-	clt *http.Client
+	ctx    context.Context
+	clt    *http.Client
+	scopes []string
 }
 
 // New creates a new Google client based on the given scopes/
-func New(ctx context.Context, scopes []string) (*Client, error) {
+func New(ctx context.Context, scopes []string) *Client {
+	return &Client{
+		ctx:    ctx,
+		scopes: scopes,
+	}
+}
+
+// configure creates the Google OAuth2 client using the access token of a specific user.
+func (c *Client) configure() error {
 	conf := &oauth2.Config{
 		ClientID:     ClientID,
 		ClientSecret: ClientSecret,
 		Endpoint:     google.Endpoint,
 		RedirectURL:  RedirectURL,
-		Scopes:       scopes,
+		Scopes:       c.scopes,
 	}
 
-	token, err := GetAccessToken(ctx, conf)
+	token, err := GetAccessToken(c.ctx, conf)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get google access token: %w", err)
+		return fmt.Errorf("failed to get google access token: %w", err)
 	}
 
-	return &Client{
-		ctx: ctx,
-		clt: conf.Client(ctx, token),
-	}, nil
+	c.clt = conf.Client(c.ctx, token)
+
+	return nil
 }
 
 // CreateNewEvent creates a new Google Calendar event using the specified parameters.
-func (c *Client) CreateNewEvent(title string, start time.Time, duration time.Duration) error {
+func (c *Client) CreateNewEvent(p *structpb.Struct) error {
+	type paramsEvent struct {
+		title    string
+		start    time.Time
+		duration time.Duration
+	}
+
+	var err error
+
+	params := paramsEvent{
+		title: p.Fields["title"].GetStringValue(),
+	}
+
+	params.start, err = time.Parse(time.RFC3339, p.Fields["start"].GetStringValue())
+	if err != nil {
+		return fmt.Errorf("failed to parse event start date: %w", err)
+	}
+
+	params.duration, err = time.ParseDuration(p.Fields["duration"].GetStringValue())
+	if err != nil {
+		return fmt.Errorf("failed to parse event duration: %w", err)
+	}
+
+	if err = c.configure(); err != nil {
+		return fmt.Errorf("failed to configure google oauth2: %w", err)
+	}
+
 	srv, err := calendar.NewService(c.ctx, option.WithHTTPClient(c.clt))
 	if err != nil {
 		return fmt.Errorf("failed to create google calendar service: %w", err)
 	}
 
 	_, err = srv.Events.Insert("primary", &calendar.Event{
-		Summary: title,
+		Summary: params.title,
 		Start: &calendar.EventDateTime{
-			DateTime: start.Format(time.RFC3339),
+			DateTime: params.start.Format(time.RFC3339),
 		},
 		End: &calendar.EventDateTime{
-			DateTime: start.Add(duration).Format(time.RFC3339),
+			DateTime: params.start.Add(params.duration).Format(time.RFC3339),
 		},
 	}).Do()
 
@@ -75,26 +111,54 @@ func (c *Client) CreateNewEvent(title string, start time.Time, duration time.Dur
 		return fmt.Errorf("failed to create new google calendar event: %w", err)
 	}
 
+	zap.S().Info("New google event successfully created")
+
 	return nil
 }
 
 // CreateNewDocument creates a new Google Docs document using the given title.
-func (c *Client) CreateNewDocument(title string) error {
+func (c *Client) CreateNewDocument(p *structpb.Struct) error {
+	type paramsDocument struct {
+		title string
+	}
+
+	params := paramsDocument{
+		title: p.Fields["title"].GetStringValue(),
+	}
+
+	if err := c.configure(); err != nil {
+		return fmt.Errorf("failed to configure google oauth2: %w", err)
+	}
+
 	srv, err := docs.NewService(c.ctx, option.WithHTTPClient(c.clt))
 	if err != nil {
 		return fmt.Errorf("failed to create google docs service: %w", err)
 	}
 
-	_, err = srv.Documents.Create(&docs.Document{Title: title}).Do()
+	_, err = srv.Documents.Create(&docs.Document{Title: params.title}).Do()
 	if err != nil {
 		return fmt.Errorf("failed to create new google document: %w", err)
 	}
+
+	zap.S().Info("New google document successfully created")
 
 	return nil
 }
 
 // CreateNewSheet creates a new Google Sheet document using the given title.
-func (c *Client) CreateNewSheet(title string) error {
+func (c *Client) CreateNewSheet(p *structpb.Struct) error {
+	type paramsSheet struct {
+		title string
+	}
+
+	params := paramsSheet{
+		title: p.Fields["title"].GetStringValue(),
+	}
+
+	if err := c.configure(); err != nil {
+		return fmt.Errorf("failed to configure google oauth2: %w", err)
+	}
+
 	srv, err := sheets.NewService(c.ctx, option.WithHTTPClient(c.clt))
 	if err != nil {
 		return fmt.Errorf("failed to create google sheet service: %w", err)
@@ -102,12 +166,14 @@ func (c *Client) CreateNewSheet(title string) error {
 
 	_, err = srv.Spreadsheets.Create(&sheets.Spreadsheet{
 		Properties: &sheets.SpreadsheetProperties{
-			Title: title,
+			Title: params.title,
 		},
 	}).Do()
 	if err != nil {
 		return fmt.Errorf("failed to create new google sheet: %w", err)
 	}
+
+	zap.S().Info("New google sheet successfully created")
 
 	return nil
 }

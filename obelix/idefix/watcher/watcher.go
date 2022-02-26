@@ -7,9 +7,9 @@ import (
 	"github.com/Cleopha/ifttt-like-common/common"
 	"github.com/Cleopha/ifttt-like-common/protos"
 	"github.com/PtitLuca/go-dispatcher/dispatcher"
+	"go.uber.org/zap"
 	"idefix/services"
 	"idefix/workflow"
-	"log"
 	"os"
 	"strconv"
 	"sync"
@@ -21,12 +21,16 @@ var (
 	WorkflowAPIPort = ""
 )
 
+var (
+	ErrWatcherConfigurationNotSet = errors.New("watcher configuration is not set")
+)
+
 func init() {
 	TimeInterval = os.Getenv("TIME_INTERVAL")
 	WorkflowAPIPort = os.Getenv("WORKFLOW_API_PORT")
 
 	if TimeInterval == "" || WorkflowAPIPort == "" {
-		log.Fatal(errors.New("watcher credentials are not set"))
+		zap.S().Fatal(ErrWatcherConfigurationNotSet)
 	}
 }
 
@@ -98,16 +102,23 @@ func (w *Watcher) RunGCalendar() error {
 }
 */
 
+//nolint:nolintlint,staticcheck
 func (w *Watcher) Watch() error {
 	ticker := time.NewTicker(w.Interval)
 	defer ticker.Stop()
 
+	zap.S().Info("Idefix watcher is now running")
+
 	for {
+		zap.S().Info("Listing workflows..")
+
 		workflows, err := w.clt.ListWorkflows(w.ctx,
 			&protos.ListWorkflowsRequest{Owner: "f1352b9d-3a91-496e-9179-ae9e32429d9a"})
 		if err != nil {
 			return fmt.Errorf("failed to get list of workflows: %w", err)
 		}
+
+		zap.S().Infof("%d workflow(s) found", len(workflows.Workflows))
 
 		for _, elem := range workflows.Workflows {
 			w.wg.Add(1)
@@ -124,14 +135,15 @@ func (w *Watcher) Watch() error {
 
 					service, method, params, err := common.ParseAction(task)
 					if err != nil {
-						// TODO: log error
+						zap.S().Error(err)
+
 						return
 					}
 
 					_, err = w.d.Run(service, method, taskID, params)
 					if err != nil {
-						fmt.Println(err)
-						// TODO log error
+						zap.S().Error(err)
+
 						return
 					}
 				}
