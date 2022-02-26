@@ -34,7 +34,7 @@ func validateMethodsSignatures(service interface{}) error {
 
 	for i := 0; i < st.NumMethod(); i++ {
 		// We only care about exported methods.
-		if !st.Method(i).IsExported() {
+		if !(st.Method(i).PkgPath == "") {
 			continue
 		}
 
