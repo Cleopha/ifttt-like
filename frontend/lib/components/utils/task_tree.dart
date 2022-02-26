@@ -46,13 +46,7 @@ class TaskTree extends StatelessWidget {
             color: task.action!.service.color,
             title: task.action!.name,
             iconPath: task.action!.service.iconPath,
-            onClick: () {
-              // Get.to(
-              //   EditTask(task: task),
-              //   transition:
-              //       kIsWeb ? Transition.noTransition : Transition.rightToLeft,
-              // );
-            },
+            onClick: () {},
           ),
         const _ServiceSeparator(),
         for (final reaction in task.reactions)

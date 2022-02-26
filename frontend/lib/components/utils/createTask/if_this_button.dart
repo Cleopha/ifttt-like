@@ -15,14 +15,7 @@ class IfThisButton extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.white.withOpacity(0.2),
         highlightColor: Colors.transparent,
-        onTap: () {
-          // Get.to(
-          //   TaskCardAbout(task: task),
-          //   transition: kIsWeb
-          //       ? Transition.noTransition
-          //       : Transition.rightToLeft,
-          // );
-        },
+        onTap: () {},
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 12.0,

@@ -17,16 +17,7 @@ class ThenThatButton extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.white.withOpacity(0.2),
         highlightColor: Colors.transparent,
-        onTap: enabled
-            ? () {
-                // Get.to(
-                //   TaskCardAbout(task: task),
-                //   transition: kIsWeb
-                //       ? Transition.noTransition
-                //       : Transition.rightToLeft,
-                // );
-              }
-            : null,
+        onTap: enabled ? () {} : null,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 12.0,
