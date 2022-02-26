@@ -68,7 +68,8 @@ func (c *Client) CreateNewFlexibleIp(projectID string, owner string) error {
 }
 
 // CreateNewInstance creates a new instance (either a DEV1-S or DEV1-M) with the given name in the specified zone.
-func (c *Client) CreateNewInstance(projectID string, zone scw.Zone, name string, commercialType string, owner string) error {
+func (c *Client) CreateNewInstance(projectID string, zone scw.Zone, name string, commercialType string,
+	owner string) error {
 	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}

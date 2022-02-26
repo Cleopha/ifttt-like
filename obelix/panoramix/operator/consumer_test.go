@@ -40,6 +40,6 @@ func TestRunReactionFail(t *testing.T) {
 
 	err = operator.runReaction(&protos.Task{
 		Action: protos.TaskAction(math.MaxInt32),
-	})
+	}, "")
 	assert.Error(t, err)
 }
