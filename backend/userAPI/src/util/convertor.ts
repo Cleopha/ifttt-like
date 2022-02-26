@@ -4,6 +4,7 @@ import { NullValue, Task, TaskAction, TaskType, Service, Credential } from '@pro
 import { AllowedObject, AllowedValue, IStruct, IValue, PrimitiveAllowedValue } from '@util/struct';
 import { TsTaskAction, TsTaskType } from '@task';
 import { TsService } from '@credential';
+import * as _ from 'lodash';
 
 
 export class Convertor {
@@ -111,6 +112,10 @@ export class Convertor {
 	}
 
 	static grpcStructToObject(struct: IStruct): AllowedObject {
+		if (_.isEmpty(struct)) {
+			return {}
+		}
+
 		const keys = Object.keys(struct.fields);
 		const obj: AllowedObject = {};
 
