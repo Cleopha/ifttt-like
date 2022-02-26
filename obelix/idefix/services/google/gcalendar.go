@@ -74,7 +74,7 @@ func (gc *GCalendar) Parse(srv *calendar.Service) error {
 
 // LookForChange compares the current date and the nearest event's date.
 // It there's less than 10 minutes between these two events, the action can be triggered.
-func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string) error {
+func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string, owner string) error {
 	// Sets the two elements to compare.
 	now := time.Now()
 	agendaDate := gc.date
@@ -95,7 +95,7 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 				return fmt.Errorf("failed to update redis state: %w", err)
 			}
 
-			err = gc.SendToKafka(op.KP, key)
+			err = gc.SendToKafka(op.KP, key, owner)
 			if err != nil {
 				return fmt.Errorf("failed to send message to kafka: %w", err)
 			}
@@ -114,8 +114,11 @@ func (gc *GCalendar) LookForChange(op *operator.IdefixOperator, key, old string)
 }
 
 // SendToKafka sends the task ID to Kafka.
-func (gc *GCalendar) SendToKafka(kp sarama.SyncProducer, taskID string) error {
-	data, err := json.Marshal(kafka.Action{TaskID: taskID})
+func (gc *GCalendar) SendToKafka(kp sarama.SyncProducer, taskID string, owner string) error {
+	data, err := json.Marshal(kafka.Message{
+		TaskID: taskID,
+		Owner:  owner,
+	})
 	if err != nil {
 		return fmt.Errorf("failed to marshal: %w", err)
 	}

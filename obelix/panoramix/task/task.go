@@ -9,10 +9,6 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-type Action struct {
-	TaskID string
-}
-
 type Client struct {
 	conn *grpc.ClientConn
 	clt  protos.TaskServiceClient

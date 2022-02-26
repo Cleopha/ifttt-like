@@ -69,14 +69,14 @@ func (i *Issues) GetRedisState(rc *redis.Client, key string, isPR bool) (string,
 	return state, nil
 }
 
-func (i *Issues) LookForChange(op *operator.IdefixOperator, key, old string, isPR bool) error {
+func (i *Issues) LookForChange(op *operator.IdefixOperator, key, old string, isPR bool, owner string) error {
 	newer, ok := i.findLatestIssue(isPR)
 	if !ok {
 		return ErrNoIssues
 	}
 
 	if old != newer.URL {
-		err := i.SendToKafka(op.KP, key)
+		err := i.SendToKafka(op.KP, key, owner)
 		if err != nil {
 			return fmt.Errorf("failed to send message to task: %w", err)
 		}
@@ -90,8 +90,11 @@ func (i *Issues) LookForChange(op *operator.IdefixOperator, key, old string, isP
 	return nil
 }
 
-func (i *Issues) SendToKafka(kp sarama.SyncProducer, taskID string) error {
-	data, err := json.Marshal(kafka.Action{TaskID: taskID})
+func (i *Issues) SendToKafka(kp sarama.SyncProducer, taskID string, owner string) error {
+	data, err := json.Marshal(kafka.Message{
+		TaskID: taskID,
+		Owner:  owner,
+	})
 	if err != nil {
 		return fmt.Errorf("failed to marshal: %w", err)
 	}
