@@ -32,10 +32,10 @@ void main() {
   UserAPI userAPI = new UserAPI(dio: dio);
   WorkflowAPI workflowAPI = new WorkflowAPI(dio: dio);
 
-  final String mail = "abc@gmail.com";
-  final String password = "dazdzrazr";
+  final String mail = "string@gmail.com";
+  final String password = "string";
 
-  // api.register(mail, password).then((void v) {
+  // userAPI.register(mail, password).then((void v) {
   //   print("Registered");
   // });
 
@@ -66,30 +66,28 @@ void main() {
           workflowAPI.getTask(user.uid, w.id).then((Task task) {
             print("task: ${task.action.name}");
 
-            workflowAPI.addAction(user.uid, w.id, "Create PR", "GITHUB_NEW_PR_DETECTED", []).then((Task t) {
-              print("action added");
+            workflowAPI.addAction(user.uid, w.id, "Create PR", "GITHUB_NEW_PR_DETECTED", {}).then((Task t) {
+              print("action added: ${t.action.name}");
 
-              workflowAPI.deleteWorkflow(user.uid, w.id).then((void v) {
-                print("workflow deleted");
+              workflowAPI.addReaction(user.uid, w.id, "My Reaction", "GOOGLE_CREATE_NEW_EVENT", {}).then((Task t) {
+                print("reaction added: ${t.reactions[0].name}");
+
+                workflowAPI.getWorkflows(user.uid).then((List<Workflow> workflows) {
+                  workflowAPI.putWorkflow(user.uid, workflows[0].id, "New Name").then((void v) {
+                    print("workflow updated");
+
+                    workflowAPI.deleteWorkflow(user.uid, w.id).then((void v) {
+                      print("workflow deleted");
+                    });
+                  });
+                });
               });
 
             });
-
-
-          });
-
-
-          workflowAPI.getWorkflows(user.uid).then((List<Workflow> workflows) {
-            workflowAPI.putWorkflow(user.uid, workflows[0].id, "New Name").then((void v) {
-              print("workflow updated");
-            });
           });
         });
-
-
       });
     });
-
   });
 }
 
@@ -246,7 +244,7 @@ class RawTask {
   final String name;
   final String type;
   final String action;
-  final List<dynamic> params;
+  final Map<String, dynamic> params;
   final String nextId;
 
   RawTask({
@@ -317,6 +315,26 @@ class WorkflowAPI {
     required this.dio
   }) {
     dio.interceptors.add(CookieManager(CookieJar()));
+  }
+
+  List<String> getActionServiceNameAndPath(String action) {
+    if (action.length >= "GITHUB".length && action.substring(0, 5) == "GITHUB") {
+      return ["Github", "assets/github.png"];
+    } else if (action.length >= "GOOGLE".length && action.substring(0, 5) == "GOOGLE") {
+      return ["Google", "assets/google.png"];
+    } else if (action.length >= "SCALEWAY".length && action.substring(0, 5) == "SCALEWAY") {
+      return ["Scaleway", "assets/scaleway.png"];
+    } else if (action.length >= "COINMARKETCAP".length && action.substring(0, 5) == "COINMARKETCAP") {
+      return ["CoinMarketCap", "assets/coinmarketcap.png"];
+    } else if (action.length >= "NIST".length && action.substring(0, 5) == "NIST") {
+      return ["Nist", "assets/nist.png"];
+    } else if (action.length >= "NOTION".length && action.substring(0, 5) == "NOTION") {
+      return ["Notion", "assets/notion.png"];
+    } else if (action.length >= "ONEDRIVE".length && action.substring(0, 5) == "ONEDRIVE") {
+      return ["OneDrive", "assets/onedrive.png"];
+    } else {
+      return ["Unknown", "assets/unknown.png"];
+    }
   }
 
   String getWorkflowsUrl(String userId) {
@@ -432,7 +450,7 @@ class WorkflowAPI {
           type: t['type'],
           action: t['action'],
           params: t['params'],
-          nextId: t['nextId'],
+          nextId: t['nextTask'],
         );
       }));
 
@@ -445,6 +463,8 @@ class WorkflowAPI {
       for (RawTask rawTask in rawTasks) {
         if (rawTask.type == "ACTION") {
           sortedRawTasks.add(rawTask);
+          rawTasks.remove(rawTask);
+          break;
         }
       }
 
@@ -452,20 +472,23 @@ class WorkflowAPI {
         throw Exception("No action tasks found");
       }
 
-      while (sortedRawTasks.length > 0) {
-        RawTask rawTask = sortedRawTasks.firstWhere((RawTask t) => t.id == sortedRawTasks.last.nextId);
+      while (rawTasks.length > 0) {
+        RawTask rawTask = rawTasks.firstWhere((RawTask t) => t.id == sortedRawTasks.last.nextId);
 
-        sortedRawTasks.remove(rawTask);
+        rawTasks.remove(rawTask);
         sortedRawTasks.add(rawTask);
       }
+
+      List<String> nameAndpath = getActionServiceNameAndPath(sortedRawTasks.first.action);
 
       ActionInfo action = ActionInfo(
         name: sortedRawTasks.first.action,
         service: ServiceInfo(
-          name: "TODO",
-          iconPath: "TODO",
+          name: nameAndpath[0],
+          iconPath: nameAndpath[1],
         ),
       );
+
       sortedRawTasks.removeAt(0);
 
       return Task(
@@ -475,11 +498,13 @@ class WorkflowAPI {
         numberOfUsers: 1,
         isActive: true,
         reactions: List<ReactionInfo>.from(sortedRawTasks.map((RawTask rawTask) {
+          List<String> nameAndpath = getActionServiceNameAndPath(sortedRawTasks.first.action);
+
           return ReactionInfo(
             name: rawTask.action,
             service: ServiceInfo(
-              name: "TODO",
-              iconPath: "TODO",
+              name: nameAndpath[0],
+              iconPath: nameAndpath[1],
             ),
           );
         })),
@@ -490,7 +515,7 @@ class WorkflowAPI {
     }
   }
 
-  Future<Task> addAction(String userId, String workflowId, String title, String action, List<dynamic> params) async {
+  Future<Task> addAction(String userId, String workflowId, String title, String action, Map<String, dynamic> params) async {
     try {
       Response response = await dio.get(getTasksUrl(userId, workflowId));
 
@@ -542,7 +567,6 @@ class WorkflowAPI {
       if (firstReaction == null && rawTasks.length != 0) {
         throw Exception("Reactions produce a circular dependency (E2)");
       } else {
-        print(rawTasks.length);
         firstReaction = actionTask;
       }
 
@@ -556,7 +580,7 @@ class WorkflowAPI {
         "name": title,
         "type": "ACTION",
         "action": action,
-        "params": {}, // TODO: params
+        "params": params,
         "nextId": nextId,
       });
 
@@ -564,8 +588,8 @@ class WorkflowAPI {
         "name": title,
         "type": "ACTION",
         "action": action,
-        "params": {}, // TODO: params
-        "nextId": nextId,
+        "params": params,
+        "nextTask": nextId,
       });
 
       if (response.statusCode != 201) {
@@ -579,7 +603,7 @@ class WorkflowAPI {
     }
   }
 
-  Future<Task> addReaction(String userId, String workflowId, String title, String reaction, List<dynamic> params) async {
+  Future<Task> addReaction(String userId, String workflowId, String title, String reaction, Map<String, dynamic> params) async {
     try {
       Response response = await dio.get(getTasksUrl(userId, workflowId));
 
@@ -594,7 +618,7 @@ class WorkflowAPI {
           type: t['type'],
           action: t['action'],
           params: t['params'],
-          nextId: t['nextId'],
+          nextId: t['nextTask'],
         );
       }));
 
@@ -603,6 +627,7 @@ class WorkflowAPI {
       for (RawTask t in rawTasks) {
         if (t.nextId.length == 0) {
           lastReaction = t;
+          break;
         }
       }
 
@@ -615,7 +640,7 @@ class WorkflowAPI {
         "type": "REACTION",
         "action": reaction,
         "params": params,
-        "nextId": "",
+        "nextTask": "",
       });
 
       if (response.statusCode != 201) {
@@ -631,8 +656,12 @@ class WorkflowAPI {
         nextId: "",
       );
 
-      response = await dio.patch("/user/$userId/workflow/$workflowId/task/${lastReaction.id}", data: {
-        "nextId": rawTask.id,
+      response = await dio.put("/user/$userId/workflow/$workflowId/task/${lastReaction.id}", data: {
+        "name": lastReaction.name,
+        "type": lastReaction.type,
+        "action": lastReaction.action,
+        "params": lastReaction.params,
+        "nextTask": rawTask.id,
       });
 
       if (response.statusCode != 200) {
@@ -642,7 +671,6 @@ class WorkflowAPI {
       return getTask(userId, workflowId);
 
     } catch (e) {
-      // TODO: PATCH the lastReaction to have the nextId of the new reaction (API)
       throw e;
     }
   }
