@@ -38,6 +38,8 @@ services:
       - REDIS_PORT
       - WORKFLOW_API_PORT
       - WORKFLOW_API_HOST=workflow-api
+      - CREDENTIAL_API_PORT
+      - CREDENTIAL_API_HOST=credential-api
     ports:
       - "${USER_API_PORT}:${USER_API_PORT}"
     networks:
