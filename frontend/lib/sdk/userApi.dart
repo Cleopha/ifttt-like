@@ -184,7 +184,7 @@ class UserAPI {
       throw e;
     }
   }
-
+  
   Future<List> githubRepos(String token) async {
     Dio dio = Dio(new BaseOptions(
       baseUrl: 'https://api.github.com/',
@@ -204,7 +204,12 @@ class UserAPI {
         throw Exception("Error getting user repos");
       }
 
-      return response.data;
+      List<String> repos = [];
+
+      for (var x in response.data) {
+        repos.add(x['full_name']);
+      }
+      return repos;
 
     } catch (e) {
       throw e;
