@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/components/home/top_bar.dart';
 import 'package:frontend/components/utils/create_button.dart';
 import 'package:frontend/components/utils/explore_button.dart';
-import 'package:frontend/components/utils/taskCard/task_card.dart';
 import 'package:frontend/components/utils/task_scroller.dart';
-import 'package:frontend/utils/services.dart';
-import 'package:frontend/utils/task.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -34,57 +31,8 @@ class Home extends StatelessWidget {
                 SliverList(
                   delegate: SliverChildListDelegate(
                     <Widget>[
-                      TaskScroller(
-                        tasks: [
-                          TaskCard(
-                            task: Task(
-                              author: 'quentinFringhian',
-                              numberOfUsers: 3,
-                              action: actions['prMerge']!,
-                              reactions: [
-                                reactions['openIssue']!,
-                                reactions['sendMessage']!,
-                                reactions['sendMessage']!,
-                              ],
-                              isActive: true,
-                            ),
-                          ),
-                          TaskCard(
-                            task: Task(
-                              author: 'quentinFringhian',
-                              numberOfUsers: 30000,
-                              action: actions['xHours']!,
-                              reactions: [
-                                reactions['sendMessage']!,
-                              ],
-                              isActive: true,
-                            ),
-                          ),
-                          TaskCard(
-                            task: Task(
-                              author: 'quentinFringhian',
-                              numberOfUsers: 2875,
-                              action: actions['folderChange']!,
-                              reactions: [
-                                reactions['sendMessage']!,
-                                reactions['openIssue']!,
-                              ],
-                              isActive: true,
-                            ),
-                          ),
-                          TaskCard(
-                            task: Task(
-                              author: 'quentinFringhian',
-                              numberOfUsers: 2875,
-                              action: actions['specificRole']!,
-                              reactions: [
-                                reactions['sendMessage']!,
-                                reactions['addRole']!,
-                              ],
-                              isActive: true,
-                            ),
-                          ),
-                        ],
+                      const TaskScroller(
+                        tasks: [],
                       )
                     ],
                   ),

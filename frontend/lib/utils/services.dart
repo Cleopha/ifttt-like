@@ -43,7 +43,7 @@ Map<String, ServiceInfo> services = {
     iconPath: 'assets/icons/tags/spotify.svg',
     color: const Color(0xff1db954),
   ),
-  'googleDrive': ServiceInfo(
+  'google': ServiceInfo(
     name: 'Google Drive',
     iconPath: 'assets/icons/tags/googleDrive.svg',
     color: const Color(0xff23448b),
@@ -76,83 +76,83 @@ Map<String, ServiceInfo> services = {
 };
 
 Map<String, ActionInfo> actions = {
-  'prMerge': ActionInfo(
-    name: 'A Pull Request Merged',
+  'GITHUB_NEW_PR_DETECTED': ActionInfo(
+    name: 'Une nouvelle Pull Request a été détectée',
     service: services['github']!,
   ),
-  'issueOpen': ActionInfo(
-    name: 'An Issue Opened',
+  'GITHUB_NEW_ISSUE_DETECTED': ActionInfo(
+    name: 'Une nouvelle Issue a été détectée',
     service: services['github']!,
   ),
-  'release': ActionInfo(
-    name: 'Ther Is A New Release',
+  'GITHUB_NEW_ASSIGNATION_DETECTED': ActionInfo(
+    name: 'Une nouvelle Assignation a été détectée',
     service: services['github']!,
   ),
-  'userSponsor': ActionInfo(
-    name: 'A New Sponsor',
+  'GITHUB_NEW_ISSUE_CLOSED_DETECTED': ActionInfo(
+    name: 'Une nouvelle Fermeture d\'Issue a été détectée',
     service: services['github']!,
   ),
-  'specificRole': ActionInfo(
-    name: 'I Have A Specific Role',
-    service: services['discord']!,
+  'GOOGLE_NEW_INCOMING_EVENT': ActionInfo(
+    name: 'Un nouvelle Evenement a été ajouté',
+    service: services['google']!,
   ),
-  'bucketStorage': ActionInfo(
-    name: 'A Bucket Has Overloaded',
+  'SCALEWAY_VOLUME_EXCEEDS_LIMIT': ActionInfo(
+    name: 'Le volume de la VM a dépassé la limite',
     service: services['scaleway']!,
   ),
-  'folderChange': ActionInfo(
-    name: 'The Folder Has Changed',
-    service: services['googleDrive']!,
+  'COINMARKETCAP_ASSET_VARIATION_DETECTED': ActionInfo(
+    name: 'Une variation d\'un Asset a été détectée',
+    service: services['scaleway']!,
   ),
-  'xHours': ActionInfo(
-    name: 'X Hours Has Elapsed',
-    service: services['timer']!,
-  ),
-  'date': ActionInfo(
-    name: 'It Is A Specific Date',
-    service: services['timer']!,
+  'NIST_NEW_CVE_DETECTED': ActionInfo(
+    name: 'Une nouvelle CVE a été détectée',
+    service: services['scaleway']!,
   ),
 };
 
 Map<String, ReactionInfo> reactions = {
-  'openIssue': ReactionInfo(
-    name: 'Open An Issue',
-    service: services['github']!,
+  'GOOGLE_CREATE_NEW_EVENT': ReactionInfo(
+    name: 'Création d\'un nouvel Evenement',
+    service: services['google']!,
   ),
-  'playMusic': ReactionInfo(
-    name: 'Play Music',
-    service: services['spotify']!,
+  'GOOGLE_CREATE_NEW_DOCUMENT': ReactionInfo(
+    name: 'Création d\'un nouveau Document',
+    service: services['google']!,
   ),
-  'addUserPlaylist': ReactionInfo(
-    name: 'Add User To Playlist',
-    service: services['spotify']!,
+  'GOOGLE_CREATE_NEW_SHEET': ReactionInfo(
+    name: 'Création d\'un nouveau Sheet',
+    service: services['google']!,
   ),
-  'sendMessage': ReactionInfo(
-    name: 'Send Message',
-    service: services['discord']!,
-  ),
-  'addRole': ReactionInfo(
-    name: 'Add Role',
-    service: services['discord']!,
-  ),
-  'createChannel': ReactionInfo(
-    name: 'Create Channel',
-    service: services['slack']!,
-  ),
-  'pingUser': ReactionInfo(
-    name: 'Ping User',
-    service: services['slack']!,
-  ),
-  'startServerless': ReactionInfo(
-    name: 'Start Serverless',
+  'SCALEWAY_CREATE_NEW_FLEXIBLE_IP': ReactionInfo(
+    name: 'Création d\'une nouvelle IP Flexible',
     service: services['scaleway']!,
   ),
-  'addUserToPage': ReactionInfo(
-    name: 'Add User To Page',
-    service: services['notion']!,
+  'SCALEWAY_CREATE_NEW_INSTANCE': ReactionInfo(
+    name: 'Création d\'une nouvelle Instance',
+    service: services['scaleway']!,
   ),
-  'storeFile': ReactionInfo(
-    name: 'Store File',
-    service: services['googleDrive']!,
+  'SCALEWAY_CREATE_NEW_DATABASE': ReactionInfo(
+    name: 'Création d\'une nouvelle Base de Données',
+    service: services['scaleway']!,
+  ),
+  'SCALEWAY_CREATE_NEW_KUBERNETES_CLUSTER': ReactionInfo(
+    name: 'Création d\'un nouveau Cluster Kubernetes',
+    service: services['scaleway']!,
+  ),
+  'SCALEWAY_CREATE_NEW_CONTAINER_REGISTRY': ReactionInfo(
+    name: 'Création d\'un nouveau Registre de Conteneur',
+    service: services['scaleway']!,
+  ),
+  'ONEDRIVE_CREATE_NEW_POWER_POINT': ReactionInfo(
+    name: 'Création d\'un nouveau Power Point',
+    service: services['google']!,
+  ),
+  'ONEDRIVE_CREATE_NEW_FORM': ReactionInfo(
+    name: 'Création d\'un nouveau Formulaire',
+    service: services['google']!,
+  ),
+  'NOTION_CREATE_NEW_PAGE': ReactionInfo(
+    name: 'Création d\'une nouvelle Page',
+    service: services['notion']!,
   ),
 };
