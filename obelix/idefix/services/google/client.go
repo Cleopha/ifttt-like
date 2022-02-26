@@ -9,7 +9,6 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/devauth"
 	"idefix/operator"
-	"idefix/services/github"
 	"net/http"
 )
 
@@ -47,21 +46,20 @@ func (c *Client) NewIncomingEvent(taskID string, prm *structpb.Struct) error {
 		return fmt.Errorf("unable to retrieve Calendar client: %w", err)
 	}
 
-	if err = gc.Parse(srv); err != nil || !errors.Is(err, ErrNoUpcomingEvent) {
+	if err = gc.Parse(srv); err != nil {
+		if errors.Is(err, ErrNoUpcomingEvent) {
+			return nil
+		}
+
 		return fmt.Errorf("failed to parse gcalendar data: %w", err)
 	}
 
 	old, err := gc.GetRedisState(c.Operator.RC, taskID)
 	if err != nil {
-		if errors.Is(err, github.ErrNoIssues) {
-			return nil
-		}
-
 		return fmt.Errorf("failed to update redis state: %w", err)
 	}
 
-	err = gc.LookForChange(c.Operator, taskID, old)
-	if err != nil {
+	if err = gc.LookForChange(c.Operator, taskID, old); err != nil {
 		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
 	}
 
