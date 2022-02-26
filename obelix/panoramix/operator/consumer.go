@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Cleopha/ifttt-like-common/common"
+	"github.com/Cleopha/ifttt-like-common/kafka"
 	"github.com/Cleopha/ifttt-like-common/protos"
 	"github.com/PtitLuca/go-dispatcher/dispatcher"
 	"github.com/Shopify/sarama"
@@ -62,7 +63,7 @@ func New(ctx context.Context, conf *configuration.Configuration) (*Operator, err
 	}, nil
 }
 
-func (o *Operator) runReaction(t *protos.Task) error {
+func (o *Operator) runReaction(t *protos.Task, owner string) error {
 	service, method, params, err := common.ParseAction(t)
 	if err != nil {
 		return fmt.Errorf("failed to parse action: %w", err)
@@ -70,7 +71,7 @@ func (o *Operator) runReaction(t *protos.Task) error {
 
 	zap.S().Infof("Executing method %s from service %s", method, service)
 
-	out, err := o.d.Run(service, method, params)
+	out, err := o.d.Run(service, method, params, owner)
 
 	if err != nil {
 		return fmt.Errorf("failed to run reaction: %w", err)
@@ -97,7 +98,7 @@ func (o *Operator) runReaction(t *protos.Task) error {
 }
 
 // runWorkflow uses the action at the beginning of the workflow to execute the following reactions.
-func (o *Operator) runWorkflow(initialAction task.Action) error {
+func (o *Operator) runWorkflow(initialAction kafka.Message) error {
 	// Creates the task client, used to retrieve a workflow's tasks one after the other.
 	client, err := task.NewClient("9000")
 	if err != nil {
@@ -117,7 +118,7 @@ func (o *Operator) runWorkflow(initialAction task.Action) error {
 			return fmt.Errorf("failed to get reaction: %w", err)
 		}
 
-		if err = o.runReaction(t); err != nil {
+		if err = o.runReaction(t, initialAction.Owner); err != nil {
 			return fmt.Errorf("failed to run reaction: %w", err)
 		}
 	}
@@ -149,7 +150,7 @@ func (o *Operator) consumeService(topic string) error {
 
 		// Read all messages.
 		for msg := range messages {
-			a := task.Action{}
+			a := kafka.Message{}
 			if err := json.Unmarshal(msg.Value, &a); err != nil {
 				return fmt.Errorf("failed to decode kafka message: %w", err)
 			}

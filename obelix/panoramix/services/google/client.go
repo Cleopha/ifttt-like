@@ -3,6 +3,8 @@ package google
 import (
 	"context"
 	"fmt"
+	"github.com/Cleopha/ifttt-like-common/credentials"
+	"github.com/Cleopha/ifttt-like-common/protos"
 	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -45,7 +47,7 @@ func New(ctx context.Context, scopes []string) *Client {
 }
 
 // configure creates the Google OAuth2 client using the access token of a specific user.
-func (c *Client) configure() error {
+func (c *Client) configure(owner string) error {
 	conf := &oauth2.Config{
 		ClientID:     ClientID,
 		ClientSecret: ClientSecret,
@@ -54,18 +56,29 @@ func (c *Client) configure() error {
 		Scopes:       c.scopes,
 	}
 
-	token, err := GetAccessToken(c.ctx, conf)
+	token := &oauth2.Token{}
+	credentialClient, err := credentials.NewClient("9001")
+
 	if err != nil {
-		return fmt.Errorf("failed to get google access token: %w", err)
+		return fmt.Errorf("failed to create credential gRPC client: %w", err)
 	}
 
+	credential, err := credentialClient.GetCredential(c.ctx, &protos.GetCredentialRequest{
+		Owner:   owner,
+		Service: protos.Service_GOOGLE,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to query google credential: %w", err)
+	}
+
+	token.AccessToken = credential.GetToken()
 	c.clt = conf.Client(c.ctx, token)
 
 	return nil
 }
 
 // CreateNewEvent creates a new Google Calendar event using the specified parameters.
-func (c *Client) CreateNewEvent(p *structpb.Struct) error {
+func (c *Client) CreateNewEvent(p *structpb.Struct, owner string) error {
 	type paramsEvent struct {
 		title    string
 		start    time.Time
@@ -88,7 +101,7 @@ func (c *Client) CreateNewEvent(p *structpb.Struct) error {
 		return fmt.Errorf("failed to parse event duration: %w", err)
 	}
 
-	if err = c.configure(); err != nil {
+	if err = c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure google oauth2: %w", err)
 	}
 
@@ -117,7 +130,7 @@ func (c *Client) CreateNewEvent(p *structpb.Struct) error {
 }
 
 // CreateNewDocument creates a new Google Docs document using the given title.
-func (c *Client) CreateNewDocument(p *structpb.Struct) error {
+func (c *Client) CreateNewDocument(p *structpb.Struct, owner string) error {
 	type paramsDocument struct {
 		title string
 	}
@@ -126,7 +139,7 @@ func (c *Client) CreateNewDocument(p *structpb.Struct) error {
 		title: p.Fields["title"].GetStringValue(),
 	}
 
-	if err := c.configure(); err != nil {
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure google oauth2: %w", err)
 	}
 
@@ -146,7 +159,7 @@ func (c *Client) CreateNewDocument(p *structpb.Struct) error {
 }
 
 // CreateNewSheet creates a new Google Sheet document using the given title.
-func (c *Client) CreateNewSheet(p *structpb.Struct) error {
+func (c *Client) CreateNewSheet(p *structpb.Struct, owner string) error {
 	type paramsSheet struct {
 		title string
 	}
@@ -155,7 +168,7 @@ func (c *Client) CreateNewSheet(p *structpb.Struct) error {
 		title: p.Fields["title"].GetStringValue(),
 	}
 
-	if err := c.configure(); err != nil {
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure google oauth2: %w", err)
 	}
 

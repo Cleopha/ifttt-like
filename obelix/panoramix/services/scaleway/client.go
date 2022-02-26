@@ -32,7 +32,7 @@ func New(ctx context.Context) *Client {
 
 // configure uses the credentialAPI to retrieve the user's access and secret keys used when making queries to the
 // Scaleway services.
-func (c *Client) configure() error {
+func (c *Client) configure(owner string) error {
 	var err error
 
 	accessKey, secretKey := GetKeys()
@@ -47,8 +47,8 @@ func (c *Client) configure() error {
 
 //nolint:stylecheck
 // CreateNewFlexibleIp creates a new flexible IP in the fr-par-2 zone.
-func (c *Client) CreateNewFlexibleIp(projectID string) error {
-	if err := c.configure(); err != nil {
+func (c *Client) CreateNewFlexibleIp(projectID string, owner string) error {
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
 
@@ -68,8 +68,8 @@ func (c *Client) CreateNewFlexibleIp(projectID string) error {
 }
 
 // CreateNewInstance creates a new instance (either a DEV1-S or DEV1-M) with the given name in the specified zone.
-func (c *Client) CreateNewInstance(projectID string, zone scw.Zone, name string, commercialType string) error {
-	if err := c.configure(); err != nil {
+func (c *Client) CreateNewInstance(projectID string, zone scw.Zone, name string, commercialType string, owner string) error {
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
 
@@ -95,8 +95,8 @@ func (c *Client) CreateNewInstance(projectID string, zone scw.Zone, name string,
 	return nil
 }
 
-func (c *Client) CreateNewDatabase(projectID, name, username, password, engine string) error {
-	if err := c.configure(); err != nil {
+func (c *Client) CreateNewDatabase(projectID, name, username, password, engine string, owner string) error {
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
 
@@ -123,8 +123,8 @@ func (c *Client) CreateNewDatabase(projectID, name, username, password, engine s
 }
 
 func (c *Client) CreateNewKubernetesCluster(projectID, name string, region scw.Region,
-	cni k8s.CNI, ingress k8s.Ingress) error {
-	if err := c.configure(); err != nil {
+	cni k8s.CNI, ingress k8s.Ingress, owner string) error {
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
 
@@ -152,8 +152,8 @@ func (c *Client) CreateNewKubernetesCluster(projectID, name string, region scw.R
 	return nil
 }
 
-func (c *Client) CreateNewContainerRegistry(region scw.Region, name string, projectID string) error {
-	if err := c.configure(); err != nil {
+func (c *Client) CreateNewContainerRegistry(region scw.Region, name string, projectID string, owner string) error {
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
 

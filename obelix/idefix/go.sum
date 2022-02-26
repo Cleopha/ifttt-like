@@ -57,6 +57,14 @@ github.com/Cleopha/ifttt-like-common v1.0.3 h1:qiah05yvfh1r+bRXk2ldx2yfCV3q6ApNN
 github.com/Cleopha/ifttt-like-common v1.0.3/go.mod h1:ugrBl+b8qRsr36DyC/lIPegtJ7ck/vMooXb8YXCdaN0=
 github.com/Cleopha/ifttt-like-common v1.0.4 h1:J70GOEK1DlsgXvanxXloGdkbtWg2WXv+J1tOB2FxY9U=
 github.com/Cleopha/ifttt-like-common v1.0.4/go.mod h1:67ddh7VRHbhYWb/XtV+sTXINK2vSp4cRqqMIcaOoAXk=
+github.com/Cleopha/ifttt-like-common v1.0.5 h1:r266XuRKQ1WX+1bvcZcv6R7sEHkjUfQLNozNibVdeFQ=
+github.com/Cleopha/ifttt-like-common v1.0.5/go.mod h1:67ddh7VRHbhYWb/XtV+sTXINK2vSp4cRqqMIcaOoAXk=
+github.com/Cleopha/ifttt-like-common v1.0.6 h1:s3N2RRPy1iOn1vsFLhYnpYN1WGdteVmHFXr5Ai/4X5o=
+github.com/Cleopha/ifttt-like-common v1.0.6/go.mod h1:67ddh7VRHbhYWb/XtV+sTXINK2vSp4cRqqMIcaOoAXk=
+github.com/Cleopha/ifttt-like-common v1.0.7 h1:q2YKkTIPf0i8PFNcNDXJ1Tj+MgaqLVVO4uTMY2PDff8=
+github.com/Cleopha/ifttt-like-common v1.0.7/go.mod h1:67ddh7VRHbhYWb/XtV+sTXINK2vSp4cRqqMIcaOoAXk=
+github.com/Cleopha/ifttt-like-common v1.0.8 h1:rAjKbBFe/lnGLHMWs3NT71w5tRuenxRYR7NflE57TF0=
+github.com/Cleopha/ifttt-like-common v1.0.8/go.mod h1:67ddh7VRHbhYWb/XtV+sTXINK2vSp4cRqqMIcaOoAXk=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/PtitLuca/go-dispatcher v1.0.0 h1:ci6Rfw0BP8ANSaxyPe3wzoBEPYPmfdvB+31q+7uUjzQ=
 github.com/PtitLuca/go-dispatcher v1.0.0/go.mod h1:LnUEx7yU8cM//F/NT31Fb+cMoDffuCJLKIOi5opAUfk=

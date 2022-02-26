@@ -22,13 +22,10 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 
 	rc := redis.NewClient(ctx)
 
-	githubClient := &github.Client{
-		Requester: nil,
-		Operator: &operator.IdefixOperator{
-			RC: rc,
-			KP: kp,
-		},
-	}
+	githubClient := github.NewClient(ctx, &operator.IdefixOperator{
+		RC: rc,
+		KP: kp,
+	})
 
 	googleClient := &google.Client{
 		Requester: nil,

@@ -108,7 +108,7 @@ func (w *Watcher) Watch() error {
 						return
 					}
 
-					_, err = w.d.Run(service, method, taskID, params)
+					_, err = w.d.Run(service, method, taskID, params, elem.Owner)
 					if err != nil {
 						zap.S().Error(err)
 
