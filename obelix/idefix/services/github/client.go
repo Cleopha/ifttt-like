@@ -1,6 +1,7 @@
 package github
 
 import (
+	"errors"
 	"fmt"
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/devauth"
@@ -71,52 +72,48 @@ func (c *Client) preprocessIssue(prm *structpb.Struct) (*Issues, error) {
 
 // NewPrDetected check if new pull-request is open
 func (c *Client) NewPrDetected(taskID string, prm *structpb.Struct) error {
-	/*
-		issues, err := c.preprocessIssue(prm)
-		if err != nil {
-			return fmt.Errorf("failed to preprecess issue: %w", err)
+	issues, err := c.preprocessIssue(prm)
+	if err != nil {
+		return fmt.Errorf("failed to preprecess issue: %w", err)
+	}
+
+	old, err := issues.GetRedisState(c.Operator.RC, taskID, true)
+	if err != nil {
+		if errors.Is(err, ErrNoIssues) {
+			return nil
 		}
 
-		old, err := issues.GetRedisState(c.Operator.RC, taskID, true)
-		if err != nil {
-			if errors.Is(err, ErrNoIssues) {
-				return nil
-			}
+		return fmt.Errorf("failed to update redis state: %w", err)
+	}
 
-			return fmt.Errorf("failed to update redis state: %w", err)
-		}
+	err = issues.LookForChange(c.Operator, taskID, old, true)
+	if err != nil {
+		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
+	}
 
-		err = issues.LookForChange(c.Operator, taskID, old, true)
-		if err != nil {
-			return fmt.Errorf("an error has occurred while looking for changes: %w", err)
-		}
-
-	*/
 	return nil
 }
 
 // NewIssueDetected check if new issue is open
 func (c *Client) NewIssueDetected(taskID string, prm *structpb.Struct) error {
-	/*
-		issues, err := c.preprocessIssue(prm)
-		if err != nil {
-			return fmt.Errorf("failed to preprecess issue: %w", err)
+	issues, err := c.preprocessIssue(prm)
+	if err != nil {
+		return fmt.Errorf("failed to preprecess issue: %w", err)
+	}
+
+	old, err := issues.GetRedisState(c.Operator.RC, taskID, false)
+	if err != nil {
+		if errors.Is(err, ErrNoIssues) {
+			return nil
 		}
 
-		old, err := issues.GetRedisState(c.Operator.RC, taskID, false)
-		if err != nil {
-			if errors.Is(err, ErrNoIssues) {
-				return nil
-			}
+		return fmt.Errorf("failed to update redis state: %w", err)
+	}
 
-			return fmt.Errorf("failed to update redis state: %w", err)
-		}
+	if err = issues.LookForChange(c.Operator, taskID, old, false); err != nil {
+		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
+	}
 
-		if err = issues.LookForChange(c.Operator, taskID, old, false); err != nil {
-			return fmt.Errorf("an error has occurred while looking for changes: %w", err)
-		}
-
-	*/
 	return nil
 }
 
