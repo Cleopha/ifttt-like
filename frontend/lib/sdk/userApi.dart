@@ -199,7 +199,7 @@ class UserAPI {
     }
   }
   
-  Future<List> githubRepos(String token) async {
+  Future<List<String>> githubRepos(String token) async {
     Dio dio = Dio(new BaseOptions(
       baseUrl: 'https://api.github.com/',
       connectTimeout: 15000,
