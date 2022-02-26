@@ -318,19 +318,19 @@ class WorkflowAPI {
   }
 
   List<String> getActionServiceNameAndPath(String action) {
-    if (action.length >= "GITHUB".length && action.substring(0, 5) == "GITHUB") {
+    if (action.length >= "GITHUB".length && action.substring(0, "GITHUB".length) == "GITHUB") {
       return ["Github", "assets/github.png"];
-    } else if (action.length >= "GOOGLE".length && action.substring(0, 5) == "GOOGLE") {
+    } else if (action.length >= "GOOGLE".length && action.substring(0, "GOOGLE".length) == "GOOGLE") {
       return ["Google", "assets/google.png"];
-    } else if (action.length >= "SCALEWAY".length && action.substring(0, 5) == "SCALEWAY") {
+    } else if (action.length >= "SCALEWAY".length && action.substring(0, "SCALEWAY".length) == "SCALEWAY") {
       return ["Scaleway", "assets/scaleway.png"];
-    } else if (action.length >= "COINMARKETCAP".length && action.substring(0, 5) == "COINMARKETCAP") {
+    } else if (action.length >= "COINMARKETCAP".length && action.substring(0, "COINMARKETCAP".length) == "COINMARKETCAP") {
       return ["CoinMarketCap", "assets/coinmarketcap.png"];
-    } else if (action.length >= "NIST".length && action.substring(0, 5) == "NIST") {
+    } else if (action.length >= "NIST".length && action.substring(0, "NIST".length) == "NIST") {
       return ["Nist", "assets/nist.png"];
-    } else if (action.length >= "NOTION".length && action.substring(0, 5) == "NOTION") {
+    } else if (action.length >= "NOTION".length && action.substring(0, "NOTION".length) == "NOTION") {
       return ["Notion", "assets/notion.png"];
-    } else if (action.length >= "ONEDRIVE".length && action.substring(0, 5) == "ONEDRIVE") {
+    } else if (action.length >= "ONEDRIVE".length && action.substring(0, "ONEDRIVE".length) == "ONEDRIVE") {
       return ["OneDrive", "assets/onedrive.png"];
     } else {
       return ["Unknown", "assets/unknown.png"];
