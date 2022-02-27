@@ -12,6 +12,7 @@ import (
 	"idefix/redis"
 	"idefix/services/github"
 	"idefix/services/google"
+	"idefix/services/scaleway"
 	"reflect"
 )
 
@@ -77,6 +78,10 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 	}
 
 	rc := redis.NewClient(ctx)
+	op := &operator.IdefixOperator{
+		RC: rc,
+		KP: kp,
+	}
 
 	githubClient := github.NewClient(ctx, &operator.IdefixOperator{
 		RC: rc,
@@ -90,11 +95,10 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 			"https://www.googleapis.com/auth/blogger",
 			"https://www.googleapis.com/auth/calendar",
 		},
-		Operator: &operator.IdefixOperator{
-			RC: rc,
-			KP: kp,
-		},
+		Operator: op,
 	}
+
+	scalewayClient := scaleway.NewClient(ctx, op)
 
 	if err := validateMethodsSignatures(googleClient); err != nil {
 		return nil, err
@@ -104,12 +108,20 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 		return nil, err
 	}
 
+	if err := validateMethodsSignatures(scalewayClient); err != nil {
+		return nil, err
+	}
+
 	if err = d.Register("github", githubClient); err != nil {
-		return nil, fmt.Errorf("failed to register Github services: %w", err)
+		return nil, fmt.Errorf("failed to register Github service: %w", err)
 	}
 
 	if err = d.Register("google", googleClient); err != nil {
-		return nil, fmt.Errorf("failed to register Google services: %w", err)
+		return nil, fmt.Errorf("failed to register Google service: %w", err)
+	}
+
+	if err = d.Register("scaleway", scalewayClient); err != nil {
+		return nil, fmt.Errorf("failed to register Scaleway service: %w", err)
 	}
 
 	zap.S().Info("Services are now loaded into idefix")
