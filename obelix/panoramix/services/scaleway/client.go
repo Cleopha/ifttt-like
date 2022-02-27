@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/Cleopha/ifttt-like-common/credentials"
+	"github.com/Cleopha/ifttt-like-common/protos"
 	flexibleip "github.com/scaleway/scaleway-sdk-go/api/flexibleip/v1alpha1"
 	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
 	"github.com/scaleway/scaleway-sdk-go/api/k8s/v1"
@@ -11,11 +13,14 @@ import (
 	"github.com/scaleway/scaleway-sdk-go/api/registry/v1"
 	"github.com/scaleway/scaleway-sdk-go/scw"
 	"go.uber.org/zap"
+	"os"
+	"strings"
 )
 
 var (
-	ErrInvalidServerCommercialType   = errors.New("can only DEV1-S and DEV1-M servers for money reasons")
-	ErrInvalidDatabaseInstanceEngine = errors.New("only support PostgreSQL-14 and MySQL-8")
+	ErrInvalidServerCommercialType      = errors.New("can only DEV1-S and DEV1-M servers for money reasons")
+	ErrInvalidDatabaseInstanceEngine    = errors.New("only support PostgreSQL-14 and MySQL-8")
+	ErrInvalidScalewayCredentialsFormat = errors.New("invalid scaleway credentials format")
 )
 
 type Client struct {
@@ -33,11 +38,28 @@ func New(ctx context.Context) *Client {
 // configure uses the credentialAPI to retrieve the user's access and secret keys used when making queries to the
 // Scaleway services.
 func (c *Client) configure(owner string) error {
-	var err error
+	credentialClient, err := credentials.NewClient(os.Getenv("CREDENTIAL_API_PORT"))
+	if err != nil {
+		return fmt.Errorf("failed to create gRPC credential client: %w", err)
+	}
 
-	accessKey, secretKey := GetKeys()
+	creds, err := credentialClient.GetCredential(c.ctx, &protos.GetCredentialRequest{
+		Owner:   owner,
+		Service: protos.Service_SCALEWAY,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to get scaleway credentials: %w", err)
+	}
 
-	c.clt, err = scw.NewClient(scw.WithAuth(accessKey, secretKey))
+	// Scaleway credentials are stored using the following format: secretKey + accessKey
+	// with the access key beginning by "SCW"
+	keys := strings.Split(creds.GetToken(), "SCW")
+
+	if len(keys) != 2 {
+		return ErrInvalidScalewayCredentialsFormat
+	}
+
+	c.clt, err = scw.NewClient(scw.WithAuth("SCW"+keys[1], keys[0]))
 	if err != nil {
 		return fmt.Errorf("failed to create scaleway client: %w", err)
 	}

@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/operator"
+	"os"
 	"strings"
 )
 
@@ -33,7 +34,7 @@ func NewClient(ctx context.Context, op *operator.IdefixOperator) *Client {
 }
 
 func (c *Client) configure(owner string) error {
-	credentialClient, err := credentials.NewClient("9001")
+	credentialClient, err := credentials.NewClient(os.Getenv("CREDENTIAL_API_PORT"))
 	if err != nil {
 		return fmt.Errorf("failed to create gRPC credential client: %w", err)
 	}
