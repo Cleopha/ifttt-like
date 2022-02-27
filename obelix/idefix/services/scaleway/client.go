@@ -103,6 +103,7 @@ func (c *Client) VolumeExceedsLimit(taskID string, prm *structpb.Struct, owner s
 
 	if err = v.LookForChange(c.Operator, taskID, old, owner); err != nil {
 		zap.S().Info(err)
+
 		return fmt.Errorf("an error has occurred while looking for change between states: %w", err)
 	}
 
