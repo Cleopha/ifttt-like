@@ -3,7 +3,7 @@ module idefix
 go 1.16
 
 require (
-	github.com/Cleopha/ifttt-like-common v1.0.8
+	github.com/Cleopha/ifttt-like-common v1.0.9
 	github.com/PtitLuca/go-dispatcher v1.0.0
 	github.com/Shopify/sarama v1.31.0
 	github.com/go-redis/redis/v8 v8.11.4

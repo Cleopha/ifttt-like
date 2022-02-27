@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	cloud.google.com/go/compute v1.3.0 // indirect
-	github.com/Cleopha/ifttt-like-common v1.0.8
+	github.com/Cleopha/ifttt-like-common v1.0.9
 	github.com/PtitLuca/go-dispatcher v1.0.0
 	github.com/Shopify/sarama v1.31.1
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect

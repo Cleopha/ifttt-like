@@ -11,13 +11,14 @@ datasource db {
 }
 
 enum Service {
-    GITHUB
+    UNKNOWN
     GOOGLE
     SCALEWAY
     COINMARKET
     DOCKER
     ONEDRIVE
     NOTION
+    GITHUB
 }
 
 model Storage {

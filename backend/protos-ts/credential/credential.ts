@@ -8,13 +8,14 @@ import { Empty } from "./google/protobuf/empty";
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export enum Service {
-  GITHUB = 0,
+  UNKNOWN = 0,
   GOOGLE = 1,
   SCALEWAY = 2,
   COINMARKET = 3,
   DOCKER = 4,
   ONEDRIVE = 5,
   NOTION = 6,
+  GITHUB = 7,
   UNRECOGNIZED = -1,
 }
 
