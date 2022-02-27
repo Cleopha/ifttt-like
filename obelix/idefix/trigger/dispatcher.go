@@ -4,7 +4,6 @@ import (
 	"github.com/Shopify/sarama"
 	"idefix/operator"
 	"idefix/redis"
-	"reflect"
 )
 
 /*
@@ -12,8 +11,8 @@ import (
  */
 
 type Dispatcher interface {
-	Parse(data []byte) (reflect.Value, error)
-	LookForChange(op *operator.IdefixOperator, key, old string) error
-	SendToKafka(kp sarama.SyncProducer, workflowID string) error
+	Parse(data interface{}) error
+	LookForChange(op *operator.IdefixOperator, key, old string, owner string) error
+	SendToKafka(kp sarama.SyncProducer, taskID, owner string) error
 	GetRedisState(rc *redis.Client, key string) (string, error)
 }

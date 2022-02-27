@@ -8,6 +8,7 @@ require (
 	github.com/Shopify/sarama v1.31.0
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.9 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
