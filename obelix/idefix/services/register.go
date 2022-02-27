@@ -10,8 +10,10 @@ import (
 	"idefix/operator"
 	"idefix/producer"
 	"idefix/redis"
+	"idefix/services/coinmarketcap"
 	"idefix/services/github"
 	"idefix/services/google"
+	"idefix/services/nist"
 	"idefix/services/scaleway"
 	"reflect"
 )
@@ -83,10 +85,7 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 		KP: kp,
 	}
 
-	githubClient := github.NewClient(ctx, &operator.IdefixOperator{
-		RC: rc,
-		KP: kp,
-	})
+	githubClient := github.NewClient(ctx, op)
 
 	googleClient := google.New(ctx, []string{
 		"https://www.googleapis.com/auth/bigquery",
@@ -96,15 +95,27 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 
 	scalewayClient := scaleway.NewClient(ctx, op)
 
-	if err := validateMethodsSignatures(googleClient); err != nil {
+	nistClient := nist.NewClient(ctx, op)
+
+	coinmarkercapClient := coinmarketcap.NewClient(ctx, op)
+
+	if err = validateMethodsSignatures(googleClient); err != nil {
 		return nil, err
 	}
 
-	if err := validateMethodsSignatures(githubClient); err != nil {
+	if err = validateMethodsSignatures(githubClient); err != nil {
 		return nil, err
 	}
 
-	if err := validateMethodsSignatures(scalewayClient); err != nil {
+	if err = validateMethodsSignatures(scalewayClient); err != nil {
+		return nil, err
+	}
+
+	if err = validateMethodsSignatures(nistClient); err != nil {
+		return nil, err
+	}
+
+	if err = validateMethodsSignatures(coinmarkercapClient); err != nil {
 		return nil, err
 	}
 
@@ -118,6 +129,14 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 
 	if err = d.Register("scaleway", scalewayClient); err != nil {
 		return nil, fmt.Errorf("failed to register Scaleway service: %w", err)
+	}
+
+	if err = d.Register("nist", nistClient); err != nil {
+		return nil, fmt.Errorf("failed to register Nist service: %w", err)
+	}
+
+	if err = d.Register("coinmarketcap", coinmarkercapClient); err != nil {
+		return nil, fmt.Errorf("failed to register Nist service: %w", err)
 	}
 
 	zap.S().Info("Services are now loaded into idefix")
