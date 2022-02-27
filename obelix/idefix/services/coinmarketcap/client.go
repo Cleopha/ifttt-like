@@ -44,8 +44,7 @@ func (c *Client) AssetVariationDetected(taskID string, prm *structpb.Struct, own
 		return fmt.Errorf("failed to update redis state: %w", err)
 	}
 
-	err = dominance.LookForChange(c.Operator, taskID, old, owner, p.limit)
-	if err != nil {
+	if err = dominance.LookForChange(c.Operator, taskID, old, owner, p.limit); err != nil {
 		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
 	}
 
