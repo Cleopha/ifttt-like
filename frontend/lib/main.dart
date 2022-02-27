@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/controllers/api_controller.dart';
 import 'package:get/get.dart';
 
 import 'package:frontend/routes/home.dart';
@@ -16,6 +17,7 @@ void main() {
       ),
     );
   }
+  Get.put(ApiController());
   runApp(const MyApp());
 }
 
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
       title: 'IFTTT Like',
       theme: ThemeData(fontFamily: 'AvenirNext'),
       debugShowCheckedModeBanner: false,
-      getPages: [],
+      getPages: const [],
       home: const Home(),
     );
   }
