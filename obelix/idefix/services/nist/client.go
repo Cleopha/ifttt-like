@@ -33,7 +33,7 @@ func (c *Client) NewCveDetected(taskID string, prm *structpb.Struct, owner strin
 		return fmt.Errorf("failed to update redis state: %w", err)
 	}
 
-	// Verifies if the event is in the range of < 10 minutes.
+	// Verifies if new CVE are published
 	if err = cve.LookForChange(c.Operator, taskID, old, owner); err != nil {
 		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
 	}
