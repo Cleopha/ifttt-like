@@ -73,15 +73,20 @@ void main() {
 
               workflowAPI.addReaction(user.uid, w.id, "My Reaction", "GOOGLE_CREATE_NEW_EVENT", {}).then((Task t) {
                 print("reaction added: ${t.reactions[0].name}");
+                t.reactions[0].name = "My Reaction 2";
 
-                workflowAPI.getWorkflows(user.uid).then((List<Workflow> workflows) {
-                  workflowAPI.putWorkflow(user.uid, workflows[0].id, "New Name").then((void v) {
-                    print("workflow updated");
-                    workflowAPI.getAllTasks(user.uid).then((List<Task> tasks) {
-                      print("tasks: ${tasks.length}");
+                workflowAPI.putReaction(user.uid, w.id, t.reactions[0]).then((RawTask r) {
+                  print("reaction updated: ${r.name}");
 
-                      workflowAPI.deleteWorkflow(user.uid, w.id).then((void v) {
-                        print("workflow deleted");
+                  workflowAPI.getWorkflows(user.uid).then((List<Workflow> workflows) {
+                    workflowAPI.putWorkflow(user.uid, workflows[0].id, "New Name").then((void v) {
+                      print("workflow updated");
+                      workflowAPI.getAllTasks(user.uid).then((List<Task> tasks) {
+                        print("tasks: ${tasks.length}");
+
+                        workflowAPI.deleteWorkflow(user.uid, w.id).then((void v) {
+                          print("workflow deleted");
+                        });
                       });
                     });
                   });
@@ -275,22 +280,38 @@ class ServiceInfo {
 }
 
 class ActionInfo {
-  final String name;
-  final ServiceInfo service;
+  String name;
+  String nextId;
+  String action;
+  final String id;
+  ServiceInfo service;
+  Map<String, dynamic> params;
 
   ActionInfo({
     required this.name,
     required this.service,
+    required this.id,
+    required this.action,
+    required this.params,
+    required this.nextId,
   });
 }
 
 class ReactionInfo {
-  final String name;
-  final ServiceInfo service;
+  String name;
+  final String id;
+  String reaction;
+  ServiceInfo service;
+  Map<String, dynamic> params;
+  String nextId;
 
   ReactionInfo({
     required this.name,
     required this.service,
+    required this.id,
+    required this.reaction,
+    required this.params,
+    required this.nextId,
   });
 }
 
@@ -460,7 +481,7 @@ class WorkflowAPI {
 
 
       if (rawTasks.length == 0) {
-        return Task(author: userId, numberOfUsers: 1, action: ActionInfo(name: "", service: ServiceInfo(iconPath: "TODO", name: "TODO")), reactions: [], isActive: false);
+        return Task(author: userId, numberOfUsers: 1, action: ActionInfo(name: "", id: "", action: "", params: {}, nextId: "", service: ServiceInfo(iconPath: "TODO", name: "TODO")), reactions: [], isActive: false);
       }
 
       List<RawTask> sortedRawTasks = [];
@@ -488,6 +509,10 @@ class WorkflowAPI {
 
       ActionInfo action = ActionInfo(
         name: sortedRawTasks.first.action,
+        action: sortedRawTasks.first.action,
+        id: sortedRawTasks.first.id,
+        params: sortedRawTasks.first.params,
+        nextId: sortedRawTasks.first.nextId,
         service: ServiceInfo(
           name: nameAndpath[0],
           iconPath: nameAndpath[1],
@@ -507,6 +532,10 @@ class WorkflowAPI {
 
           return ReactionInfo(
             name: rawTask.action,
+            reaction: rawTask.action,
+            id: rawTask.id,
+            params: rawTask.params,
+            nextId: rawTask.nextId,
             service: ServiceInfo(
               name: nameAndpath[0],
               iconPath: nameAndpath[1],
@@ -691,6 +720,71 @@ class WorkflowAPI {
       }
 
       return tasks;
+
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<RawTask> putReaction(String userId, String workflowId, ReactionInfo reaction) async {
+    try {
+      String id = reaction.id;
+
+      Response response = await dio.put("/user/$userId/workflow/$workflowId/task/$id", data: {
+        "name": reaction.name,
+        "type": "REACTION",
+        "action": reaction.reaction,
+        "params": reaction.params,
+        "nextTask": reaction.nextId,
+      });
+
+      if (response.statusCode != 200) {
+        throw Exception("Error patching task");
+      }
+
+      return RawTask(
+        id: response.data['id'],
+        name: response.data['name'],
+        type: response.data['type'],
+        action: response.data['action'],
+        params: response.data['params'],
+        nextId: response.data['nextTask'],
+      );
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> deleteReaction(String userId, String workflowId, Task task, ReactionInfo reaction) async {
+    try {
+      ReactionInfo? previousReaction = null;
+      ReactionInfo? nextReaction = null;
+
+      for (ReactionInfo r in task.reactions) {
+        if (r.nextId == reaction.id) {
+          previousReaction = r;
+          break;
+        }
+      }
+
+      for (ReactionInfo r in task.reactions) {
+        if (r.id == reaction.nextId) {
+          nextReaction = r;
+          break;
+        }
+      }
+
+      if (previousReaction != null) {
+        previousReaction.nextId = nextReaction?.id ?? "";
+      }
+
+      Response response = await dio.delete("/user/$userId/workflow/$workflowId/task/${reaction.id}");
+
+      if (response.statusCode != 200) {
+        throw Exception("Error deleting task");
+      }
+
+      task.reactions.remove(reaction);
 
     } catch (e) {
       throw e;
