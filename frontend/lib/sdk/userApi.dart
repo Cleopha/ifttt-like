@@ -1,4 +1,6 @@
 // import 'package:flutter/material.dart';
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
@@ -32,7 +34,7 @@ void main() {
   UserAPI userAPI = new UserAPI(dio: dio);
   WorkflowAPI workflowAPI = new WorkflowAPI(dio: dio);
 
-  final String mail = "string@gmail.com";
+  final String mail = "s@gmail.com";
   final String password = "string";
 
   // userAPI.register(mail, password).then((void v) {
@@ -75,14 +77,16 @@ void main() {
                 workflowAPI.getWorkflows(user.uid).then((List<Workflow> workflows) {
                   workflowAPI.putWorkflow(user.uid, workflows[0].id, "New Name").then((void v) {
                     print("workflow updated");
+                    workflowAPI.getAllTasks(user.uid).then((List<Task> tasks) {
+                      print("tasks: ${tasks.length}");
 
-                    workflowAPI.deleteWorkflow(user.uid, w.id).then((void v) {
-                      print("workflow deleted");
+                      workflowAPI.deleteWorkflow(user.uid, w.id).then((void v) {
+                        print("workflow deleted");
+                      });
                     });
                   });
                 });
               });
-
             });
           });
         });
@@ -454,12 +458,13 @@ class WorkflowAPI {
         );
       }));
 
+
       if (rawTasks.length == 0) {
         return Task(author: userId, numberOfUsers: 1, action: ActionInfo(name: "", service: ServiceInfo(iconPath: "TODO", name: "TODO")), reactions: [], isActive: false);
       }
 
       List<RawTask> sortedRawTasks = [];
-      
+
       for (RawTask rawTask in rawTasks) {
         if (rawTask.type == "ACTION") {
           sortedRawTasks.add(rawTask);
@@ -576,14 +581,6 @@ class WorkflowAPI {
         nextId = firstReaction.id;
       }
 
-      print({
-        "name": title,
-        "type": "ACTION",
-        "action": action,
-        "params": params,
-        "nextId": nextId,
-      });
-
       response = await dio.post("/user/$userId/workflow/$workflowId/task", data: {
         "name": title,
         "type": "ACTION",
@@ -669,6 +666,31 @@ class WorkflowAPI {
       }
 
       return getTask(userId, workflowId);
+
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<List<Task>> getAllTasks(String userId) async {
+    try {
+      Response response = await dio.get("/user/$userId/workflow");
+
+      if (response.statusCode != 200) {
+        throw Exception("Error getting tasks");
+      }
+
+      List<Task> tasks = [];
+
+      for (dynamic t in response.data) {
+        try {
+          tasks.add(await getTask(userId, t['id']));
+        } catch (e) {
+          throw e;
+        }
+      }
+
+      return tasks;
 
     } catch (e) {
       throw e;
