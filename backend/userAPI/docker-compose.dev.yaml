@@ -1,0 +1,67 @@
+version: '3.3'
+
+services:
+  database:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - backend
+
+  redis:
+    image: bitnami/redis
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASS}
+    ports:
+      - "${REDIS_PORT}:6379"
+
+  workflow-api:
+    image: area/workflow-api
+    build:
+      context: ../
+      dockerfile: workflowAPI/Dockerfile
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=$WORKFLOW_API_PORT
+      - DB_HOST=database
+      - DB_PORT
+      - DB_URL=postgresql://$DB_USER:$DB_PASS@database:$DB_PORT/$DB_NAME?schema=$DB_WORKFLOW_SCHEMA
+    ports:
+      - "${WORKFLOW_API_PORT}:${WORKFLOW_API_PORT}"
+    networks:
+      - backend
+    depends_on:
+      - database
+
+  credential-api:
+    image: area/credential-api
+    build:
+      context: ../
+      dockerfile: credentialAPI/Dockerfile
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=$CREDENTIAL_API_PORT
+      - DB_HOST=database
+      - DB_PORT
+      - DB_URL=postgresql://$DB_USER:$DB_PASS@database:$DB_PORT/$DB_NAME?schema=$DB_CREDENTIAL_SCHEMA
+    ports:
+      - "${CREDENTIAL_API_PORT}:${CREDENTIAL_API_PORT}"
+    networks:
+      - backend
+    depends_on:
+      - database
+
+  grpc-doc:
+    image: area/grpc-doc
+    build:
+      context: ../../protos
+      dockerfile: Dockerfile
+    ports:
+      - "${GRPC_DOC_PORT}:80"
+
+networks:
+  backend:

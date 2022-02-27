@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+enum TaskType {
+    ACTION
+    REACTION
+}
+
+enum TaskAction {
+  GITHUB_NEW_PR_DETECTED                   // Action
+  GITHUB_NEW_ISSUE_DETECTED                // Action
+  GITHUB_NEW_ISSUE_ASSIGNATION_DETECTED    // Action
+  GITHUB_NEW_ISSUE_CLOSED_DETECTED         // Action
+  GOOGLE_NEW_INCOMING_EVENT                // Action
+  SCALEWAY_VOLUME_EXCEEDS_LIMIT            // Action
+  COINMARKETCAP_ASSET_VARIATION_DETECTED   // Action
+  NIST_NEW_CVE_DETECTED                    // Action
+  GOOGLE_CREATE_NEW_EVENT                  // Reaction
+  GOOGLE_CREATE_NEW_DOCUMENT               // Reaction
+  GOOGLE_CREATE_NEW_SHEET                  // Reaction
+  SCALEWAY_CREATE_NEW_FLEXIBLE_IP          // Reaction
+  SCALEWAY_CREATE_NEW_INSTANCE             // Reaction
+  SCALEWAY_CREATE_NEW_DATABASE             // Reaction
+  SCALEWAY_CREATE_NEW_KUBERNETES_CLUSTER   // Reaction
+  SCALEWAY_CREATE_NEW_CONTAINER_REGISTRY   // Reaction
+  ONEDRIVE_CREATE_NEW_POWER_POINT          // Reaction
+  ONEDRIVE_CREATE_NEW_FORM                 // Reaction
+  NOTION_CREATE_NEW_PAGE                   // Reaction
+}
+
+model Workflow {
+    id     String @id @default(uuid())
+    owner  String
+    name   String
+    tasks  Task[]
+}
+
+model Task {
+    id         String @id @default(uuid())
+    name       String?
+    type       TaskType
+    action     TaskAction
+    nextTask   String?
+    params     Json
+    workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+    workflowId String
+}

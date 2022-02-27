@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+
+    "paths": {
+      "@logger": ["src/logger/index.js"],
+      "@config": ["src/config/index.js"],
+      "@exception": ["src/exception/index.js"],
+      "@protos": ["src/protos/index.js"],
+      "@task": ["src/task/index.js"],
+      "@workflow": ["src/workflow/index.js"],
+      "@db": ["src/prisma/index.js"]
+    }
+  },
+}

@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+// Area Workflow API
+package area.workflow;
+
+// Imports
+import "google/protobuf/empty.proto";
+
+import "task.proto";
+
+// Options
+option go_package = "./";
+
+
+// A workflow is a set of task (action and reaction) to execute
+message Workflow {
+  string id = 1;
+  string owner = 2;
+  string name = 3;
+  repeated task.Task tasks = 4;
+}
+
+// CRUD operation to manipulate a Workflow
+service WorkflowService {
+  rpc CreateWorkflow(CreateWorkflowRequest) returns (Workflow);
+  rpc ListWorkflows(ListWorkflowsRequest) returns (ListWorkflowsResponse);
+  rpc GetWorkflow(GetWorkflowRequest) returns (Workflow);
+  rpc UpdateWorkflow(UpdateWorkflowRequest) returns (Workflow);
+  rpc DeleteWorkflow(DeleteWorkflowRequest) returns (google.protobuf.Empty);
+}
+
+message CreateWorkflowRequest {
+  string owner = 2;
+  string name = 3;
+  repeated task.Task tasks = 4;
+}
+
+message ListWorkflowsRequest {
+  string owner = 1;
+}
+
+message ListWorkflowsResponse {
+  repeated Workflow workflows = 1;
+}
+
+message GetWorkflowRequest {
+  string id = 1;
+}
+
+message UpdateWorkflowRequest {
+  string id = 1;
+  optional string owner = 2;
+  optional string name = 3;
+}
+
+message DeleteWorkflowRequest {
+  string id = 1;
+}

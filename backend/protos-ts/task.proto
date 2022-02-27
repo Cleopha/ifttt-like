@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+// Area Workflow API
+package area.task;
+
+// Imports
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
+// Options
+option go_package = "./";
+
+
+// Task kind
+enum TaskType {
+  ACTION = 0; // Wait for an action
+  REACTION = 1; // React to an action
+}
+
+// Available action in the project
+// It will be completed with time
+enum TaskAction {
+  GITHUB_NEW_PR_DETECTED = 0;                  // Action
+  GITHUB_NEW_ISSUE_DETECTED = 1;               // Action
+  GITHUB_NEW_ISSUE_ASSIGNATION_DETECTED = 2;   // Action
+  GITHUB_NEW_ISSUE_CLOSED_DETECTED = 3;        // Action
+  GOOGLE_NEW_INCOMING_EVENT = 4;               // Action
+  SCALEWAY_VOLUME_EXCEEDS_LIMIT = 5;           // Action
+  COINMARKETCAP_ASSET_VARIATION_DETECTED = 6;  // Action
+  NIST_NEW_CVE_DETECTED = 7;                   // Action
+  GOOGLE_CREATE_NEW_EVENT = 8;                 // Reaction
+  GOOGLE_CREATE_NEW_DOCUMENT = 9;              // Reaction
+  GOOGLE_CREATE_NEW_SHEET = 10;                // Reaction
+  SCALEWAY_CREATE_NEW_FLEXIBLE_IP = 11;        // Reaction
+  SCALEWAY_CREATE_NEW_INSTANCE = 12;           // Reaction
+  SCALEWAY_CREATE_NEW_DATABASE = 13;           // Reaction
+  SCALEWAY_CREATE_NEW_KUBERNETES_CLUSTER = 14; // Reaction
+  SCALEWAY_CREATE_NEW_CONTAINER_REGISTRY = 15; // Reaction
+  ONEDRIVE_CREATE_NEW_POWER_POINT = 16;        // Reaction
+  ONEDRIVE_CREATE_NEW_FORM = 17;               // Reaction
+  NOTION_CREATE_NEW_PAGE = 18;                 // Reaction
+}
+
+// Task correspond to an action or reaction
+message Task {
+  string id = 1;
+  optional string name = 2;
+  TaskType type = 3;
+  TaskAction action = 4;
+
+  // Next task to execute (set to "" by default)
+  string next_task = 5;
+
+  // Any additional metadata required to execute the task
+  google.protobuf.Struct params = 6;
+}
+
+// CRUD operation to manipulate a Task
+service TaskService {
+  rpc CreateTask(CreateTaskRequest) returns (Task);
+  rpc ListTasks(ListTasksRequest) returns (ListTasksResponse);
+  rpc GetTask(GetTaskRequest) returns (Task);
+  rpc UpdateTask(UpdateTaskRequest) returns (Task);
+  rpc DeleteTask(DeleteTaskRequest) returns (google.protobuf.Empty);
+}
+
+message ListTasksRequest {
+  optional TaskType filter_type = 1;
+  optional TaskAction filter_action = 2;
+}
+
+message ListTasksResponse {
+  repeated Task tasks = 1;
+}
+
+message GetTaskRequest {
+  string id = 1;
+}
+
+message CreateTaskRequest {
+  string workflow_id = 1;
+  optional string name = 2;
+  TaskType type = 3;
+  TaskAction action = 4;
+  string next_task = 5;
+  google.protobuf.Struct params = 6;
+}
+
+message UpdateTaskRequest {
+  string id = 1;
+  optional string name = 2;
+  optional TaskType type = 3;
+  optional TaskAction action = 4;
+  optional string next_task = 5;
+  optional google.protobuf.Struct params = 6;
+}
+
+message DeleteTaskRequest {
+  string id = 1;
+}
