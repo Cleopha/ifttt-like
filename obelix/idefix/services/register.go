@@ -88,15 +88,11 @@ func RegisterServices(ctx context.Context) (*dispatcher.Dispatcher, error) {
 		KP: kp,
 	})
 
-	googleClient := &google.Client{
-		Requester: nil,
-		Scope: []string{
-			"https://www.googleapis.com/auth/bigquery",
-			"https://www.googleapis.com/auth/blogger",
-			"https://www.googleapis.com/auth/calendar",
-		},
-		Operator: op,
-	}
+	googleClient := google.New(ctx, []string{
+		"https://www.googleapis.com/auth/bigquery",
+		"https://www.googleapis.com/auth/blogger",
+		"https://www.googleapis.com/auth/calendar",
+	}, op)
 
 	scalewayClient := scaleway.NewClient(ctx, op)
 

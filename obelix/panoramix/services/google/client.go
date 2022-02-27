@@ -57,7 +57,7 @@ func (c *Client) configure(owner string) error {
 	}
 
 	token := &oauth2.Token{}
-	credentialClient, err := credentials.NewClient("9001")
+	credentialClient, err := credentials.NewClient(os.Getenv("CREDENTIAL_API_PORT"))
 
 	if err != nil {
 		return fmt.Errorf("failed to create credential gRPC client: %w", err)
