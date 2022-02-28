@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:frontend/controllers/controller_constant.dart';
 import 'package:frontend/routes/task_setting.dart';
 import 'package:get/get.dart';
 
@@ -93,6 +94,35 @@ class TaskCardAbout extends StatelessWidget {
                     toggleSize: kIsWeb ? 111 : 76,
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Container(
+                    height: 1,
+                    width: double.infinity,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ),
+                const SizedBox(height: 45),
+                Center(
+                  child: TextButton(
+                    onPressed: () async {
+                      await apiController.taskAPI.deleteWorkflow(
+                        apiController.user!.uid,
+                        task.workflowId!,
+                      );
+                      Get.back();
+                    },
+                    child: const Text(
+                      'Archiver',
+                      style: TextStyle(
+                        fontSize: kIsWeb ? 24 : 22,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
               ],
             ),
           )

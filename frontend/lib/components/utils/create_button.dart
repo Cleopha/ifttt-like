@@ -17,7 +17,7 @@ class CreateButton extends StatelessWidget {
     return TextButton(
       onPressed: () {
         Get.to(
-          CreateTask(),
+          const CreateTask(),
           transition: kIsWeb ? Transition.noTransition : Transition.rightToLeft,
         );
       },
