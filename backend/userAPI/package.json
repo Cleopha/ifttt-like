@@ -110,6 +110,7 @@
     "@logger": "dist/logger/index.js",
     "@doc": "dist/app.doc.js",
     "@auth": "dist/auth/index.js",
+    "@oauth": "dist/oauth/index.js",
     "@config": "dist/config/index.js",
     "@redis": "dist/redis/index.js",
     "@session": "dist/session/index.js",
@@ -121,6 +122,7 @@
     "@task": "dist/task/index.js",
     "@workflow": "dist/workflow/index.js",
     "@credential": "dist/credential/index.js",
+    "@credential/*": "dist/credential/*",
     "@protos": "dist/protos/index.js"
   }
 }
