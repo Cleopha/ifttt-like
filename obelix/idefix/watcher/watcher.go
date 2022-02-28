@@ -125,7 +125,6 @@ func (w *Watcher) Watch() error {
 							zap.S().Error(err)
 						}
 					}(&wg, &w.mu)
-
 				}
 			}(elem.Tasks, elem.Owner)
 		}
