@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:frontend/components/home/top_bar.dart';
 import 'package:frontend/components/utils/create_button.dart';
 import 'package:frontend/components/utils/explore_button.dart';
+import 'package:frontend/components/utils/taskCard/task_card.dart';
 import 'package:frontend/components/utils/task_scroller.dart';
+import 'package:frontend/controllers/controller_constant.dart';
+import 'package:frontend/utils/task.dart';
+import 'package:get/get.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -28,15 +32,23 @@ class Home extends StatelessWidget {
                     child: TopBar(),
                   ),
                 ),
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    <Widget>[
-                      const TaskScroller(
-                        tasks: [],
-                      )
-                    ],
+                taskController.obx(
+                  (state) => SliverList(
+                    delegate: SliverChildListDelegate(
+                      <Widget>[
+                        TaskScroller(
+                          tasks: [
+                            for (Task _task in state!)
+                              TaskCard(
+                                task: _task,
+                              ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                )
+                  onLoading: const CircularProgressIndicator(),
+                ),
               ],
             ),
           ],
