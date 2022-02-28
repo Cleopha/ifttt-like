@@ -22,6 +22,7 @@
       "@logger": ["src/logger/index.js"],
       "@doc": ["src/app.doc.js"],
       "@auth": ["src/auth/index.js"],
+      "@oauth": ["src/oauth/index.js"],
       "@config": ["src/config/index.js"],
       "@redis": ["src/redis/index.js"],
       "@session": ["src/session/index.js"],
@@ -32,6 +33,7 @@
       "@task": ["src/task/index.js"],
       "@workflow": ["src/workflow/index.js"],
       "@credential": ["src/credential/index.js"],
+      "@credential/*": ["src/credential/*"],
       "@util/*": ["src/util/*"],
       "@protos": ["src/protos/index.js"]
     }
