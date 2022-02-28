@@ -63,7 +63,7 @@ func (c *Client) configure(owner string) error {
 
 	c.clt = clt
 
-	return nil
+	return credentialClient.Shutdown()
 }
 
 func (c *Client) VolumeExceedsLimit(taskID string, prm *structpb.Struct, owner string) error {
