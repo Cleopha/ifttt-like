@@ -79,7 +79,7 @@ func (c *Client) configure(owner string) error {
 	token.AccessToken = credential.GetToken()
 	c.Requester = conf.Client(c.ctx, token)
 
-	return nil
+	return credentialClient.Shutdown()
 }
 
 // NewIncomingEvent check if event's calendar begin before 10 minutes

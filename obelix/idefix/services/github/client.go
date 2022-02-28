@@ -81,7 +81,7 @@ func (c *Client) configure(owner string) error {
 	token.AccessToken = credential.GetToken()
 	c.Requester = conf.Client(c.ctx, token)
 
-	return nil
+	return credentialClient.Shutdown()
 }
 
 // parseParams get params of gRPC
