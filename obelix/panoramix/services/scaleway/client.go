@@ -156,6 +156,7 @@ func (c *Client) CreateNewDatabase(p *structpb.Struct, owner string) error {
 		password:  p.Fields["password"].GetStringValue(),
 		engine:    p.Fields["engine"].GetStringValue(),
 	}
+
 	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
