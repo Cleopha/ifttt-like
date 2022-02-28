@@ -79,7 +79,11 @@ func (c *Client) configure(owner string) error {
 		return fmt.Errorf("failed to extract private key: %w", err)
 	}
 
-	return nil
+	return credentialsClient.Shutdown()
+}
+
+func (c *Client) shutdown() {
+	c.clt.Close()
 }
 
 func (c *Client) SendTransaction(p *structpb.Struct, owner string) error {
@@ -87,6 +91,8 @@ func (c *Client) SendTransaction(p *structpb.Struct, owner string) error {
 		to    string
 		value int64
 	}
+
+	defer c.shutdown()
 
 	err := c.configure(owner)
 	if err != nil {

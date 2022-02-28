@@ -57,7 +57,7 @@ func (c *Client) configure(owner string) error {
 
 	c.clt = notionapi.NewClient(notionapi.Token(credential.GetToken()))
 
-	return nil
+	return credentialClient.Shutdown()
 }
 
 func (c *Client) CreateNewPage(p *structpb.Struct, owner string) error {
