@@ -9,6 +9,7 @@ import (
 	"panoramix/configuration"
 	"panoramix/services/ethereum"
 	"panoramix/services/google"
+	"panoramix/services/scaleway"
 	"reflect"
 )
 
@@ -70,6 +71,7 @@ func RegisterServices(ctx context.Context, conf *configuration.Configuration) (*
 
 	googleClient := google.New(ctx, conf.GoogleScopes)
 	ethereumClient := ethereum.NewClient(ctx)
+	scalewayClient := scaleway.New(ctx)
 
 	// Validate google methods signatures
 	if err := validateMethodsSignatures(googleClient); err != nil {
@@ -81,12 +83,21 @@ func RegisterServices(ctx context.Context, conf *configuration.Configuration) (*
 		return nil, err
 	}
 
+	// Validate scaleway methods signatures
+	if err := validateMethodsSignatures(scalewayClient); err != nil {
+		return nil, err
+	}
+
 	if err := d.Register("google", googleClient); err != nil {
 		return nil, fmt.Errorf("failed to register Google service: %w", err)
 	}
 
 	if err := d.Register("eth", ethereumClient); err != nil {
 		return nil, fmt.Errorf("failed to register ETH service: %w", err)
+	}
+
+	if err := d.Register("scaleway", scalewayClient); err != nil {
+		return nil, fmt.Errorf("failed to register scaleway service: %w", err)
 	}
 
 	return d, nil
