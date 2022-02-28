@@ -29,7 +29,7 @@ func init() {
 	ClientID = os.Getenv("COINMARKETCAP_CLIENT_ID")
 
 	if ClientID == "" {
-		log.Fatal(errors.New("github credentials are not set"))
+		log.Fatal(errors.New("coin market cap credentials are not set"))
 	}
 }
 
