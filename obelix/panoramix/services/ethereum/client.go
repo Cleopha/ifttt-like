@@ -18,6 +18,24 @@ import (
 )
 
 var (
+	InfuraEndpoint     = ""
+	CredentialEndpoint = ""
+)
+
+func init() {
+	InfuraEndpoint = os.Getenv("INFURA_ENDPOINT")
+	CredentialEndpoint = os.Getenv("CREDENTIAL_API_PORT")
+
+	if InfuraEndpoint == "" {
+		zap.S().Fatal("ethereum credentials are not set")
+	}
+
+	if CredentialEndpoint == "" {
+		zap.S().Fatal("credential API configuration is not set")
+	}
+}
+
+var (
 	ErrFailedToConvertPublicKey = errors.New("failed to convert public key to valid format")
 )
 
@@ -34,14 +52,14 @@ func NewClient(ctx context.Context) *Client {
 }
 
 func (c *Client) configure(owner string) error {
-	clt, err := ethclient.Dial(os.Getenv("INFURA_ENDPOINT"))
+	clt, err := ethclient.Dial(InfuraEndpoint)
 	if err != nil {
 		return fmt.Errorf("failed to create ethereum client: %w", err)
 	}
 
 	c.clt = clt
 
-	credentialsClient, err := credentials.NewClient(os.Getenv("CREDENTIAL_API_PORT"))
+	credentialsClient, err := credentials.NewClient(CredentialEndpoint)
 	if err != nil {
 		return fmt.Errorf("failed to create gRPC client: %w", err)
 	}

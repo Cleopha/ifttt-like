@@ -19,9 +19,10 @@ import (
 )
 
 var (
-	ClientID     = ""
-	ClientSecret = ""
-	RedirectURL  = ""
+	ClientID           = ""
+	ClientSecret       = ""
+	RedirectURL        = ""
+	CredentialEndpoint = ""
 )
 
 // TODO : Must be removed when the credentials API is up.
@@ -29,6 +30,15 @@ func init() {
 	ClientID = os.Getenv("GOOGLE_CLIENT_ID")
 	ClientSecret = os.Getenv("GOOGLE_CLIENT_SECRET")
 	RedirectURL = os.Getenv("GOOGLE_REDIRECT_URL")
+	CredentialEndpoint = os.Getenv("CREDENTIAL_API_PORT")
+
+	if ClientID == "" || ClientSecret == "" || RedirectURL == "" {
+		zap.S().Fatal("google credentials are not set")
+	}
+
+	if CredentialEndpoint == "" {
+		zap.S().Fatal("credential API configuration is not set")
+	}
 }
 
 // Client represents a minimal Google client able to make OAuth2.0 authenticated requests.
@@ -57,7 +67,7 @@ func (c *Client) configure(owner string) error {
 	}
 
 	token := &oauth2.Token{}
-	credentialClient, err := credentials.NewClient(os.Getenv("CREDENTIAL_API_PORT"))
+	credentialClient, err := credentials.NewClient(CredentialEndpoint)
 
 	if err != nil {
 		return fmt.Errorf("failed to create credential gRPC client: %w", err)
