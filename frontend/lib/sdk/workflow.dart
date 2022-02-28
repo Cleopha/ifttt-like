@@ -3,6 +3,7 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/utils/services.dart';
+import 'package:frontend/utils/task.dart';
 
 class Workflow {
   final String id;
@@ -29,44 +30,6 @@ class RawTask {
     required this.action,
     required this.params,
     required this.nextId,
-  });
-}
-
-class ActionInfo {
-  final String name;
-  final ServiceInfo service;
-
-  ActionInfo({
-    required this.name,
-    required this.service,
-  });
-}
-
-class ReactionInfo {
-  final String name;
-  final ServiceInfo service;
-
-  ReactionInfo({
-    required this.name,
-    required this.service,
-  });
-}
-
-class Task {
-  final String? title;
-  final String author;
-  final int numberOfUsers;
-  final ActionInfo action;
-  final List<ReactionInfo> reactions;
-  final bool isActive;
-
-  Task({
-    this.title,
-    required this.author,
-    required this.numberOfUsers,
-    required this.action,
-    required this.reactions,
-    required this.isActive,
   });
 }
 
@@ -223,18 +186,12 @@ class WorkflowAPI {
 
       if (rawTasks.isEmpty) {
         return Task(
-            author: userId,
-            numberOfUsers: 1,
-            action: ActionInfo(
-              name: "",
-              service: ServiceInfo(
-                iconPath: "TODO",
-                name: "TODO",
-                color: Colors.amber,
-              ),
-            ),
-            reactions: [],
-            isActive: false);
+          author: userId,
+          numberOfUsers: 1,
+          action: null,
+          reactions: [],
+          isActive: false,
+        );
       }
 
       List<RawTask> sortedRawTasks = [];
@@ -463,6 +420,30 @@ class WorkflowAPI {
       }
 
       return getTask(userId, workflowId);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Task>> getAllTasks(String userId) async {
+    try {
+      Response response = await dio.get("/user/$userId/workflow");
+
+      if (response.statusCode != 200) {
+        throw Exception("Error getting tasks");
+      }
+
+      List<Task> tasks = [];
+
+      for (dynamic t in response.data) {
+        try {
+          tasks.add(await getTask(userId, t['id']));
+        } catch (e) {
+          rethrow;
+        }
+      }
+
+      return tasks;
     } catch (e) {
       rethrow;
     }

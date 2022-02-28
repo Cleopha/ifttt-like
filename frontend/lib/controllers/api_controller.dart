@@ -6,10 +6,12 @@ import 'package:get/get.dart';
 class ApiController extends GetxController {
   static ApiController instance = Get.find();
 
+  User? user;
+
   UserAPI userAPI = UserAPI(
     dio: Dio(
       BaseOptions(
-        baseUrl: 'http://localhost:7001/',
+        baseUrl: 'https://eed3-86-247-180-86.ngrok.io/',
         connectTimeout: 15000,
         receiveTimeout: 13000,
         headers: {
@@ -25,7 +27,7 @@ class ApiController extends GetxController {
   WorkflowAPI taskAPI = WorkflowAPI(
     dio: Dio(
       BaseOptions(
-        baseUrl: 'http://localhost:7001/',
+        baseUrl: 'https://eed3-86-247-180-86.ngrok.io/',
         connectTimeout: 15000,
         receiveTimeout: 13000,
         headers: {
