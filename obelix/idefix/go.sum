@@ -55,6 +55,8 @@ github.com/Cleopha/ifttt-like-common v1.0.9 h1:erfS3wqYkXGCSTUYlqqgluyjhXK5R80UT
 github.com/Cleopha/ifttt-like-common v1.0.9/go.mod h1:67ddh7VRHbhYWb/XtV+sTXINK2vSp4cRqqMIcaOoAXk=
 github.com/Cleopha/ifttt-like-common v1.1.0 h1:nPHRfIUeOSfsk54Iw7UhOEIZJ9RCqsrUq5XW9cHnMQA=
 github.com/Cleopha/ifttt-like-common v1.1.0/go.mod h1:67ddh7VRHbhYWb/XtV+sTXINK2vSp4cRqqMIcaOoAXk=
+github.com/Cleopha/ifttt-like-common v1.1.1 h1:Rn8vRz2GAHAXS7YgLcpVoT9oW/Tl3ofg/ESwq4FuA1w=
+github.com/Cleopha/ifttt-like-common v1.1.1/go.mod h1:67ddh7VRHbhYWb/XtV+sTXINK2vSp4cRqqMIcaOoAXk=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/PtitLuca/go-dispatcher v1.0.0 h1:ci6Rfw0BP8ANSaxyPe3wzoBEPYPmfdvB+31q+7uUjzQ=
 github.com/PtitLuca/go-dispatcher v1.0.0/go.mod h1:LnUEx7yU8cM//F/NT31Fb+cMoDffuCJLKIOi5opAUfk=

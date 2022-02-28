@@ -77,7 +77,7 @@ func (c *Client) configure(owner string) error {
 		return fmt.Errorf("failed to create scaleway client: %w", err)
 	}
 
-	return nil
+	return credentialClient.Shutdown()
 }
 
 //nolint:stylecheck
