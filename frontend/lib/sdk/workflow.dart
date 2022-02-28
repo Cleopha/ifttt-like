@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:flutter/material.dart';
+import 'package:frontend/controllers/controller_constant.dart';
 import 'package:frontend/utils/services.dart';
 import 'package:frontend/utils/task.dart';
 
@@ -12,6 +12,16 @@ class Workflow {
   Workflow({
     required this.id,
     required this.name,
+  });
+}
+
+class FlowAR {
+  final String flow;
+  final Map<String, dynamic> params;
+
+  FlowAR({
+    required this.flow,
+    required this.params,
   });
 }
 
@@ -38,33 +48,6 @@ class WorkflowAPI {
 
   WorkflowAPI({required this.dio}) {
     dio.interceptors.add(CookieManager(CookieJar()));
-  }
-
-  List<String> getActionServiceNameAndPath(String action) {
-    if (action.length >= "GITHUB".length &&
-        action.substring(0, "GITHUB".length) == "GITHUB") {
-      return ["Github", "assets/github.png"];
-    } else if (action.length >= "GOOGLE".length &&
-        action.substring(0, "GOOGLE".length) == "GOOGLE") {
-      return ["Google", "assets/google.png"];
-    } else if (action.length >= "SCALEWAY".length &&
-        action.substring(0, "SCALEWAY".length) == "SCALEWAY") {
-      return ["Scaleway", "assets/scaleway.png"];
-    } else if (action.length >= "COINMARKETCAP".length &&
-        action.substring(0, "COINMARKETCAP".length) == "COINMARKETCAP") {
-      return ["CoinMarketCap", "assets/coinmarketcap.png"];
-    } else if (action.length >= "NIST".length &&
-        action.substring(0, "NIST".length) == "NIST") {
-      return ["Nist", "assets/nist.png"];
-    } else if (action.length >= "NOTION".length &&
-        action.substring(0, "NOTION".length) == "NOTION") {
-      return ["Notion", "assets/notion.png"];
-    } else if (action.length >= "ONEDRIVE".length &&
-        action.substring(0, "ONEDRIVE".length) == "ONEDRIVE") {
-      return ["OneDrive", "assets/onedrive.png"];
-    } else {
-      return ["Unknown", "assets/unknown.png"];
-    }
   }
 
   String getWorkflowsUrl(String userId) {
@@ -216,40 +199,20 @@ class WorkflowAPI {
         sortedRawTasks.add(rawTask);
       }
 
-      List<String> nameAndpath =
-          getActionServiceNameAndPath(sortedRawTasks.first.action);
-
-      ActionInfo action = ActionInfo(
-        name: sortedRawTasks.first.action,
-        service: ServiceInfo(
-          name: nameAndpath[0],
-          iconPath: nameAndpath[1],
-          color: Colors.amber,
-        ),
-      );
+      ActionInfo action = actions[sortedRawTasks.first.action]!;
 
       sortedRawTasks.removeAt(0);
 
       return Task(
-        title: workflowId,
+        workflowId: workflowId,
         action: action,
-        author: userId,
+        author: apiController.user?.email ?? "",
         numberOfUsers: 1,
         isActive: true,
         reactions: List<ReactionInfo>.from(
           sortedRawTasks.map(
             (RawTask rawTask) {
-              List<String> nameAndpath =
-                  getActionServiceNameAndPath(sortedRawTasks.first.action);
-
-              return ReactionInfo(
-                name: rawTask.action,
-                service: ServiceInfo(
-                  name: nameAndpath[0],
-                  iconPath: nameAndpath[1],
-                  color: Colors.amber,
-                ),
-              );
+              return reactions[rawTask.action]!;
             },
           ),
         ),
@@ -259,8 +222,12 @@ class WorkflowAPI {
     }
   }
 
-  Future<Task> addAction(String userId, String workflowId, String title,
-      String action, Map<String, dynamic> params) async {
+  Future<Task> addAction(
+    String userId,
+    String workflowId,
+    String title,
+    FlowAR flow,
+  ) async {
     try {
       Response response = await dio.get(getTasksUrl(userId, workflowId));
 
@@ -327,8 +294,8 @@ class WorkflowAPI {
         data: {
           "name": title,
           "type": "ACTION",
-          "action": action,
-          "params": params,
+          "action": flow.flow,
+          "params": flow.params,
           "nextTask": nextId,
         },
       );
@@ -343,8 +310,12 @@ class WorkflowAPI {
     }
   }
 
-  Future<Task> addReaction(String userId, String workflowId, String title,
-      String reaction, Map<String, dynamic> params) async {
+  Future<Task> addReaction(
+    String userId,
+    String workflowId,
+    String title,
+    FlowAR flow,
+  ) async {
     try {
       Response response = await dio.get(getTasksUrl(userId, workflowId));
 
@@ -385,8 +356,8 @@ class WorkflowAPI {
         data: {
           "name": title,
           "type": "REACTION",
-          "action": reaction,
-          "params": params,
+          "action": flow.flow,
+          "params": flow.params,
           "nextTask": "",
         },
       );
@@ -399,8 +370,8 @@ class WorkflowAPI {
         id: response.data['id'],
         name: title,
         type: "REACTION",
-        action: reaction,
-        params: params,
+        action: flow.flow,
+        params: flow.params,
         nextId: "",
       );
 

@@ -1,14 +1,16 @@
 import 'package:frontend/utils/services.dart';
 
 class Task {
-  final String? title;
-  final ActionInfo? action;
-  final String? author;
-  final List<ReactionInfo> reactions;
-  final int numberOfUsers;
-  final bool isActive;
+  String? workflowId;
+  String? title;
+  ActionInfo? action;
+  String? author;
+  List<ReactionInfo> reactions;
+  int numberOfUsers;
+  bool isActive;
 
   Task({
+    this.workflowId,
     this.title,
     this.action,
     this.author,

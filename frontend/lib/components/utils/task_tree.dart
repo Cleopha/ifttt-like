@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:frontend/controllers/edit_task_controller.dart';
 
 import 'package:frontend/utils/task.dart';
 
 import 'package:frontend/components/utils/createTask/if_this_button.dart';
 import 'package:frontend/components/utils/createTask/then_that_button.dart';
+import 'package:get/get.dart';
 
 class TaskTree extends StatelessWidget {
   const TaskTree({
@@ -16,53 +18,61 @@ class TaskTree extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (task.author != null)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Créée par ',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                ),
+    return GetBuilder<EditTaskController>(
+      init: EditTaskController(task: task),
+      builder: (editTask) {
+        Get.lazyPut(() => EditTaskController(task: task));
+        return Column(
+          children: [
+            const SizedBox(height: 16),
+            if (editTask.task.author != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Créée par ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    '${editTask.task.author}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                '${task.author}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-        if (task.author != null) const SizedBox(height: 15),
-        if (task.action == null) const IfThisButton(),
-        if (task.action != null)
-          _TaskServiceViewer(
-            isAction: true,
-            color: task.action!.service.color,
-            title: task.action!.name,
-            iconPath: task.action!.service.iconPath,
-            onClick: () {},
-          ),
-        const _ServiceSeparator(),
-        for (final reaction in task.reactions)
-          Column(
-            children: [
+            if (editTask.task.author != null) const SizedBox(height: 15),
+            if (editTask.task.action == null) const IfThisButton(),
+            if (editTask.task.action != null)
               _TaskServiceViewer(
-                isAction: false,
-                color: reaction.service.color,
-                title: reaction.name,
-                iconPath: reaction.service.iconPath,
+                isAction: true,
+                color: editTask.task.action!.service.color,
+                title: editTask.task.action!.name,
+                iconPath: editTask.task.action!.service.iconPath,
+                onClick: () {},
               ),
-              const _ServiceSeparator(),
-            ],
-          ),
-        ThenThatButton(enabled: task.action != null),
-      ],
+            const _ServiceSeparator(),
+            for (final reaction in editTask.task.reactions)
+              Column(
+                children: [
+                  _TaskServiceViewer(
+                    isAction: false,
+                    color: reaction.service.color,
+                    title: reaction.name,
+                    iconPath: reaction.service.iconPath,
+                  ),
+                  const _ServiceSeparator(),
+                ],
+              ),
+            ThenThatButton(enabled: editTask.task.action != null),
+            const SizedBox(height: 16),
+          ],
+        );
+      },
     );
   }
 }
@@ -144,12 +154,15 @@ class _TaskServiceViewer extends StatelessWidget {
               const SizedBox(width: 10),
               Transform.translate(
                 offset: const Offset(0, 1),
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
