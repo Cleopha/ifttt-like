@@ -9,6 +9,10 @@ import (
 	"os"
 )
 
+var (
+	ErrFirstRedisLookup = errors.New("special case")
+)
+
 var addr string
 var pass string
 

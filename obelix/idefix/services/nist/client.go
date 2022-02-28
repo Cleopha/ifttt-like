@@ -2,9 +2,11 @@ package nist
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/operator"
+	"idefix/redis"
 )
 
 type Client struct {
@@ -30,6 +32,10 @@ func (c *Client) NewCveDetected(taskID string, prm *structpb.Struct, owner strin
 	// Retrieves the last state from the Redis DB.
 	old, err := cve.GetRedisState(c.Operator.RC, taskID)
 	if err != nil {
+		if errors.Is(err, redis.ErrFirstRedisLookup) {
+			return nil
+		}
+
 		return fmt.Errorf("failed to update redis state: %w", err)
 	}
 

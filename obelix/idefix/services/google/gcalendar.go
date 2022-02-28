@@ -140,6 +140,8 @@ func (gc *GCalendar) GetRedisState(rc *redis.Client, key string) (string, error)
 		if err != nil {
 			return "", fmt.Errorf("failed to set value in redis: %w", err)
 		}
+
+		return "", redis.ErrFirstRedisLookup
 	} else if err != nil {
 		return "", fmt.Errorf("failed to get value from redis: %w", err)
 	}

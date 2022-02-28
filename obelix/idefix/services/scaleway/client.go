@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/operator"
+	"idefix/redis"
 	"os"
 	"strings"
 )
@@ -99,6 +100,10 @@ func (c *Client) VolumeExceedsLimit(taskID string, prm *structpb.Struct, owner s
 
 	old, err := v.GetRedisState(c.Operator.RC, taskID)
 	if err != nil {
+		if errors.Is(err, redis.ErrFirstRedisLookup) {
+			return nil
+		}
+
 		return fmt.Errorf("failed to retrieve redis state: %w", err)
 	}
 

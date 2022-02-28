@@ -98,7 +98,7 @@ func (d *Dominance) GetRedisState(rc *redis.Client, key string) (string, error) 
 			return "", fmt.Errorf("failed to set value in redis: %w", err)
 		}
 
-		state = Inactive
+		return "", redis.ErrFirstRedisLookup
 	} else if err != nil {
 		return "", fmt.Errorf("failed to get value from redis: %w", err)
 	}
