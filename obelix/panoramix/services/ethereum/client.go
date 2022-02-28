@@ -2,23 +2,29 @@ package ethereum
 
 import (
 	"context"
+	"crypto/ecdsa"
+	"errors"
 	"fmt"
 	"github.com/Cleopha/ifttt-like-common/credentials"
 	"github.com/Cleopha/ifttt-like-common/protos"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/umbracle/go-web3"
-	"github.com/umbracle/go-web3/jsonrpc"
-	"github.com/umbracle/go-web3/wallet"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
 	"math/big"
 	"os"
 )
 
+var (
+	ErrFailedToConvertPublicKey = errors.New("failed to convert public key to valid format")
+)
+
 type Client struct {
 	ctx        context.Context
-	clt        *jsonrpc.Client
-	privateKey string
+	clt        *ethclient.Client
+	privateKey *ecdsa.PrivateKey
 }
 
 func NewClient(ctx context.Context) *Client {
@@ -28,9 +34,9 @@ func NewClient(ctx context.Context) *Client {
 }
 
 func (c *Client) configure(owner string) error {
-	clt, err := jsonrpc.NewClient(os.Getenv("INFURA_ENDPOINT"))
+	clt, err := ethclient.Dial(os.Getenv("INFURA_ENDPOINT"))
 	if err != nil {
-		return fmt.Errorf("failed to create JSON RPC ethereum client: %w", err)
+		return fmt.Errorf("failed to create ethereum client: %w", err)
 	}
 
 	c.clt = clt
@@ -42,67 +48,80 @@ func (c *Client) configure(owner string) error {
 
 	creds, err := credentialsClient.GetCredential(c.ctx, &protos.GetCredentialRequest{
 		Owner:   owner,
-		Service: 5,
+		Service: protos.Service_ETH,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to get ethereum credentials: %w", err)
 	}
 
-	c.privateKey = creds.GetToken()
+	rawPrivateKey := creds.GetToken()
+
+	c.privateKey, err = crypto.HexToECDSA(rawPrivateKey)
+	if err != nil {
+		return fmt.Errorf("failed to extract private key: %w", err)
+	}
 
 	return nil
 }
 
 func (c *Client) SendTransaction(p *structpb.Struct, owner string) error {
-	type paramsTransaction struct {
-		from     web3.Address
-		to       web3.Address
-		value    *big.Int
-		gasPrice uint64
+	type paramsSendTransaction struct {
+		to    string
+		value int64
 	}
 
-	params := paramsTransaction{
-		from:     web3.HexToAddress(p.Fields["from"].GetStringValue()),
-		to:       web3.HexToAddress(p.Fields["to"].GetStringValue()),
-		value:    big.NewInt(int64(p.Fields["value"].GetNumberValue())),
-		gasPrice: uint64(p.Fields["gasPrice"].GetNumberValue()),
+	err := c.configure(owner)
+	if err != nil {
+		return fmt.Errorf("failed to run ethereum configuration: %w", err)
 	}
 
-	if err := c.configure(owner); err != nil {
-		return fmt.Errorf("failed to configure ethereum client: %w", err)
+	params := paramsSendTransaction{
+		to:    p.Fields["to"].GetStringValue(),
+		value: int64(p.Fields["value"].GetNumberValue()),
 	}
 
-	nonce, err := c.clt.Eth().GetNonce(params.from, web3.Latest)
+	from, ok := c.privateKey.Public().(*ecdsa.PublicKey)
+	if !ok {
+		return ErrFailedToConvertPublicKey
+	}
+
+	nonce, err := c.clt.PendingNonceAt(c.ctx, crypto.PubkeyToAddress(*from))
 	if err != nil {
 		return fmt.Errorf("failed to get nonce: %w", err)
 	}
 
-	ecdsa, err := crypto.HexToECDSA(c.privateKey)
+	gasPrice, err := c.clt.SuggestGasPrice(c.ctx)
 	if err != nil {
-		return fmt.Errorf("failed to construct private key: %w", err)
+		return fmt.Errorf("failed to estimate gas price: %w", err)
 	}
 
-	key := wallet.NewKey(ecdsa)
+	var data []byte
+	tx := types.NewTransaction(
+		nonce, common.HexToAddress(params.to),
+		big.NewInt(params.value),
+		21000,
+		gasPrice,
+		data,
+	)
 
-	signer := wallet.NewEIP155Signer(3)
-	tx, err := signer.SignTx(&web3.Transaction{
-		From:     params.from,
-		To:       &params.to,
-		Value:    params.value,
-		Nonce:    nonce,
-		GasPrice: params.gasPrice,
-		Gas:      1000000,
-	}, key)
+	chainID, err := c.clt.NetworkID(c.ctx)
 	if err != nil {
-		return fmt.Errorf("failed to sign txn: %w", err)
+		return fmt.Errorf("failed to get chainID: %w", err)
 	}
 
-	hash, err := c.clt.Eth().SendTransaction(tx)
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), c.privateKey)
+	if err != nil {
+		return fmt.Errorf("failed to sign transaction: %w", err)
+	}
+
+	err = c.clt.SendTransaction(c.ctx, signedTx)
 	if err != nil {
 		return fmt.Errorf("failed to send transaction: %w", err)
 	}
 
-	zap.S().Info("Transaction has been submitted, available here: https://etherscan.io/tx/", hash)
+	address := crypto.PubkeyToAddress(*from)
+
+	zap.S().Info("Transaction has been submitted, available here: https://ropsten.etherscan.io/address/", address)
 
 	return nil
 }
