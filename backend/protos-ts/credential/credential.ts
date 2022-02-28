@@ -13,7 +13,7 @@ export enum Service {
   SCALEWAY = 2,
   COINMARKET = 3,
   DOCKER = 4,
-  ONEDRIVE = 5,
+  ETH = 5,
   NOTION = 6,
   GITHUB = 7,
   UNRECOGNIZED = -1,

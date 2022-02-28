@@ -16,7 +16,7 @@ enum Service {
     SCALEWAY
     COINMARKET
     DOCKER
-    ONEDRIVE
+    ETH
     NOTION
     GITHUB
 }

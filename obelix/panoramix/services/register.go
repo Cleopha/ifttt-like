@@ -7,6 +7,7 @@ import (
 	"github.com/PtitLuca/go-dispatcher/dispatcher"
 	"google.golang.org/protobuf/types/known/structpb"
 	"panoramix/configuration"
+	"panoramix/services/ethereum"
 	"panoramix/services/google"
 	"reflect"
 )
@@ -68,14 +69,24 @@ func RegisterServices(ctx context.Context, conf *configuration.Configuration) (*
 	d := dispatcher.New()
 
 	googleClient := google.New(ctx, conf.GoogleScopes)
+	ethereumClient := ethereum.NewClient(ctx)
 
 	// Validate google methods signatures
 	if err := validateMethodsSignatures(googleClient); err != nil {
 		return nil, err
 	}
 
+	// Validate eth methods signatures
+	if err := validateMethodsSignatures(ethereumClient); err != nil {
+		return nil, err
+	}
+
 	if err := d.Register("google", googleClient); err != nil {
 		return nil, fmt.Errorf("failed to register Google service: %w", err)
+	}
+
+	if err := d.Register("eth", ethereumClient); err != nil {
+		return nil, fmt.Errorf("failed to register ETH service: %w", err)
 	}
 
 	return d, nil
