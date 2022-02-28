@@ -9,6 +9,7 @@ require (
 	github.com/Shopify/sarama v1.31.1
 	github.com/ethereum/go-ethereum v1.10.16 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/jomei/notionapi v1.7.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.9
 	github.com/stretchr/testify v1.7.0
