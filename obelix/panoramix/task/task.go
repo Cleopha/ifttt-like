@@ -29,6 +29,10 @@ func NewClient(port string) (*Client, error) {
 	}, nil
 }
 
+func (c *Client) Shutdown() error {
+	return c.conn.Close()
+}
+
 func (c *Client) CreateTask(ctx context.Context, in *protos.CreateTaskRequest,
 	opts ...grpc.CallOption) (*protos.Task,
 	error) {

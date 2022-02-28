@@ -30,7 +30,6 @@ func TestCreateNewConsumer(t *testing.T) {
 func TestRunReactionFail(t *testing.T) {
 	ctx := context.Background()
 	operator := Operator{
-		c:   nil,
 		d:   dispatcher.New(),
 		ctx: ctx,
 	}

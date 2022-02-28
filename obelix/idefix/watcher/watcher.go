@@ -35,6 +35,7 @@ func init() {
 }
 
 type Watcher struct {
+	mu       sync.Mutex
 	ctx      context.Context
 	wg       sync.WaitGroup
 	clt      *workflow.Client
@@ -91,10 +92,13 @@ func (w *Watcher) Watch() error {
 		for _, elem := range workflows.Workflows {
 			w.wg.Add(1)
 
-			go func(elem *protos.Workflow) {
+			go func(tasks []*protos.Task, owner string) {
 				defer w.wg.Done()
 
-				for _, task := range elem.Tasks {
+				var wg sync.WaitGroup
+				defer wg.Wait()
+
+				for _, task := range tasks {
 					if task.Type != protos.TaskType_ACTION {
 						continue
 					}
@@ -108,14 +112,22 @@ func (w *Watcher) Watch() error {
 						return
 					}
 
-					_, err = w.d.Run(service, method, taskID, params, elem.Owner)
-					if err != nil {
-						zap.S().Error(err)
+					wg.Add(1)
 
-						return
-					}
+					go func(group *sync.WaitGroup, mutex *sync.Mutex) {
+						defer group.Done()
+
+						mutex.Lock()
+						defer mutex.Unlock()
+
+						_, err := w.d.Run(service, method, taskID, params, owner)
+						if err != nil {
+							zap.S().Error(err)
+						}
+					}(&wg, &w.mu)
+
 				}
-			}(elem)
+			}(elem.Tasks, elem.Owner)
 		}
 
 		<-ticker.C
