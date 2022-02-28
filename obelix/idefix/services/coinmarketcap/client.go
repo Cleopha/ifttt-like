@@ -2,9 +2,11 @@ package coinmarketcap
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/operator"
+	"idefix/redis"
 )
 
 type Client struct {
@@ -41,6 +43,10 @@ func (c *Client) AssetVariationDetected(taskID string, prm *structpb.Struct, own
 
 	old, err := dominance.GetRedisState(c.Operator.RC, taskID)
 	if err != nil {
+		if errors.Is(err, redis.ErrFirstRedisLookup) {
+			return nil
+		}
+
 		return fmt.Errorf("failed to update redis state: %w", err)
 	}
 

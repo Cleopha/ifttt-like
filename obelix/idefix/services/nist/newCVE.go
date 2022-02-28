@@ -53,6 +53,8 @@ func (c *CVE) GetRedisState(rc *redis.Client, key string) (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("failed to set value in redis: %w", err)
 		}
+
+		return "", redis.ErrFirstRedisLookup
 	}
 
 	if err != nil {

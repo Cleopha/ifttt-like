@@ -12,6 +12,7 @@ import (
 	"google.golang.org/api/option"
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/operator"
+	"idefix/redis"
 	"log"
 	"net/http"
 	"os"
@@ -99,7 +100,7 @@ func (c *Client) NewIncomingEvent(taskID string, prm *structpb.Struct, owner str
 	// Extract the nearest event's date.
 	if err = gc.Parse(srv); err != nil {
 		// If there are no upcoming events in the calendar, the action will not trigger.
-		if errors.Is(err, ErrNoUpcomingEvent) {
+		if errors.Is(err, ErrNoUpcomingEvent) || errors.Is(err, redis.ErrFirstRedisLookup) {
 			return nil
 		}
 

@@ -9,6 +9,7 @@ import (
 	"golang.org/x/oauth2"
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/operator"
+	"idefix/redis"
 	"idefix/trigger"
 	"log"
 	"net/http"
@@ -131,7 +132,7 @@ func (c *Client) NewPrDetected(taskID string, prm *structpb.Struct, owner string
 
 	old, err := issues.GetRedisState(c.Operator.RC, taskID, true)
 	if err != nil {
-		if errors.Is(err, ErrNoIssues) {
+		if errors.Is(err, ErrNoIssues) || errors.Is(err, redis.ErrFirstRedisLookup) {
 			return nil
 		}
 
@@ -155,7 +156,7 @@ func (c *Client) NewIssueDetected(taskID string, prm *structpb.Struct, owner str
 
 	old, err := issues.GetRedisState(c.Operator.RC, taskID, false)
 	if err != nil {
-		if errors.Is(err, ErrNoIssues) {
+		if errors.Is(err, ErrNoIssues) || errors.Is(err, redis.ErrFirstRedisLookup) {
 			return nil
 		}
 
