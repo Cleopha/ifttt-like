@@ -1,11 +1,19 @@
-import { Controller, Delete, Get, NotFoundException, Param, Post, UseInterceptors } from '@nestjs/common';
+import {
+	Controller,
+	Delete,
+	Get,
+	NotFoundException,
+	Param,
+	Post,
+	UseInterceptors
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Storage } from '@protos';
 import { OwnerMiddleware } from '@auth';
 
 import { TransformStorageInterceptor } from './storage.format';
-import { CredentialAPIStorageClient } from './credentialAPIStorage.client';
+import { CredentialAPIStorageClient } from './client/credentialAPIStorage.client';
 
 @ApiTags('CredentialAPI')
 @Controller('/user/:userId/storage')

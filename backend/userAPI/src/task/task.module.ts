@@ -3,17 +3,14 @@ import { ClientGrpcProxy, ClientProxyFactory, Transport } from '@nestjs/microser
 
 import { IConfig, ConfigService } from '@config';
 import { TaskAPIClient } from './taskAPI.client';
-import { UserService } from '@user/user.service';
-import { PrismaService } from '@db';
 import { TaskController } from './task.controller';
 import { WorkflowModule } from '@workflow';
+import { UserModule } from '@user';
 
 @Module({
-	imports: [ WorkflowModule ],
+	imports: [ UserModule, WorkflowModule ],
 	providers: [
 		TaskAPIClient,
-		UserService,
-		PrismaService,
 		{
 			provide: 'TASK_PACKAGE',
 			useFactory: (configService: ConfigService<IConfig>): ClientGrpcProxy => {

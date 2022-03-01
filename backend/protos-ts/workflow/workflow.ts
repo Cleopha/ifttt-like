@@ -29,6 +29,7 @@ export class CreateWorkflowRequest {
 }
 
 export class ListWorkflowsRequest {
+  @IsOptional()
   @IsString()
   owner: string;
 }

@@ -41,6 +41,12 @@ export class CredentialController implements CredentialServiceController {
 		const { service, owner, token } = req;
 
 		try {
+			const isExist = await this.credentialService.getCredential(
+				this.credentialConvertor.grpcServiceToPrismaService(service), owner);
+			if (isExist) {
+				throw new RpcException(`Credential for service ${service} already exist`)
+			}
+
 			const credential = await this.credentialService.createCredential({
 				service: this.credentialConvertor.grpcServiceToPrismaService(service),
 				token,
