@@ -19,6 +19,7 @@ dependencies:
   dio: ^4.0.4
   dio_cookie_manager: ^2.0.0
   flutter_dotenv: ^5.0.2
+  lottie: ^1.2.2
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +32,7 @@ flutter:
   assets:
     - .env
     - assets/
+    - assets/loti/
     - assets/icons/
     - assets/icons/tags/
   fonts:
