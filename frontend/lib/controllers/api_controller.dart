@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/sdk/user.dart';
 import 'package:frontend/sdk/workflow.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,7 @@ class ApiController extends GetxController {
   User? user;
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'http://localhost:7001/',
+      baseUrl: dotenv.env['API_URL'] ?? '',
       connectTimeout: 15000,
       receiveTimeout: 13000,
       headers: {
