@@ -37,7 +37,9 @@ class TaskTree extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${editTask.task.author}',
+                    editTask.task.author!.length > 30
+                        ? '${editTask.task.author!.substring(0, 30)}...'
+                        : editTask.task.author!,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,

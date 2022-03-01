@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:frontend/components/utils/create_button.dart';
 import 'package:frontend/components/utils/explore_button.dart';
+import 'package:frontend/controllers/controller_constant.dart';
 
 class TopBar extends StatelessWidget {
   const TopBar({
@@ -53,7 +54,9 @@ class TopBar extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.only(left: 9),
               child: Text(
-                'quentin.fringhian@gmail.com',
+                apiController.user!.email.length > 20
+                    ? apiController.user!.email.substring(0, 20) + '...'
+                    : apiController.user!.email,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.right,
                 style: TextStyle(
