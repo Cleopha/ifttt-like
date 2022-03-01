@@ -37,29 +37,21 @@ var (
 )
 
 type Operator struct {
-	mu  sync.Mutex
-	d   *dispatcher.Dispatcher
-	wg  sync.WaitGroup
-	ctx context.Context
+	mu   sync.Mutex
+	wg   sync.WaitGroup
+	ctx  context.Context
+	conf *configuration.Configuration
 }
 
 // New creates a new Operator containing a sarama operator.
 func New(ctx context.Context, conf *configuration.Configuration) (*Operator, error) {
-	// Registers the services
-	d, err := services.RegisterServices(ctx, conf)
-	if err != nil {
-		return nil, fmt.Errorf("failed to register services: %w", err)
-	}
-
-	zap.S().Info("Panoramix services are now loaded")
-
 	return &Operator{
-		d:   d,
-		ctx: ctx,
+		ctx:  ctx,
+		conf: conf,
 	}, nil
 }
 
-func (o *Operator) runReaction(t *protos.Task, owner string) error {
+func (o *Operator) runReaction(d *dispatcher.Dispatcher, t *protos.Task, owner string) error {
 	service, method, params, err := common.ParseAction(t)
 	if err != nil {
 		return fmt.Errorf("failed to parse action: %w", err)
@@ -67,7 +59,7 @@ func (o *Operator) runReaction(t *protos.Task, owner string) error {
 
 	zap.S().Infof("Executing method %s from service %s", method, service)
 
-	out, err := o.d.Run(service, method, params, owner)
+	out, err := d.Run(service, method, params, owner)
 
 	if err != nil {
 		return fmt.Errorf("failed to run reaction: %w", err)
@@ -95,6 +87,16 @@ func (o *Operator) runReaction(t *protos.Task, owner string) error {
 
 // runWorkflow uses the action at the beginning of the workflow to execute the following reactions.
 func (o *Operator) runWorkflow(initialAction kafka.Message) error {
+	o.mu.Lock()
+
+	// Registers the services
+	d, err := services.RegisterServices(o.ctx, o.conf)
+	if err != nil {
+		return fmt.Errorf("failed to register services: %w", err)
+	}
+
+	o.mu.Unlock()
+
 	// Creates the task client, used to retrieve a workflow's tasks one after the other.
 	client, err := task.NewClient(WorkflowEndpoint)
 	if err != nil {
@@ -120,7 +122,7 @@ func (o *Operator) runWorkflow(initialAction kafka.Message) error {
 			return fmt.Errorf("failed to get reaction: %w", err)
 		}
 
-		if err = o.runReaction(t, initialAction.Owner); err != nil {
+		if err = o.runReaction(d, t, initialAction.Owner); err != nil {
 			return fmt.Errorf("failed to run reaction: %w", err)
 		}
 	}
@@ -177,13 +179,9 @@ func (o *Operator) consumeService(topic string) error {
 					zap.S().Errorf("failed to decode kafka message: %s", err.Error())
 				}
 
-				o.mu.Lock()
-
 				if err := o.runWorkflow(a); err != nil {
 					zap.S().Errorf("Worflow failed to run: %s", err.Error())
 				}
-
-				o.mu.Unlock()
 			}(&wg, *msg)
 		}
 	}
