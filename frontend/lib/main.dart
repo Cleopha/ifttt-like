@@ -23,8 +23,6 @@ Future<void> main() async {
   await dotenv.load(fileName: '.env');
   Get.put(ApiController());
   Get.put(TaskController());
-  await apiController.userAPI.login('quentin.fringhian@gmail.com', 'password');
-  apiController.user = await apiController.userAPI.me();
   runApp(const MyApp());
 }
 
