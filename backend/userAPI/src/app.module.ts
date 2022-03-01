@@ -10,6 +10,7 @@ import { TaskModule } from '@task';
 import { WorkflowModule } from '@workflow';
 import { CredentialModule } from '@credential';
 import { OauthModule } from '@oauth';
+import { AboutModule } from './about/about.module';
 
 @Module({
 	imports: [
@@ -23,6 +24,7 @@ import { OauthModule } from '@oauth';
 		WorkflowModule,
 		CredentialModule,
 		OauthModule,
+		AboutModule,
 	],
 })
 export class AppModule {
