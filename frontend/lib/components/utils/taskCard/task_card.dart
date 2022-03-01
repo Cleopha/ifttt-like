@@ -82,7 +82,11 @@ class TaskCard extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                task.author ?? 'IFTTT Like',
+                                task.author != null
+                                    ? task.author!.length > 30
+                                        ? '${task.author!.substring(0, 30)}...'
+                                        : task.author!
+                                    : 'IFTTT Like',
                                 style: TextStyle(
                                   fontSize: kIsWeb ? 19 : null,
                                   fontWeight: FontWeight.w600,
