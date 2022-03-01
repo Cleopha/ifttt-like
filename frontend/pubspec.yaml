@@ -1,0 +1,39 @@
+name: frontend
+description: A new Flutter project.
+
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.15.1 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get: ^4.6.1
+
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^1.0.3
+  flutter_staggered_grid_view: ^0.6.1
+  flutter_switch: ^0.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/icons/
+    - assets/icons/tags/
+  fonts:
+    - family: AvenirNext
+      fonts:
+        - asset: fonts/AvenirNextLTPro-Regular.otf
+        - asset: fonts/AvenirNextLTPro-Bold.otf
+          weight: 700
+        - asset: fonts/AvenirNextLTPro-It.otf
+          style: italic
