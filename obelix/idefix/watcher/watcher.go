@@ -81,8 +81,7 @@ func (w *Watcher) Watch() error {
 	for {
 		zap.S().Info("Listing workflows..")
 
-		workflows, err := w.clt.ListWorkflows(w.ctx,
-			&protos.ListWorkflowsRequest{Owner: "f1352b9d-3a91-496e-9179-ae9e32429d9a"})
+		workflows, err := w.clt.ListWorkflows(w.ctx, &protos.ListWorkflowsRequest{})
 		if err != nil {
 			return fmt.Errorf("failed to get list of workflows: %w", err)
 		}
