@@ -5,6 +5,7 @@ import 'package:frontend/controllers/api_controller.dart';
 import 'package:frontend/controllers/controller_constant.dart';
 import 'package:frontend/controllers/task_controller.dart';
 import 'package:frontend/routes/home.dart';
+import 'package:frontend/routes/login.dart';
 import 'package:get/get.dart';
 
 Future<void> main() async {
@@ -20,8 +21,6 @@ Future<void> main() async {
   }
   Get.put(ApiController());
   Get.put(TaskController());
-  await apiController.userAPI.login('quentin.fringhian@gmail.com', 'password');
-  apiController.user = await apiController.userAPI.me();
   runApp(const MyApp());
 }
 
@@ -30,11 +29,16 @@ class MyApp extends StatelessWidget {
 
   Future<void> _getDataForRoute(String id, String currentRoute) async {
     try {
-      if (currentRoute == '/') {
+      if (currentRoute == '/home') {
         taskController.getTasks();
       }
     } catch (e) {
-      print(e);
+      Get.snackbar(
+        'Erreur',
+        e.toString().split('\n')[0],
+        backgroundColor: Colors.red,
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
@@ -55,6 +59,11 @@ class MyApp extends StatelessWidget {
       getPages: <GetPage<dynamic>>[
         GetPage<dynamic>(
           name: '/',
+          page: () => const Login(),
+          transition: Transition.fade,
+        ),
+        GetPage<dynamic>(
+          name: '/home',
           page: () => const Home(),
           transition: Transition.fade,
         ),
