@@ -9,10 +9,6 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-type Action struct {
-	TaskID string
-}
-
 type Client struct {
 	conn *grpc.ClientConn
 	clt  protos.TaskServiceClient
@@ -31,6 +27,10 @@ func NewClient(port string) (*Client, error) {
 		conn,
 		clt,
 	}, nil
+}
+
+func (c *Client) Shutdown() error {
+	return c.conn.Close()
 }
 
 func (c *Client) CreateTask(ctx context.Context, in *protos.CreateTaskRequest,

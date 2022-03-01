@@ -35,6 +35,7 @@ func main() {
 	topics := []string{
 		"google",
 		"github",
+		"scaleway",
 	}
 
 	if err = opr.ConsumeTopics(topics); err != nil {

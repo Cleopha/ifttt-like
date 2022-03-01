@@ -35,6 +35,7 @@ func init() {
 }
 
 type Watcher struct {
+	mu       sync.Mutex
 	ctx      context.Context
 	wg       sync.WaitGroup
 	clt      *workflow.Client
@@ -70,38 +71,6 @@ func New(ctx context.Context) (*Watcher, error) {
 	}, nil
 }
 
-/*
-func (w *Watcher) RunGCalendar() error {
-	var gc google.GCalendar
-
-	srv, err := calendar.NewService(context.Background(), option.WithHTTPClient(w.Requester))
-	if err != nil {
-		log.Fatalf("Unable to retrieve Calendar client: %v", err)
-	}
-
-	err = gc.Parse(srv)
-	if err != nil || !errors.Is(err, google.ErrNoUpcomingEvent) {
-		return fmt.Errorf("failed to parse gcalendar data: %w", err)
-	}
-
-	old, err := gc.GetRedisState(w.Operator.RC, "2")
-	if err != nil {
-		if errors.Is(err, github.ErrNoIssues) {
-			return nil
-		}
-
-		return fmt.Errorf("failed to update redis state: %w", err)
-	}
-
-	err = gc.LookForChange(w.Operator, "2", old)
-	if err != nil {
-		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
-	}
-
-	return nil
-}
-*/
-
 //nolint:nolintlint,staticcheck
 func (w *Watcher) Watch() error {
 	ticker := time.NewTicker(w.Interval)
@@ -123,10 +92,13 @@ func (w *Watcher) Watch() error {
 		for _, elem := range workflows.Workflows {
 			w.wg.Add(1)
 
-			go func(elem *protos.Workflow) {
+			go func(tasks []*protos.Task, owner string) {
 				defer w.wg.Done()
 
-				for _, task := range elem.Tasks {
+				var wg sync.WaitGroup
+				defer wg.Wait()
+
+				for _, task := range tasks {
 					if task.Type != protos.TaskType_ACTION {
 						continue
 					}
@@ -140,14 +112,21 @@ func (w *Watcher) Watch() error {
 						return
 					}
 
-					_, err = w.d.Run(service, method, taskID, params)
-					if err != nil {
-						zap.S().Error(err)
+					wg.Add(1)
 
-						return
-					}
+					go func(group *sync.WaitGroup, mutex *sync.Mutex) {
+						defer group.Done()
+
+						mutex.Lock()
+						defer mutex.Unlock()
+
+						_, err := w.d.Run(service, method, taskID, params, owner)
+						if err != nil {
+							zap.S().Error(err)
+						}
+					}(&wg, &w.mu)
 				}
-			}(elem)
+			}(elem.Tasks, elem.Owner)
 		}
 
 		<-ticker.C

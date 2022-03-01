@@ -6,6 +6,7 @@ import 'package:frontend/controllers/controller_constant.dart';
 import 'package:frontend/controllers/task_controller.dart';
 import 'package:frontend/routes/home.dart';
 import 'package:frontend/routes/login.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
 Future<void> main() async {
@@ -19,6 +20,7 @@ Future<void> main() async {
       ),
     );
   }
+  await dotenv.load(fileName: '.env');
   Get.put(ApiController());
   Get.put(TaskController());
   runApp(const MyApp());

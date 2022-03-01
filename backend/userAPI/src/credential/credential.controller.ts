@@ -18,7 +18,7 @@ import { Convertor } from '@util/convertor';
 
 import { TsService } from './credential.type';
 import { TransformCredentialInterceptor } from './credential.format';
-import { CredentialAPIClient } from './credentialAPI.client';
+import { CredentialAPIClient } from './client/credentialAPI.client';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
 

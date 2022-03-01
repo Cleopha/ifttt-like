@@ -9,6 +9,7 @@ import { Logger as LoggerModule } from '@logger';
 import { TaskModule } from '@task';
 import { WorkflowModule } from '@workflow';
 import { CredentialModule } from '@credential';
+import { OauthModule } from '@oauth';
 
 @Module({
 	imports: [
@@ -21,6 +22,7 @@ import { CredentialModule } from '@credential';
 		TaskModule,
 		WorkflowModule,
 		CredentialModule,
+		OauthModule,
 	],
 })
 export class AppModule {

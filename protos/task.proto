@@ -36,9 +36,8 @@ enum TaskAction {
   SCALEWAY_CREATE_NEW_DATABASE = 13;           // Reaction
   SCALEWAY_CREATE_NEW_KUBERNETES_CLUSTER = 14; // Reaction
   SCALEWAY_CREATE_NEW_CONTAINER_REGISTRY = 15; // Reaction
-  ONEDRIVE_CREATE_NEW_POWER_POINT = 16;        // Reaction
-  ONEDRIVE_CREATE_NEW_FORM = 17;               // Reaction
-  NOTION_CREATE_NEW_PAGE = 18;                 // Reaction
+  ETH_SEND_TRANSACTION = 16;                   // Reaction
+  NOTION_CREATE_NEW_PAGE = 17;                 // Reaction
 }
 
 // Task correspond to an action or reaction

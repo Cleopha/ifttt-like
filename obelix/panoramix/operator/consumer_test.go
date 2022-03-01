@@ -30,7 +30,6 @@ func TestCreateNewConsumer(t *testing.T) {
 func TestRunReactionFail(t *testing.T) {
 	ctx := context.Background()
 	operator := Operator{
-		c:   nil,
 		d:   dispatcher.New(),
 		ctx: ctx,
 	}
@@ -40,6 +39,6 @@ func TestRunReactionFail(t *testing.T) {
 
 	err = operator.runReaction(&protos.Task{
 		Action: protos.TaskAction(math.MaxInt32),
-	})
+	}, "")
 	assert.Error(t, err)
 }

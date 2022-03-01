@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/Cleopha/ifttt-like-common/credentials"
+	"github.com/Cleopha/ifttt-like-common/protos"
 	flexibleip "github.com/scaleway/scaleway-sdk-go/api/flexibleip/v1alpha1"
 	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
 	"github.com/scaleway/scaleway-sdk-go/api/k8s/v1"
@@ -11,11 +13,27 @@ import (
 	"github.com/scaleway/scaleway-sdk-go/api/registry/v1"
 	"github.com/scaleway/scaleway-sdk-go/scw"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/structpb"
+	"os"
+	"strings"
 )
 
 var (
-	ErrInvalidServerCommercialType   = errors.New("can only DEV1-S and DEV1-M servers for money reasons")
-	ErrInvalidDatabaseInstanceEngine = errors.New("only support PostgreSQL-14 and MySQL-8")
+	CredentialEndpoint = ""
+)
+
+func init() {
+	CredentialEndpoint = os.Getenv("CREDENTIAL_API_PORT")
+
+	if CredentialEndpoint == "" {
+		zap.S().Fatal("credential API configuration is not set")
+	}
+}
+
+var (
+	ErrInvalidServerCommercialType      = errors.New("can only DEV1-S and DEV1-M servers for money reasons")
+	ErrInvalidDatabaseInstanceEngine    = errors.New("only support PostgreSQL-14 and MySQL-8")
+	ErrInvalidScalewayCredentialsFormat = errors.New("invalid scaleway credentials format")
 )
 
 type Client struct {
@@ -32,30 +50,55 @@ func New(ctx context.Context) *Client {
 
 // configure uses the credentialAPI to retrieve the user's access and secret keys used when making queries to the
 // Scaleway services.
-func (c *Client) configure() error {
-	var err error
+func (c *Client) configure(owner string) error {
+	credentialClient, err := credentials.NewClient(CredentialEndpoint)
+	if err != nil {
+		return fmt.Errorf("failed to create gRPC credential client: %w", err)
+	}
 
-	accessKey, secretKey := GetKeys()
+	creds, err := credentialClient.GetCredential(c.ctx, &protos.GetCredentialRequest{
+		Owner:   owner,
+		Service: protos.Service_SCALEWAY,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to get scaleway credentials: %w", err)
+	}
 
-	c.clt, err = scw.NewClient(scw.WithAuth(accessKey, secretKey))
+	// Scaleway credentials are stored using the following format: secretKey + accessKey
+	// with the access key beginning by "SCW"
+	keys := strings.Split(creds.GetToken(), "SCW")
+
+	if len(keys) != 2 {
+		return ErrInvalidScalewayCredentialsFormat
+	}
+
+	c.clt, err = scw.NewClient(scw.WithAuth("SCW"+keys[1], keys[0]))
 	if err != nil {
 		return fmt.Errorf("failed to create scaleway client: %w", err)
 	}
 
-	return nil
+	return credentialClient.Shutdown()
 }
 
 //nolint:stylecheck
 // CreateNewFlexibleIp creates a new flexible IP in the fr-par-2 zone.
-func (c *Client) CreateNewFlexibleIp(projectID string) error {
-	if err := c.configure(); err != nil {
+func (c *Client) CreateNewFlexibleIp(p *structpb.Struct, owner string) error {
+	type paramsNewFlexibleIP struct {
+		projectID string
+	}
+
+	params := paramsNewFlexibleIP{
+		projectID: p.Fields["projectID"].GetStringValue(),
+	}
+
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
 
 	api := flexibleip.NewAPI(c.clt)
 	_, err := api.CreateFlexibleIP(&flexibleip.CreateFlexibleIPRequest{
 		Zone:      scw.ZoneFrPar2,
-		ProjectID: projectID,
+		ProjectID: params.projectID,
 	})
 
 	if err != nil {
@@ -68,21 +111,35 @@ func (c *Client) CreateNewFlexibleIp(projectID string) error {
 }
 
 // CreateNewInstance creates a new instance (either a DEV1-S or DEV1-M) with the given name in the specified zone.
-func (c *Client) CreateNewInstance(projectID string, zone scw.Zone, name string, commercialType string) error {
-	if err := c.configure(); err != nil {
+func (c *Client) CreateNewInstance(p *structpb.Struct, owner string) error {
+	type paramsNewInstance struct {
+		projectID      string
+		zone           scw.Zone
+		name           string
+		commercialType string
+	}
+
+	params := paramsNewInstance{
+		projectID:      p.Fields["projectID"].GetStringValue(),
+		zone:           scw.Zone(p.Fields["zone"].GetStringValue()),
+		name:           p.Fields["name"].GetStringValue(),
+		commercialType: p.Fields["commercialType"].GetStringValue(),
+	}
+
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
 
-	if commercialType != "DEV1-S" && commercialType != "DEV1-M" {
+	if params.commercialType != "DEV1-S" && params.commercialType != "DEV1-M" {
 		return ErrInvalidServerCommercialType
 	}
 
 	api := instance.NewAPI(c.clt)
 	_, err := api.CreateServer(&instance.CreateServerRequest{
-		Zone:           zone,
-		Name:           name,
-		CommercialType: commercialType,
-		Project:        &projectID,
+		Zone:           params.zone,
+		Name:           params.name,
+		CommercialType: params.commercialType,
+		Project:        &params.projectID,
 		Image:          "ubuntu_focal",
 	})
 
@@ -95,23 +152,39 @@ func (c *Client) CreateNewInstance(projectID string, zone scw.Zone, name string,
 	return nil
 }
 
-func (c *Client) CreateNewDatabase(projectID, name, username, password, engine string) error {
-	if err := c.configure(); err != nil {
+func (c *Client) CreateNewDatabase(p *structpb.Struct, owner string) error {
+	type paramsNewInstance struct {
+		projectID string
+		name      string
+		username  string
+		password  string
+		engine    string
+	}
+
+	params := paramsNewInstance{
+		projectID: p.Fields["projectID"].GetStringValue(),
+		name:      p.Fields["name"].GetStringValue(),
+		username:  p.Fields["username"].GetStringValue(),
+		password:  p.Fields["password"].GetStringValue(),
+		engine:    p.Fields["engine"].GetStringValue(),
+	}
+
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
 
-	if engine != "PostgreSQL-14" && engine != "MySQL-8" {
+	if params.engine != "PostgreSQL-14" && params.engine != "MySQL-8" {
 		return ErrInvalidDatabaseInstanceEngine
 	}
 
 	api := rdb.NewAPI(c.clt)
 	_, err := api.CreateInstance(&rdb.CreateInstanceRequest{
 		Region:    scw.RegionFrPar,
-		ProjectID: &projectID,
-		Name:      name,
-		Engine:    engine,
-		UserName:  username,
-		Password:  password,
+		ProjectID: &params.projectID,
+		Name:      params.name,
+		Engine:    params.engine,
+		UserName:  params.username,
+		Password:  params.password,
 		NodeType:  "DB-DEV-S",
 	})
 
@@ -122,28 +195,43 @@ func (c *Client) CreateNewDatabase(projectID, name, username, password, engine s
 	return nil
 }
 
-func (c *Client) CreateNewKubernetesCluster(projectID, name string, region scw.Region,
-	cni k8s.CNI, ingress k8s.Ingress) error {
-	if err := c.configure(); err != nil {
+func (c *Client) CreateNewKubernetesCluster(p *structpb.Struct, owner string) error {
+	type paramsNewK8S struct {
+		projectID string
+		name      string
+		region    scw.Region
+		cni       k8s.CNI
+		ingress   k8s.Ingress
+	}
+
+	params := paramsNewK8S{
+		projectID: p.Fields["projectID"].GetStringValue(),
+		name:      p.Fields["name"].GetStringValue(),
+		region:    scw.Region(p.Fields["region"].GetStringValue()),
+		cni:       k8s.CNI(p.Fields["cni"].GetStringValue()),
+		ingress:   k8s.Ingress(p.Fields["ingress"].GetStringValue()),
+	}
+
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
 
 	api := k8s.NewAPI(c.clt)
 
 	versions, err := api.ListVersions(&k8s.ListVersionsRequest{
-		Region: region,
+		Region: params.region,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to get available k8s versions: %w", err)
 	}
 
 	_, err = api.CreateCluster(&k8s.CreateClusterRequest{
-		Region:    region,
-		ProjectID: &projectID,
-		Name:      name,
+		Region:    params.region,
+		ProjectID: &params.projectID,
+		Name:      params.name,
 		Version:   versions.Versions[0].Name,
-		Cni:       cni,
-		Ingress:   ingress,
+		Cni:       params.cni,
+		Ingress:   params.ingress,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create k8s cluster: %w", err)
@@ -152,16 +240,28 @@ func (c *Client) CreateNewKubernetesCluster(projectID, name string, region scw.R
 	return nil
 }
 
-func (c *Client) CreateNewContainerRegistry(region scw.Region, name string, projectID string) error {
-	if err := c.configure(); err != nil {
+func (c *Client) CreateNewContainerRegistry(p *structpb.Struct, owner string) error {
+	type paramsNewContainerRegistry struct {
+		region    scw.Region
+		name      string
+		projectID string
+	}
+
+	params := paramsNewContainerRegistry{
+		region:    scw.Region(p.Fields["region"].GetStringValue()),
+		name:      p.Fields["name"].GetStringValue(),
+		projectID: p.Fields["projectID"].GetStringValue(),
+	}
+
+	if err := c.configure(owner); err != nil {
 		return fmt.Errorf("failed to configure scaleway client: %w", err)
 	}
 
 	api := registry.NewAPI(c.clt)
 	_, err := api.CreateNamespace(&registry.CreateNamespaceRequest{
-		Region:    region,
-		Name:      name,
-		ProjectID: &projectID,
+		Region:    params.region,
+		Name:      params.name,
+		ProjectID: &params.projectID,
 	})
 
 	if err != nil {

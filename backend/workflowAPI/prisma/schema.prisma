@@ -32,8 +32,7 @@ enum TaskAction {
   SCALEWAY_CREATE_NEW_DATABASE             // Reaction
   SCALEWAY_CREATE_NEW_KUBERNETES_CLUSTER   // Reaction
   SCALEWAY_CREATE_NEW_CONTAINER_REGISTRY   // Reaction
-  ONEDRIVE_CREATE_NEW_POWER_POINT          // Reaction
-  ONEDRIVE_CREATE_NEW_FORM                 // Reaction
+  ETH_SEND_TRANSACTION                     // Reaction
   NOTION_CREATE_NEW_PAGE                   // Reaction
 }
 

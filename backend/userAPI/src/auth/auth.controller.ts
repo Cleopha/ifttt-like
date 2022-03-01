@@ -10,7 +10,7 @@ import {
 
 import { compare, hash } from 'bcrypt';
 
-import { ISession } from "@session";
+import { ISession } from '@session';
 import { UserService } from '@user';
 import { User } from '@user/entities';
 
@@ -34,7 +34,7 @@ export class AuthController {
 			const hashedPassword = await hash(password, 10);
 			return this.userService.create({ ...registerDto, password: hashedPassword });
 		} catch (e) {
-			throw new InternalServerErrorException(e.msg)
+			throw new InternalServerErrorException(e.msg);
 		}
 	}
 

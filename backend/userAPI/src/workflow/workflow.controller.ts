@@ -15,7 +15,7 @@ import { WorkflowAPIClient } from './workflowAPI.client';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateWorkflowDto } from './dto/create-workflow.dto';
 import { UpdateWorkflowDto } from './dto/update-workflow.dto';
-import { OwnerMiddleware } from '../auth';
+import { OwnerMiddleware } from '@auth';
 import { TransformWorkflowInterceptor } from './workflow.format';
 
 @ApiTags('workflowAPI')
