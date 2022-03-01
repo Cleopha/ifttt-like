@@ -9,7 +9,7 @@ class ApiController extends GetxController {
   User? user;
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'http://192.168.50.83:7001/',
+      baseUrl: 'http://localhost:7001/',
       connectTimeout: 15000,
       receiveTimeout: 13000,
       headers: {
