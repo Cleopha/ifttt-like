@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:frontend/components/utils/createTask/add_button.dart';
+import 'package:frontend/components/utils/createTask/add_if.dart';
 import 'package:frontend/controllers/edit_task_controller.dart';
 import 'package:frontend/sdk/workflow.dart';
 import 'package:get/get.dart';
@@ -21,15 +23,21 @@ class IfThisButton extends StatelessWidget {
             splashColor: Colors.white.withOpacity(0.2),
             highlightColor: Colors.transparent,
             onTap: () async {
+              final FlowAR? newFlow = await Get.to(
+                const AddIf(),
+                transition:
+                    kIsWeb ? Transition.noTransition : Transition.rightToLeft,
+              );
+              if (newFlow == null) return;
               try {
-                await editTask.setIfThis(
-                  FlowAR(
-                    flow: "GITHUB_NEW_PR_DETECTED",
-                    params: const {},
-                  ),
-                );
+                await editTask.setIfThis(newFlow);
               } catch (e) {
-                print(e);
+                Get.snackbar(
+                  'Erreur',
+                  e.toString().split('\n')[0],
+                  backgroundColor: Colors.red,
+                  snackPosition: SnackPosition.BOTTOM,
+                );
               }
             },
             child: Padding(
