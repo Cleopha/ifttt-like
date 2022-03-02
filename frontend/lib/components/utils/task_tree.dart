@@ -127,9 +127,10 @@ class _TaskServiceViewer extends StatelessWidget {
         highlightColor: Colors.transparent,
         onTap: onClick,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 12.0,
-            horizontal: 15,
+          padding: const EdgeInsets.only(
+            top: 12.0,
+            bottom: 12.0,
+            left: 15,
           ),
           child: Row(
             children: [
@@ -150,14 +151,14 @@ class _TaskServiceViewer extends StatelessWidget {
                 semanticsLabel: 'icon',
                 alignment: Alignment.centerLeft,
                 color: Colors.white,
-                height: 19,
+                height: 24,
                 width: 16,
               ),
               const SizedBox(width: 10),
               Transform.translate(
                 offset: const Offset(0, 1),
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.5,
                   child: Text(
                     title,
                     style: const TextStyle(
