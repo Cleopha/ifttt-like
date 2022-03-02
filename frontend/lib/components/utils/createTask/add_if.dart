@@ -45,52 +45,54 @@ class AddIf extends StatelessWidget {
                 mainAxisSpacing: 15,
                 children: [
                   for (String _key in services.keys)
-                    SizedBox(
-                      height: 140,
-                      child: Material(
-                        color: services[_key]!.color,
-                        borderRadius: BorderRadius.circular(8),
-                        child: InkWell(
-                          onTap: () async {
-                            final FlowAR? flow = await Get.to(
-                              ServiceAbout(
-                                service: services[_key]!,
-                              ),
-                            );
-                            if (flow == null) return;
-                            Get.back(result: flow);
-                          },
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(8)),
-                          splashColor: Colors.black.withOpacity(0.2),
-                          highlightColor: Colors.transparent,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 16, horizontal: 8),
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(
-                                  services[_key]!.iconPath,
-                                  alignment: Alignment.center,
-                                  color: Colors.white,
-                                  width: 50,
+                    if (actions.values
+                        .any((a) => a.service.name == services[_key]!.name))
+                      SizedBox(
+                        height: 140,
+                        child: Material(
+                          color: services[_key]!.color,
+                          borderRadius: BorderRadius.circular(8),
+                          child: InkWell(
+                            onTap: () async {
+                              final FlowAR? flow = await Get.to(
+                                ServiceAbout(
+                                  service: services[_key]!,
                                 ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  services[_key]!.name,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
+                              );
+                              if (flow == null) return;
+                              Get.back(result: flow);
+                            },
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8)),
+                            splashColor: Colors.black.withOpacity(0.2),
+                            highlightColor: Colors.transparent,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 16, horizontal: 8),
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(
+                                    services[_key]!.iconPath,
+                                    alignment: Alignment.center,
                                     color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                    width: 50,
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    services[_key]!.name,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
                 ],
               ),
             ),
