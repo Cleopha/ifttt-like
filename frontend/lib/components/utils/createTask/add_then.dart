@@ -71,6 +71,7 @@ class AddThen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   vertical: 16, horizontal: 8),
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SvgPicture.asset(
                                     services[_key]!.iconPath,
