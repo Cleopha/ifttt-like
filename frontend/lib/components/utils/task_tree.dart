@@ -1,8 +1,9 @@
-import 'dart:developer';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:frontend/components/utils/createTask/add_if.dart';
 import 'package:frontend/controllers/edit_task_controller.dart';
+import 'package:frontend/sdk/workflow.dart';
 
 import 'package:frontend/utils/task.dart';
 
@@ -80,7 +81,8 @@ class TaskTree extends StatelessWidget {
                                   semanticsLabel: 'icon',
                                   alignment: Alignment.centerLeft,
                                   color: Colors.white,
-                                  width: 24,
+                                  height: 24,
+                                  width: 16,
                                 ),
                                 const SizedBox(width: 10),
                                 Transform.translate(
@@ -103,18 +105,28 @@ class TaskTree extends StatelessWidget {
                           ),
                         ),
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Center(
-                              child: editTask.task.action!.settings(
-                                inspect,
-                                editTask.task.action!.params,
-                              ),
-                            ),
-                          ),
                           Center(
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () async {
+                                final FlowAR? newFlow = await Get.to(
+                                  const AddIf(),
+                                  transition: kIsWeb
+                                      ? Transition.noTransition
+                                      : Transition.rightToLeft,
+                                );
+                                if (newFlow != null) {
+                                  try {
+                                    await editTask.setIfThis(newFlow);
+                                  } catch (e) {
+                                    Get.snackbar(
+                                      'Erreur',
+                                      e.toString().split('\n')[0],
+                                      backgroundColor: Colors.red,
+                                      snackPosition: SnackPosition.BOTTOM,
+                                    );
+                                  }
+                                }
+                              },
                               child: const Text(
                                 'Changer l\'action',
                                 style: TextStyle(
@@ -188,16 +200,6 @@ class TaskTree extends StatelessWidget {
                               ),
                             ),
                             children: <Widget>[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Center(
-                                  child: reaction.settings(
-                                    inspect,
-                                    reaction.params,
-                                  ),
-                                ),
-                              ),
                               Center(
                                 child: Material(
                                   child: InkWell(
