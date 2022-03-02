@@ -1,9 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:frontend/components/utils/createTask/add_if.dart';
 import 'package:frontend/controllers/edit_task_controller.dart';
-import 'package:frontend/sdk/workflow.dart';
 
 import 'package:frontend/utils/task.dart';
 
@@ -107,26 +104,7 @@ class TaskTree extends StatelessWidget {
                         children: <Widget>[
                           Center(
                             child: GestureDetector(
-                              onTap: () async {
-                                final FlowAR? newFlow = await Get.to(
-                                  const AddIf(),
-                                  transition: kIsWeb
-                                      ? Transition.noTransition
-                                      : Transition.rightToLeft,
-                                );
-                                if (newFlow != null) {
-                                  try {
-                                    await editTask.setIfThis(newFlow);
-                                  } catch (e) {
-                                    Get.snackbar(
-                                      'Erreur',
-                                      e.toString().split('\n')[0],
-                                      backgroundColor: Colors.red,
-                                      snackPosition: SnackPosition.BOTTOM,
-                                    );
-                                  }
-                                }
-                              },
+                              onTap: () {},
                               child: const Text(
                                 'Changer l\'action',
                                 style: TextStyle(
