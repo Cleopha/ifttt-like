@@ -1,15 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/sdk/workflow.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/utils/services.dart';
 
 class ServiceAbout extends StatelessWidget {
   const ServiceAbout({
+    this.isReaction = false,
     required this.service,
     Key? key,
   }) : super(key: key);
 
+  final bool isReaction;
   final ServiceInfo service;
 
   @override
@@ -44,14 +47,14 @@ class ServiceAbout extends StatelessWidget {
           Container(
             color: service.color,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
                     service.iconPath,
                     color: Colors.white,
-                    width: 110,
+                    width: 90,
                   ),
                   const SizedBox(height: 20),
                   Text(
@@ -68,10 +71,11 @@ class ServiceAbout extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -79,13 +83,137 @@ class ServiceAbout extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal:
-                  kIsWeb ? (MediaQuery.of(context).size.width / 2.7) : 45,
-              vertical: 32,
+                  kIsWeb ? (MediaQuery.of(context).size.width / 2.7) : 12,
+              vertical: 16,
             ),
-            child: Container(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (!isReaction)
+                  for (String _key in actions.keys)
+                    if (actions[_key]!.service.name == service.name)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: _ASelector(id: _key, action: actions[_key]!),
+                      ),
+                if (isReaction)
+                  for (String _key in reactions.keys)
+                    if (reactions[_key]!.service.name == service.name)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: _RSelector(id: _key, reaction: reactions[_key]!),
+                      ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
         ],
+      ),
+    );
+  }
+}
+
+class _ASelector extends StatelessWidget {
+  const _ASelector({
+    required this.action,
+    required this.id,
+    Key? key,
+  }) : super(key: key);
+
+  final ActionInfo action;
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.9),
+            blurRadius: 7,
+            spreadRadius: 1,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Material(
+        color: action.service.color,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        child: InkWell(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          splashColor: Colors.white.withOpacity(0.1),
+          highlightColor: Colors.transparent,
+          onTap: () {
+            Get.back(result: FlowAR(flow: id, params: {}));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Transform.translate(
+              offset: const Offset(0, 2),
+              child: Text(
+                action.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RSelector extends StatelessWidget {
+  const _RSelector({
+    required this.reaction,
+    required this.id,
+    Key? key,
+  }) : super(key: key);
+
+  final ReactionInfo reaction;
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.9),
+            blurRadius: 7,
+            spreadRadius: 1,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Material(
+        color: reaction.service.color,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        child: InkWell(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          splashColor: Colors.white.withOpacity(0.1),
+          highlightColor: Colors.transparent,
+          onTap: () {
+            Get.back(result: FlowAR(flow: id, params: {}));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Transform.translate(
+              offset: const Offset(0, 2),
+              child: Text(
+                reaction.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

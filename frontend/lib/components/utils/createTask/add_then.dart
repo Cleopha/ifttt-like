@@ -6,8 +6,8 @@ import 'package:frontend/sdk/workflow.dart';
 import 'package:frontend/utils/services.dart';
 import 'package:get/get.dart';
 
-class AddIf extends StatelessWidget {
-  const AddIf({Key? key}) : super(key: key);
+class AddThen extends StatelessWidget {
+  const AddThen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +55,7 @@ class AddIf extends StatelessWidget {
                             final FlowAR? flow = await Get.to(
                               ServiceAbout(
                                 service: services[_key]!,
+                                isReaction: true,
                               ),
                             );
                             if (flow == null) return;
