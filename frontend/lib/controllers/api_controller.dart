@@ -10,7 +10,7 @@ class ApiController extends GetxController {
   User? user;
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['API_URL'] ?? '',
+      baseUrl: dotenv.env['API_URL'] ?? 'http://localhost:7001',
       connectTimeout: 15000,
       receiveTimeout: 13000,
       headers: {
