@@ -92,8 +92,95 @@ services:
     ports:
       - "${GRPC_DOC_PORT}:80"
 
+# ------------- OBELIX -------------
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    # I have to delete the exposure of the ports if I have put in the same network ?
+    ports:
+      - "22181:22181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 22181
+    networks:
+      - obelix
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    # I have to delete the exposure of the ports if I have put in the same network ?
+    ports:
+      - "19092:19092"
+      - "19091:19091"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:22181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+    networks:
+      - obelix
+    depends_on:
+      - zookeeper
+
+  redis-idefix:
+    image: bitnami/redis:6.2
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASS_IDEFIX}
+    networks:
+      - obelix
+
+  idefix:
+    image: area/idefix
+    build:
+      context: obelix
+      dockerfile: idefix/Dockerfile
+    environment:
+      - REDIS_ADDR=redis-idefix:${REDIS_PORT_IDEFIX}
+      - PRODUCER_ENDPOINT=kafka:19092
+      - TIME_INTERVAL
+      - WORKFLOW_API_PORT
+      - CREDENTIAL_API_PORT
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
+      - GOOGLE_REDIRECT_URL
+      - GITHUB_CLIENT_ID
+      - GITHUB_CLIENT_SECRET
+      - COINMARKETCAP_CLIENT_ID
+    depends_on:
+      - kafka
+      - redis-idefix
+    networks:
+      - backend
+      - obelix
+
+  panoramix:
+    image: area/panoramix
+    build:
+      context: obelix
+      dockerfile: panoramix/Dockerfile
+    environment:
+      - BROKER_ADDRESS=kafka:19092
+      - WORKFLOW_API_PORT
+      - CREDENTIAL_API_PORT
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
+      - GOOGLE_REDIRECT_URL
+      - NOTION_CLIENT_ID
+      - NOTION_CLIENT_SECRET
+      - NOTION_REDIRECT_URL
+      - INFURA_ENDPOINT
+    depends_on:
+      - kafka
+      - idefix
+    networks:
+      - backend
+      - obelix
+
+
 networks:
   backend:
+  obelix:
 
 volumes:
   postgres_data:
