@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:frontend/components/utils/createTask/add_if.dart';
 import 'package:frontend/controllers/edit_task_controller.dart';
+import 'package:frontend/sdk/workflow.dart';
 
 import 'package:frontend/utils/task.dart';
 
@@ -55,7 +58,90 @@ class TaskTree extends StatelessWidget {
                 color: editTask.task.action!.service.color,
                 title: editTask.task.action!.name,
                 iconPath: editTask.task.action!.service.iconPath,
-                onClick: () {},
+                onClick: () async {
+                  showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SimpleDialog(
+                        title: Material(
+                          color: editTask.task.action!.service.color,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(7)),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 12.0,
+                              bottom: 12.0,
+                              left: 15,
+                            ),
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 10),
+                                SvgPicture.asset(
+                                  editTask.task.action!.service.iconPath,
+                                  semanticsLabel: 'icon',
+                                  alignment: Alignment.centerLeft,
+                                  color: Colors.white,
+                                  height: 24,
+                                  width: 16,
+                                ),
+                                const SizedBox(width: 10),
+                                Transform.translate(
+                                  offset: const Offset(0, 1),
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    child: Text(
+                                      editTask.task.action!.name,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        children: <Widget>[
+                          Center(
+                            child: GestureDetector(
+                              onTap: () async {
+                                final FlowAR? newFlow = await Get.to(
+                                  const AddIf(),
+                                  transition: kIsWeb
+                                      ? Transition.noTransition
+                                      : Transition.rightToLeft,
+                                );
+                                if (newFlow != null) {
+                                  try {
+                                    await editTask.setIfThis(newFlow);
+                                  } catch (e) {
+                                    Get.snackbar(
+                                      'Erreur',
+                                      e.toString().split('\n')[0],
+                                      backgroundColor: Colors.red,
+                                      snackPosition: SnackPosition.BOTTOM,
+                                    );
+                                  }
+                                }
+                              },
+                              child: const Text(
+                                'Changer l\'action',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
               ),
             const _ServiceSeparator(),
             for (final reaction in editTask.task.reactions)
@@ -66,6 +152,74 @@ class TaskTree extends StatelessWidget {
                     color: reaction.service.color,
                     title: reaction.name,
                     iconPath: reaction.service.iconPath,
+                    onClick: () async {
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return SimpleDialog(
+                            title: Material(
+                              color: reaction.service.color,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(7)),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 12.0,
+                                  bottom: 12.0,
+                                  left: 15,
+                                ),
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 10),
+                                    SvgPicture.asset(
+                                      reaction.service.iconPath,
+                                      semanticsLabel: 'icon',
+                                      alignment: Alignment.centerLeft,
+                                      color: Colors.white,
+                                      height: 24,
+                                      width: 16,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Transform.translate(
+                                      offset: const Offset(0, 1),
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.5,
+                                        child: Text(
+                                          reaction.name,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            children: <Widget>[
+                              Center(
+                                child: Material(
+                                  child: InkWell(
+                                    onTap: () {},
+                                    child: const Text(
+                                      'Supprimer la reaction',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
                   const _ServiceSeparator(),
                 ],
