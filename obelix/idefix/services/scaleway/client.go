@@ -12,13 +12,29 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/operator"
 	"idefix/redis"
+	"log"
 	"os"
 	"strings"
 )
 
 var (
-	ErrInvalidScalewayCredentialsFormat = errors.New("invalid scaleway credentials format")
+	CredentialAPIHost = ""
+	CredentialAPIPort = ""
 )
+
+var (
+	ErrInvalidScalewayCredentialsFormat = errors.New("invalid scaleway credentials format")
+	ErrCredentialAPINotFound            = errors.New("credentials API not set")
+)
+
+func init() {
+	CredentialAPIHost = os.Getenv("CREDENTIAL_API_HOST")
+	CredentialAPIPort = os.Getenv("CREDENTIAL_API_PORT")
+
+	if CredentialAPIHost == "" || CredentialAPIPort == "" {
+		log.Fatal(ErrCredentialAPINotFound)
+	}
+}
 
 type Client struct {
 	ctx      context.Context
@@ -35,7 +51,7 @@ func NewClient(ctx context.Context, op *operator.IdefixOperator) *Client {
 }
 
 func (c *Client) configure(owner string) error {
-	credentialClient, err := credentials.NewClient(os.Getenv("CREDENTIAL_API_PORT"))
+	credentialClient, err := credentials.NewClient(CredentialAPIHost, CredentialAPIPort)
 	if err != nil {
 		return fmt.Errorf("failed to create gRPC credential client: %w", err)
 	}

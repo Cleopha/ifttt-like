@@ -2,6 +2,7 @@ package google
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/Cleopha/ifttt-like-common/credentials"
 	"github.com/Cleopha/ifttt-like-common/protos"
@@ -19,10 +20,15 @@ import (
 )
 
 var (
-	ClientID           = ""
-	ClientSecret       = ""
-	RedirectURL        = ""
-	CredentialEndpoint = ""
+	ClientID          = ""
+	ClientSecret      = ""
+	RedirectURL       = ""
+	CredentialAPIHost = ""
+	CredentialAPIPort = ""
+)
+
+var (
+	ErrCredentialAPINotFound = errors.New("credentials API not set")
 )
 
 // TODO : Must be removed when the credentials API is up.
@@ -30,14 +36,16 @@ func init() {
 	ClientID = os.Getenv("GOOGLE_CLIENT_ID")
 	ClientSecret = os.Getenv("GOOGLE_CLIENT_SECRET")
 	RedirectURL = os.Getenv("GOOGLE_REDIRECT_URL")
-	CredentialEndpoint = os.Getenv("CREDENTIAL_API_PORT")
 
 	if ClientID == "" || ClientSecret == "" || RedirectURL == "" {
 		zap.S().Fatal("google credentials are not set")
 	}
 
-	if CredentialEndpoint == "" {
-		zap.S().Fatal("credential API configuration is not set")
+	CredentialAPIHost = os.Getenv("CREDENTIAL_API_HOST")
+	CredentialAPIPort = os.Getenv("CREDENTIAL_API_PORT")
+
+	if CredentialAPIHost == "" || CredentialAPIPort == "" {
+		zap.S().Fatal(ErrCredentialAPINotFound)
 	}
 }
 
@@ -67,7 +75,7 @@ func (c *Client) configure(owner string) error {
 	}
 
 	token := &oauth2.Token{}
-	credentialClient, err := credentials.NewClient(CredentialEndpoint)
+	credentialClient, err := credentials.NewClient(CredentialAPIHost, CredentialAPIPort)
 
 	if err != nil {
 		return fmt.Errorf("failed to create credential gRPC client: %w", err)
