@@ -68,7 +68,9 @@ class AddIf extends StatelessWidget {
                             highlightColor: Colors.transparent,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 8),
+                                vertical: 16,
+                                horizontal: 8,
+                              ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -76,7 +78,7 @@ class AddIf extends StatelessWidget {
                                     services[_key]!.iconPath,
                                     alignment: Alignment.center,
                                     color: Colors.white,
-                                    width: 50,
+                                    height: 60,
                                   ),
                                   const SizedBox(height: 16),
                                   Text(

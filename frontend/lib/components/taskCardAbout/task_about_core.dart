@@ -32,7 +32,7 @@ class TaskAboutCore extends StatelessWidget {
                         tag,
                         semanticsLabel: '$tag icon',
                         color: Colors.white,
-                        height: 54,
+                        width: 64,
                       ),
                     ),
                 ],
