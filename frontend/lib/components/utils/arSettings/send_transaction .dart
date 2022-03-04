@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class VolumeExceedsLimit extends StatelessWidget {
-  const VolumeExceedsLimit({
+class SendTransaction extends StatelessWidget {
+  const SendTransaction({
     required this.onSettingsChange,
     required this.params,
     Key? key,
@@ -16,7 +16,7 @@ class VolumeExceedsLimit extends StatelessWidget {
     return Column(
       children: <Widget>[
         const Text(
-          'Zone de la VM',
+          'Adresse Ethereum du déstinataire',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -41,16 +41,16 @@ class VolumeExceedsLimit extends StatelessWidget {
                 ),
                 onFieldSubmitted: (newValue) {
                   onSettingsChange(Map<String, dynamic>.from(params)
-                    ..addAll({'zone': newValue}));
+                    ..addAll({'to': newValue}));
                 },
-                initialValue: params['zone'].toString(),
+                initialValue: params['to'].toString(),
                 style: const TextStyle(fontSize: 16),
               ),
             ),
           ),
         ),
         const Text(
-          'Limitation',
+          'Quantité',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -77,7 +77,7 @@ class VolumeExceedsLimit extends StatelessWidget {
                   try {
                     int _newVal = int.parse(newValue);
                     onSettingsChange(Map<String, dynamic>.from(params)
-                      ..addAll({'limit': _newVal}));
+                      ..addAll({'value': _newVal}));
                   } catch (e) {
                     Get.snackbar(
                       'Erreur',
@@ -88,7 +88,7 @@ class VolumeExceedsLimit extends StatelessWidget {
                   }
                 },
                 keyboardType: TextInputType.number,
-                initialValue: params['limit'].toString(),
+                initialValue: params['value'].toString(),
                 style: const TextStyle(fontSize: 16),
               ),
             ),

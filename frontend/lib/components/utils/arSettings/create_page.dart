@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-class SendTransaction extends StatelessWidget {
-  const SendTransaction({
+class CreateNewPage extends StatelessWidget {
+  const CreateNewPage({
     required this.onSettingsChange,
     required this.params,
     Key? key,
@@ -16,7 +15,7 @@ class SendTransaction extends StatelessWidget {
     return Column(
       children: <Widget>[
         const Text(
-          'Zone de la VM',
+          'Nom de la page a créer',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -41,16 +40,16 @@ class SendTransaction extends StatelessWidget {
                 ),
                 onFieldSubmitted: (newValue) {
                   onSettingsChange(Map<String, dynamic>.from(params)
-                    ..addAll({'zone': newValue}));
+                    ..addAll({'title': newValue}));
                 },
-                initialValue: params['zone'].toString(),
+                initialValue: params['title'].toString(),
                 style: const TextStyle(fontSize: 16),
               ),
             ),
           ),
         ),
         const Text(
-          'Limitation',
+          'Nom de la page parente',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -74,21 +73,10 @@ class SendTransaction extends StatelessWidget {
                   focusColor: Colors.transparent,
                 ),
                 onFieldSubmitted: (newValue) {
-                  try {
-                    int _newVal = int.parse(newValue);
-                    onSettingsChange(Map<String, dynamic>.from(params)
-                      ..addAll({'limit': _newVal}));
-                  } catch (e) {
-                    Get.snackbar(
-                      'Erreur',
-                      'Valeur invalide, il faut que la valeur soit un nombre',
-                      backgroundColor: Colors.red,
-                      snackPosition: SnackPosition.BOTTOM,
-                    );
-                  }
+                  onSettingsChange(Map<String, dynamic>.from(params)
+                    ..addAll({'from': newValue}));
                 },
-                keyboardType: TextInputType.number,
-                initialValue: params['limit'].toString(),
+                initialValue: params['from'].toString(),
                 style: const TextStyle(fontSize: 16),
               ),
             ),
