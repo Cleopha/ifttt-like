@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/utils/arSettings/assert_variation_detected.dart';
-import 'package:frontend/components/utils/arSettings/send_transaction.dart';
+import 'package:frontend/components/utils/arSettings/create_container_registry.dart';
+import 'package:frontend/components/utils/arSettings/create_document.dart';
+import 'package:frontend/components/utils/arSettings/create_event.dart';
+import 'package:frontend/components/utils/arSettings/create_page.dart';
+import 'package:frontend/components/utils/arSettings/create_sheet.dart';
 import 'package:frontend/components/utils/arSettings/volume_exceeds_limit.dart';
+import 'package:frontend/components/utils/arSettings/send_transaction%20.dart';
 
 class ServiceInfo {
   final String name;
@@ -184,10 +189,7 @@ Map<String, ActionInfo> actions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
-      onSettingsChange: onSettingsChamge,
-      params: params,
-    ),
+        Container(),
   ),
   'COINMARKETCAP_ASSET_VARIATION_DETECTED': ActionInfo(
     name: 'Une variation d\'un Asset a été détectée',
@@ -212,10 +214,7 @@ Map<String, ActionInfo> actions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
-      onSettingsChange: onSettingsChamge,
-      params: params,
-    ),
+        Container(),
   ),
   'SCALEWAY_VOLUME_EXCEEDS_LIMIT': ActionInfo(
     name: 'Le volume de la VM a dépassé la limite',
@@ -262,7 +261,7 @@ Map<String, ReactionInfo> reactions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        CreateNewDocument(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
@@ -277,7 +276,7 @@ Map<String, ReactionInfo> reactions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        CreateNewSheet(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
@@ -287,13 +286,13 @@ Map<String, ReactionInfo> reactions = {
     service: services['google']!,
     params: {
       'title': '',
-      'date': '2024-02-12T11:00:00+01:00',
+      'start': '2024-02-12T11:00:00+01:00',
     },
     settings: (
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        CreateNewEvent(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
@@ -309,7 +308,7 @@ Map<String, ReactionInfo> reactions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        CreateNewPage(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
@@ -326,7 +325,7 @@ Map<String, ReactionInfo> reactions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        CreateContainerRegistry(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
