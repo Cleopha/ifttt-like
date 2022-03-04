@@ -138,12 +138,11 @@ class UserAPI {
     }
   }
 
-  Future<void> oauthSignin(String? accessToken, String email) async {
+  Future<void> oauthSignin(
+      String? accessToken, String email, String type) async {
     try {
-      Response response = await dio.post(oauthUrl, data: {
-        "accessToken": accessToken,
-        "email": email,
-      });
+      Response response = await dio.post(oauthUrl,
+          data: {"accessToken": accessToken, "email": email, "type": type});
 
       if (response.statusCode != 201) {
         throw Exception("Error login with oauth");

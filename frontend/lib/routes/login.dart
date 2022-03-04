@@ -189,7 +189,7 @@ class _LoginOptions extends StatelessWidget {
                         print(email);
 
                         await apiController.userAPI
-                            .oauthSignin(token?.accessToken, email);
+                            .oauthSignin(token?.accessToken, email, "GITHUB");
 
                         //apiController.user = await apiController.userAPI.me();
 
@@ -237,7 +237,7 @@ class _LoginOptions extends StatelessWidget {
                         print(email);
 
                         await apiController.userAPI
-                            .oauthSignin(token?.accessToken, email);
+                            .oauthSignin(token?.accessToken, email, "GOOGLE");
 
                         //apiController.user = await apiController.userAPI.me();
 
