@@ -77,7 +77,7 @@ class AddThen extends StatelessWidget {
                                     services[_key]!.iconPath,
                                     alignment: Alignment.center,
                                     color: Colors.white,
-                                    width: 50,
+                                    height: 60,
                                   ),
                                   const SizedBox(height: 16),
                                   Text(

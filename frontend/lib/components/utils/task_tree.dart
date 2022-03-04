@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:frontend/controllers/edit_task_controller.dart';
@@ -78,8 +80,7 @@ class TaskTree extends StatelessWidget {
                                   semanticsLabel: 'icon',
                                   alignment: Alignment.centerLeft,
                                   color: Colors.white,
-                                  height: 24,
-                                  width: 16,
+                                  width: 24,
                                 ),
                                 const SizedBox(width: 10),
                                 Transform.translate(
@@ -102,6 +103,15 @@ class TaskTree extends StatelessWidget {
                           ),
                         ),
                         children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Center(
+                              child: editTask.task.action!.settings(
+                                inspect,
+                                editTask.task.action!.params,
+                              ),
+                            ),
+                          ),
                           Center(
                             child: GestureDetector(
                               onTap: () {},
@@ -178,6 +188,16 @@ class TaskTree extends StatelessWidget {
                               ),
                             ),
                             children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Center(
+                                  child: reaction.settings(
+                                    inspect,
+                                    reaction.params,
+                                  ),
+                                ),
+                              ),
                               Center(
                                 child: Material(
                                   child: InkWell(
