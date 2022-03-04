@@ -19,22 +19,25 @@ import (
 )
 
 var (
-	CredentialEndpoint = ""
+	CredentialAPIHost = ""
+	CredentialAPIPort = ""
 )
-
-func init() {
-	CredentialEndpoint = os.Getenv("CREDENTIAL_API_PORT")
-
-	if CredentialEndpoint == "" {
-		zap.S().Fatal("credential API configuration is not set")
-	}
-}
 
 var (
 	ErrInvalidServerCommercialType      = errors.New("can only DEV1-S and DEV1-M servers for money reasons")
 	ErrInvalidDatabaseInstanceEngine    = errors.New("only support PostgreSQL-14 and MySQL-8")
 	ErrInvalidScalewayCredentialsFormat = errors.New("invalid scaleway credentials format")
+	ErrCredentialAPINotFound            = errors.New("credentials API not set")
 )
+
+func init() {
+	CredentialAPIHost = os.Getenv("CREDENTIAL_API_HOST")
+	CredentialAPIPort = os.Getenv("CREDENTIAL_API_PORT")
+
+	if CredentialAPIHost == "" || CredentialAPIPort == "" {
+		zap.S().Fatal(ErrCredentialAPINotFound)
+	}
+}
 
 type Client struct {
 	ctx context.Context
@@ -51,7 +54,7 @@ func New(ctx context.Context) *Client {
 // configure uses the credentialAPI to retrieve the user's access and secret keys used when making queries to the
 // Scaleway services.
 func (c *Client) configure(owner string) error {
-	credentialClient, err := credentials.NewClient(CredentialEndpoint)
+	credentialClient, err := credentials.NewClient(CredentialAPIHost, CredentialAPIPort)
 	if err != nil {
 		return fmt.Errorf("failed to create gRPC credential client: %w", err)
 	}

@@ -14,6 +14,6 @@ RUN go build
 
 FROM alpine:latest as app
 
-COPY --from=builder /app/panoramix /bin
+COPY --from=builder /app/panoramix /app/configuration.json /bin/
 
-ENTRYPOINT ["panoramix"]
+ENTRYPOINT ["panoramix", "--configuration=/bin/configuration.json", "-log=prod"]

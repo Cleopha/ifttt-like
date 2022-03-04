@@ -18,26 +18,30 @@ import (
 )
 
 var (
-	InfuraEndpoint     = ""
-	CredentialEndpoint = ""
+	InfuraEndpoint    = ""
+	CredentialAPIHost = ""
+	CredentialAPIPort = ""
+)
+
+var (
+	ErrCredentialAPINotFound    = errors.New("credentials API not set")
+	ErrFailedToConvertPublicKey = errors.New("failed to convert public key to valid format")
 )
 
 func init() {
 	InfuraEndpoint = os.Getenv("INFURA_ENDPOINT")
-	CredentialEndpoint = os.Getenv("CREDENTIAL_API_PORT")
 
 	if InfuraEndpoint == "" {
 		zap.S().Fatal("ethereum credentials are not set")
 	}
 
-	if CredentialEndpoint == "" {
-		zap.S().Fatal("credential API configuration is not set")
+	CredentialAPIHost = os.Getenv("CREDENTIAL_API_HOST")
+	CredentialAPIPort = os.Getenv("CREDENTIAL_API_PORT")
+
+	if CredentialAPIHost == "" || CredentialAPIPort == "" {
+		zap.S().Fatal(ErrCredentialAPINotFound)
 	}
 }
-
-var (
-	ErrFailedToConvertPublicKey = errors.New("failed to convert public key to valid format")
-)
 
 type Client struct {
 	ctx        context.Context
@@ -59,7 +63,7 @@ func (c *Client) configure(owner string) error {
 
 	c.clt = clt
 
-	credentialsClient, err := credentials.NewClient(CredentialEndpoint)
+	credentialsClient, err := credentials.NewClient(CredentialAPIHost, CredentialAPIPort)
 	if err != nil {
 		return fmt.Errorf("failed to create gRPC client: %w", err)
 	}
