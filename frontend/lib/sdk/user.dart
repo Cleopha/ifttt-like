@@ -26,6 +26,7 @@ class UserAPI {
   final String logoutUrl = "auth/logout";
   final String patchUrl = "user/";
   final String meUrl = "user/me";
+  final String oauthUrl = "oauth/login";
 
   Future<void> register(String email, String password) async {
     try {
@@ -132,6 +133,21 @@ class UserAPI {
         repos.add(x['full_name']);
       }
       return repos;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> oauthSignin(String? accessToken, String email) async {
+    try {
+      Response response = await dio.post(oauthUrl, data: {
+        "accessToken": accessToken,
+        "email": email,
+      });
+
+      if (response.statusCode != 201) {
+        throw Exception("Error login with oauth");
+      }
     } catch (e) {
       rethrow;
     }
