@@ -16,7 +16,7 @@ class VolumeExceedsLimit extends StatelessWidget {
     return Column(
       children: <Widget>[
         const Text(
-          'Adresse Ethereum du déstinataire',
+          'Zone de la VM',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -41,16 +41,16 @@ class VolumeExceedsLimit extends StatelessWidget {
                 ),
                 onFieldSubmitted: (newValue) {
                   onSettingsChange(Map<String, dynamic>.from(params)
-                    ..addAll({'to': newValue}));
+                    ..addAll({'zone': newValue}));
                 },
-                initialValue: params['to'].toString(),
+                initialValue: params['zone'].toString(),
                 style: const TextStyle(fontSize: 16),
               ),
             ),
           ),
         ),
         const Text(
-          'Quantité',
+          'Limitation',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -77,7 +77,7 @@ class VolumeExceedsLimit extends StatelessWidget {
                   try {
                     int _newVal = int.parse(newValue);
                     onSettingsChange(Map<String, dynamic>.from(params)
-                      ..addAll({'value': _newVal}));
+                      ..addAll({'limit': _newVal}));
                   } catch (e) {
                     Get.snackbar(
                       'Erreur',
@@ -88,7 +88,7 @@ class VolumeExceedsLimit extends StatelessWidget {
                   }
                 },
                 keyboardType: TextInputType.number,
-                initialValue: params['value'].toString(),
+                initialValue: params['limit'].toString(),
                 style: const TextStyle(fontSize: 16),
               ),
             ),
