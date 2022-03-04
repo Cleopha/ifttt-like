@@ -218,7 +218,12 @@ class _LoginOptions extends StatelessWidget {
                               '301365716393-pk7ibos2ljlva6sp8dbgqtdcrjvb71o8.apps.googleusercontent.com',
                           scopes: [
                             'https://www.googleapis.com/auth/userinfo.email',
-                            'https://www.googleapis.com/auth/userinfo.profile'
+                            'https://www.googleapis.com/auth/userinfo.profile',
+                            'https://www.googleapis.com/auth/bigquery',
+                            'https://www.googleapis.com/auth/blogger',
+                            'https://www.googleapis.com/auth/calendar.events',
+                            'https://www.googleapis.com/auth/documents',
+                            'https://www.googleapis.com/auth/spreadsheets'
                           ],
                         );
 
