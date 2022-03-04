@@ -36,6 +36,7 @@ func main() {
 		"google",
 		"github",
 		"scaleway",
+		"nist",
 	}
 
 	if err = opr.ConsumeTopics(topics); err != nil {
