@@ -25,6 +25,10 @@ export class UserController {
 	@HttpCode(HttpStatus.OK)
 	@Get('/me')
 	async me(@CurrentUser() user: User): Promise<User> {
+		const indexPos = user.email.lastIndexOf('-');
+		if (indexPos != -1) {
+			user.email = user.email.slice(0, indexPos);
+		}
 		return user;
 	}
 
