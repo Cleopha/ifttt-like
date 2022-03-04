@@ -14,7 +14,6 @@ import 'package:oauth2_client/google_oauth2_client.dart';
 import 'package:oauth2_client/oauth2_client.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
 import 'dart:convert';
-import 'package:oauth2_client/oauth2_client.dart';
 
 class NotionOauth2Client extends OAuth2Client {
   NotionOauth2Client(
@@ -189,7 +188,8 @@ class _LoginOptions extends StatelessWidget {
                         print(token?.accessToken);
                         print(email);
 
-                        // await apiController.userApi.oauthLogin(token?.accessToken, email);
+                        await apiController.userAPI
+                            .oauthSignin(token?.accessToken, email);
 
                         //apiController.user = await apiController.userAPI.me();
 
@@ -231,7 +231,8 @@ class _LoginOptions extends StatelessWidget {
                         print(token?.accessToken);
                         print(email);
 
-                        // await apiController.userApi.oauthLogin(token?.accessToken, email);
+                        await apiController.userAPI
+                            .oauthSignin(token?.accessToken, email);
 
                         //apiController.user = await apiController.userAPI.me();
 
