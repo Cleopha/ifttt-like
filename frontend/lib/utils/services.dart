@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/utils/arSettings/assert_variation_detected.dart';
+import 'package:frontend/components/utils/arSettings/send_transaction.dart';
 import 'package:frontend/components/utils/arSettings/volume_exceeds_limit.dart';
 
 class ServiceInfo {
@@ -246,7 +247,7 @@ Map<String, ReactionInfo> reactions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        SendTransaction(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
