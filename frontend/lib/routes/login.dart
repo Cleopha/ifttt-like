@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,19 +9,8 @@ import 'package:lottie/lottie.dart';
 import 'package:oauth2_client/access_token_response.dart';
 import 'package:oauth2_client/github_oauth2_client.dart';
 import 'package:oauth2_client/google_oauth2_client.dart';
-import 'package:oauth2_client/oauth2_client.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
 import 'dart:convert';
-
-class NotionOauth2Client extends OAuth2Client {
-  NotionOauth2Client(
-      {required String redirectUri, required String customUriScheme})
-      : super(
-            authorizeUrl: 'https://api.notion.com/v1/oauth/authorize',
-            tokenUrl: 'https://api.notion.com/v1/oauth/token',
-            redirectUri: redirectUri,
-            customUriScheme: customUriScheme);
-}
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
@@ -185,15 +172,13 @@ class _LoginOptions extends StatelessWidget {
                             break;
                           }
                         }
-                        print(token?.accessToken);
-                        print(email);
 
                         await apiController.userAPI
                             .oauthSignin(token?.accessToken, email, "GITHUB");
 
-                        //apiController.user = await apiController.userAPI.me();
+                        apiController.user = await apiController.userAPI.me();
 
-                        //Get.offAllNamed('/home');
+                        Get.offAllNamed('/home');
                       } catch (e) {
                         Get.snackbar(
                           'Erreur',
@@ -233,46 +218,13 @@ class _LoginOptions extends StatelessWidget {
                             await helper.getTokenFromStorage();
                         final body = json.decode(resp.body);
                         String email = body['emailAddresses'][0]['value'];
-                        print(token?.accessToken);
-                        print(email);
 
                         await apiController.userAPI
                             .oauthSignin(token?.accessToken, email, "GOOGLE");
 
-                        //apiController.user = await apiController.userAPI.me();
+                        apiController.user = await apiController.userAPI.me();
 
-                        //Get.offAllNamed('/home');
-                      } catch (e) {
-                        Get.snackbar(
-                          'Erreur',
-                          e.toString().split('\n')[0],
-                          backgroundColor: Colors.red,
-                          snackPosition: SnackPosition.BOTTOM,
-                        );
-                      }
-                    }),
-                const SizedBox(height: 15),
-                LoginWithButton(
-                    pathToIcon: 'assets/icons/notion.svg',
-                    text: 'Continuer avec Notion',
-                    onTap: () async {
-                      try {
-                        OAuth2Helper helper = OAuth2Helper(
-                          NotionOauth2Client(
-                              redirectUri: 'com.example.frontend://home',
-                              customUriScheme: 'com.example.frontend'),
-                          grantType: OAuth2Helper.AUTHORIZATION_CODE,
-                          clientId: '9a2ef875-92d2-4688-b04b-c10168e51452',
-                          clientSecret:
-                              'secret_MIZOU2Kgju6ak3XrWkBuRIoC3fyz1m0BCVzfCk73ZpG',
-                        );
-
-                        print(await helper.getToken());
-                        // await apiController.userApi.oauthLogin(token?.accessToken, email);
-
-                        //apiController.user = await apiController.userAPI.me();
-
-                        //Get.offAllNamed('/home');
+                        Get.offAllNamed('/home');
                       } catch (e) {
                         Get.snackbar(
                           'Erreur',
