@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/sdk/credential.dart';
 import 'package:frontend/sdk/user.dart';
 import 'package:frontend/sdk/workflow.dart';
 import 'package:get/get.dart';
@@ -24,5 +25,5 @@ class ApiController extends GetxController {
 
   late UserAPI userAPI = UserAPI(dio: dio);
   late WorkflowAPI taskAPI = WorkflowAPI(dio: dio);
-  late WorkflowAPI credentialAPI = WorkflowAPI(dio: dio);
+  late CredentialApi credentialAPI = CredentialApi(dio: dio);
 }
