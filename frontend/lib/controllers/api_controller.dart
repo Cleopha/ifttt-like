@@ -24,4 +24,5 @@ class ApiController extends GetxController {
 
   late UserAPI userAPI = UserAPI(dio: dio);
   late WorkflowAPI taskAPI = WorkflowAPI(dio: dio);
+  late WorkflowAPI credentialAPI = WorkflowAPI(dio: dio);
 }

@@ -199,7 +199,18 @@ class WorkflowAPI {
         sortedRawTasks.add(rawTask);
       }
 
-      ActionInfo action = actions[sortedRawTasks.first.action]!;
+      ActionInfo action = ActionInfo(
+        id: sortedRawTasks.first.id,
+        action: sortedRawTasks.first.action,
+        nextId: sortedRawTasks.first.nextId,
+        workflowId: workflowId,
+        name: actions[sortedRawTasks.first.action]!.name,
+        service: actions[sortedRawTasks.first.action]!.service,
+        params: Map<String, dynamic>.from(
+            actions[sortedRawTasks.first.action]!.params)
+          ..addAll(sortedRawTasks.first.params),
+        settings: actions[sortedRawTasks.first.action]!.settings,
+      );
 
       sortedRawTasks.removeAt(0);
 
@@ -212,7 +223,18 @@ class WorkflowAPI {
         reactions: List<ReactionInfo>.from(
           sortedRawTasks.map(
             (RawTask rawTask) {
-              return reactions[rawTask.action]!;
+              return ReactionInfo(
+                id: rawTask.id,
+                nextId: rawTask.nextId,
+                workflowId: workflowId,
+                reaction: rawTask.action,
+                name: reactions[rawTask.action]!.name,
+                service: reactions[rawTask.action]!.service,
+                params:
+                    Map<String, dynamic>.from(reactions[rawTask.action]!.params)
+                      ..addAll(sortedRawTasks.first.params),
+                settings: reactions[rawTask.action]!.settings,
+              );
             },
           ),
         ),
@@ -415,6 +437,74 @@ class WorkflowAPI {
       }
 
       return tasks;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<RawTask> putReaction(
+      String userId, String workflowId, ReactionInfo reaction) async {
+    try {
+      String id = reaction.id;
+
+      Response response =
+          await dio.put("/user/$userId/workflow/$workflowId/task/$id", data: {
+        "name": reaction.name,
+        "type": "REACTION",
+        "action": reaction.reaction,
+        "params": reaction.params,
+        "nextTask": reaction.nextId,
+      });
+
+      if (response.statusCode != 200) {
+        throw Exception("Error patching task");
+      }
+
+      return RawTask(
+        id: response.data['id'],
+        name: response.data['name'],
+        type: response.data['type'],
+        action: response.data['action'],
+        params: response.data['params'],
+        nextId: response.data['nextTask'],
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteReaction(String userId, String workflowId, Task task,
+      ReactionInfo reaction) async {
+    try {
+      ReactionInfo? previousReaction;
+      ReactionInfo? nextReaction;
+
+      for (ReactionInfo r in task.reactions) {
+        if (r.nextId == reaction.id) {
+          previousReaction = r;
+          break;
+        }
+      }
+
+      for (ReactionInfo r in task.reactions) {
+        if (r.id == reaction.nextId) {
+          nextReaction = r;
+          break;
+        }
+      }
+
+      if (previousReaction != null) {
+        previousReaction.nextId = nextReaction?.id ?? "";
+      }
+
+      Response response = await dio
+          .delete("/user/$userId/workflow/$workflowId/task/${reaction.id}");
+
+      if (response.statusCode != 200) {
+        throw Exception("Error deleting task");
+      }
+
+      task.reactions.remove(reaction);
     } catch (e) {
       rethrow;
     }
