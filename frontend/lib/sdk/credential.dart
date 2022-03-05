@@ -59,9 +59,8 @@ class CredentialApi {
               "GOOGLE",
               "SCALEWAY",
               "COINMARKET",
-              "DOCKER",
-              "ONEDRIVE",
-              "NOTION"
+              "ETH",
+              "NOTION",
             ].contains(service) ==
             false) {
       throw Exception("Invalid credential");
@@ -90,9 +89,8 @@ class CredentialApi {
               "GOOGLE",
               "SCALEWAY",
               "COINMARKET",
-              "DOCKER",
-              "ONEDRIVE",
-              "NOTION"
+              "ETH",
+              "NOTION",
             ].contains(service) ==
             false) {
       throw Exception("Invalid credential");
@@ -120,9 +118,8 @@ class CredentialApi {
               "GOOGLE",
               "SCALEWAY",
               "COINMARKET",
-              "DOCKER",
-              "ONEDRIVE",
-              "NOTION"
+              "ETH",
+              "NOTION",
             ].contains(service) ==
             false) {
       throw Exception("Invalid credential");
@@ -151,9 +148,8 @@ class CredentialApi {
               "GOOGLE",
               "SCALEWAY",
               "COINMARKET",
-              "DOCKER",
-              "ONEDRIVE",
-              "NOTION"
+              "ETH",
+              "NOTION",
             ].contains(service) ==
             false) {
       throw Exception("Invalid credential");
