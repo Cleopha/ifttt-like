@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/utils/arSettings/assert_variation_detected.dart';
 import 'package:frontend/components/utils/arSettings/create_container_registry.dart';
+import 'package:frontend/components/utils/arSettings/create_database.dart';
 import 'package:frontend/components/utils/arSettings/create_document.dart';
 import 'package:frontend/components/utils/arSettings/create_event.dart';
+import 'package:frontend/components/utils/arSettings/create_flexible_ip.dart';
+import 'package:frontend/components/utils/arSettings/create_instance.dart';
+import 'package:frontend/components/utils/arSettings/create_kubernetes_cluster.dart';
 import 'package:frontend/components/utils/arSettings/create_page.dart';
 import 'package:frontend/components/utils/arSettings/create_sheet.dart';
 import 'package:frontend/components/utils/arSettings/volume_exceeds_limit.dart';
@@ -317,7 +321,7 @@ Map<String, ReactionInfo> reactions = {
     name: 'Créer un nouveau conteneur',
     service: services['scaleway']!,
     params: {
-      'reguion': 'fr-par',
+      'region': 'fr-par',
       'name': '',
       'projectID': '',
     },
@@ -344,7 +348,7 @@ Map<String, ReactionInfo> reactions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        CreateDatabase(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
@@ -359,7 +363,7 @@ Map<String, ReactionInfo> reactions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        CreateFlexibleIp(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
@@ -376,7 +380,7 @@ Map<String, ReactionInfo> reactions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        CreateInstance(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
@@ -387,7 +391,7 @@ Map<String, ReactionInfo> reactions = {
     params: {
       'name': '',
       'projectID': '',
-      'reguion': 'fr-par',
+      'region': 'fr-par',
       'cni': 'unknown_cni',
       'ingress': 'unknown_ingress',
     },
@@ -395,7 +399,7 @@ Map<String, ReactionInfo> reactions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        CreateKubernetesCluster(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CreateContainerRegistry extends StatelessWidget {
-  const CreateContainerRegistry({
+class CreateInstance extends StatelessWidget {
+  const CreateInstance({
     required this.onSettingsChange,
     required this.params,
     Key? key,
@@ -15,7 +15,7 @@ class CreateContainerRegistry extends StatelessWidget {
     return Column(
       children: <Widget>[
         const Text(
-          'Nom du conteneur',
+          'Nom de l\'instance',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -49,7 +49,7 @@ class CreateContainerRegistry extends StatelessWidget {
           ),
         ),
         const Text(
-          'ID du conteneur',
+          'ID du projet',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class CreateContainerRegistry extends StatelessWidget {
           ),
         ),
         const Text(
-          'Region de creation',
+          'Zone dans laquelle l\'instance sera créée',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -103,13 +103,19 @@ class CreateContainerRegistry extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: DropdownButton<String>(
-                value: params['region'],
+                value: params['zone'],
                 onChanged: (String? newValue) {
                   onSettingsChange(Map<String, dynamic>.from(params)
-                    ..addAll({'region': newValue}));
+                    ..addAll({'zone': newValue}));
                 },
-                items: <String>['fr-par', 'nl-ams', 'pl-waw']
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: <String>[
+                  'fr-par-1',
+                  'fr-par-2',
+                  'fr-par-3',
+                  'nl-ams-1',
+                  'nl-ams-2',
+                  'pl-waw-1',
+                ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(

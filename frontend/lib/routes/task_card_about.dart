@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_switch/flutter_switch.dart';
+import 'package:frontend/components/utils/task_tree.dart';
 import 'package:frontend/controllers/controller_constant.dart';
 import 'package:frontend/routes/task_setting.dart';
 import 'package:get/get.dart';
@@ -66,32 +66,10 @@ class TaskCardAbout extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal:
-                        kIsWeb ? (MediaQuery.of(context).size.width / 2.7) : 45,
-                    vertical: 32,
-                  ),
-                  child: FlutterSwitch(
-                    height: kIsWeb ? 115 : 80,
-                    width: double.infinity,
-                    value: task.isActive,
-                    borderRadius: kIsWeb ? 60 : 45,
-                    padding: 4,
-                    activeText: 'Connecté',
-                    inactiveText: 'Connecter',
-                    activeTextColor: Colors.white,
-                    valueFontSize: 32,
-                    inactiveTextColor: Colors.white,
-                    activeTextFontWeight: FontWeight.w600,
-                    inactiveTextFontWeight: FontWeight.w600,
-                    activeColor: Colors.black,
-                    inactiveColor: Colors.black,
-                    toggleColor: task.isActive
-                        ? task.action!.service.color
-                        : Colors.grey[500]!,
-                    showOnOff: true,
-                    onToggle: (bool value) {},
-                    toggleSize: kIsWeb ? 111 : 76,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TaskTree(
+                    task: task,
+                    isEditable: false,
                   ),
                 ),
                 Padding(
