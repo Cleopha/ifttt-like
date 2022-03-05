@@ -1,6 +1,12 @@
 version: "3.9"
 
 services:
+  client_mobile:
+    image: area/client_mobile
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+
   database:
     image: postgres:14.0-alpine3.14
     environment:
