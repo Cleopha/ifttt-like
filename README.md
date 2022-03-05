@@ -47,7 +47,18 @@ git clone git@github.com:Cleopha/ifttt-like.git
 ```shell
 docker-compose up --build
 ```
+
 -> http://localhost:3000/
+
+:bulb: Server API documentation is running on `/docs` endpoint and 
+GRPC API documentation are available on [http://localhost:7777/workflow/](http://localhost:7777/workflow/)
+and [http://localhost:7777/credential/](http://localhost:7777/credential/)
+
+## Documentation
+
+- [Backend](./backend): API system to manage users, workflows and credential
+- [Obelix](./obelix): System to watch for action and execute reaction
+- [Frontend](./frontend): Mobile and Web application
 
 ## Authors:
 
