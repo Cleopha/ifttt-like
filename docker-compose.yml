@@ -6,193 +6,193 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile
-
-  database:
-    image: postgres:14.0-alpine3.14
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-      - POSTGRES_DB=${DB_NAME}
-    ports:
-      - "${DB_PORT}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - backend
-
-  redis:
-    image: bitnami/redis:6.2
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASS}
-    networks:
-      - backend
-
-  user-api:
-    image: area/user-api
-    build:
-      context: backend
-      dockerfile: userAPI/Dockerfile
-    environment:
-      - API_HOST=0.0.0.0
-      - API_PORT=$USER_API_PORT
-      - API_SESSION_SECRET=$USER_API_SESSION_SECRET
-      - API_SESSION_MAX_AGE=$USER_API_SESSION_MAX_AGE
-      - API_SESSION_SECURE=$USER_API_SESSION_SECURE
-      - DB_HOST=database
-      - DB_PORT
-      - DB_URL=postgresql://$DB_USER:$DB_PASS@database:$DB_PORT/$DB_NAME?schema=$DB_USER_SCHEMA
-      - REDIS_PASS
-      - REDIS_HOST=redis
-      - REDIS_PORT
-      - WORKFLOW_API_PORT
-      - WORKFLOW_API_HOST=workflow-api
-      - CREDENTIAL_API_PORT
-      - CREDENTIAL_API_HOST=credential-api
-    ports:
-      - "${USER_API_PORT}:${USER_API_PORT}"
-    networks:
-      - backend
-    depends_on:
-      - database
-      - redis
-
-  workflow-api:
-    image: area/workflow-api
-    build:
-      context: backend
-      dockerfile: workflowAPI/Dockerfile
-    environment:
-      - API_HOST=0.0.0.0
-      - API_PORT=$WORKFLOW_API_PORT
-      - DB_HOST=database
-      - DB_PORT
-      - DB_URL=postgresql://$DB_USER:$DB_PASS@database:$DB_PORT/$DB_NAME?schema=$DB_WORKFLOW_SCHEMA
-    ports:
-      - "${WORKFLOW_API_PORT}:${WORKFLOW_API_PORT}"
-    networks:
-      - backend
-    depends_on:
-      - database
-
-  credential-api:
-    image: area/credential-api
-    build:
-      context: backend
-      dockerfile: credentialAPI/Dockerfile
-    environment:
-      - API_HOST=0.0.0.0
-      - API_PORT=$CREDENTIAL_API_PORT
-      - DB_HOST=database
-      - DB_PORT
-      - DB_URL=postgresql://$DB_USER:$DB_PASS@database:$DB_PORT/$DB_NAME?schema=$DB_CREDENTIAL_SCHEMA
-    ports:
-      - "${CREDENTIAL_API_PORT}:${CREDENTIAL_API_PORT}"
-    networks:
-      - backend
-    depends_on:
-      - database
-
-  grpc-doc:
-    image: area/grpc-doc
-    build:
-      context: protos
-      dockerfile: Dockerfile
-    ports:
-      - "${GRPC_DOC_PORT}:80"
-
-# ------------- OBELIX -------------
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    # I have to delete the exposure of the ports if I have put in the same network ?
-    ports:
-      - "22181:22181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 22181
-    networks:
-      - obelix
-
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    # I have to delete the exposure of the ports if I have put in the same network ?
-    ports:
-      - "19092:19092"
-      - "19091:19091"
-    environment:
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:22181
-      KAFKA_LISTENERS: INTERNAL://0.0.0.0:19091,OUTSIDE://0.0.0.0:19092
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:19092,OUTSIDE://kafka:19092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    networks:
-      - obelix
-    depends_on:
-      - zookeeper
-
-  redis-idefix:
-    image: bitnami/redis:6.2
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASS_IDEFIX}
-    networks:
-      - obelix
-
-  idefix:
-    restart: always
-    image: area/idefix
-    build:
-      context: obelix/idefix
-      dockerfile: Dockerfile
-    environment:
-      - REDIS_ADDR=redis-idefix:${REDIS_PORT_IDEFIX}
-      - REDIS_PASS=${REDIS_PASS_IDEFIX}
-      - PRODUCER_ENDPOINT=kafka:19092
-      - TIME_INTERVAL
-      - WORKFLOW_API_PORT
-      - WORKFLOW_API_HOST=workflow-api
-      - CREDENTIAL_API_PORT
-      - CREDENTIAL_API_HOST=credential-api
-      - GOOGLE_CLIENT_ID
-      - GOOGLE_CLIENT_SECRET
-      - GOOGLE_REDIRECT_URL
-      - GITHUB_CLIENT_ID
-      - GITHUB_CLIENT_SECRET
-      - COINMARKETCAP_CLIENT_ID
-    depends_on:
-      - redis-idefix
-    networks:
-      - backend
-      - obelix
-
-  panoramix:
-    restart: always
-    image: area/panoramix
-    build:
-      context: obelix/panoramix
-      dockerfile: Dockerfile
-    environment:
-      - BROKER_ADDRESS=kafka:19092
-      - WORKFLOW_API_HOST=workflow-api
-      - WORKFLOW_API_PORT
-      - CREDENTIAL_API_PORT
-      - CREDENTIAL_API_HOST=credential-api
-      - GOOGLE_CLIENT_ID
-      - GOOGLE_CLIENT_SECRET
-      - GOOGLE_REDIRECT_URL
-      - NOTION_CLIENT_ID
-      - NOTION_CLIENT_SECRET
-      - NOTION_REDIRECT_URL
-      - INFURA_ENDPOINT
-    depends_on:
-      - idefix
-    networks:
-      - backend
-      - obelix
-
-
-networks:
-  backend:
-  obelix:
-
-volumes:
-  postgres_data:
+#
+#  database:
+#    image: postgres:14.0-alpine3.14
+#    environment:
+#      - POSTGRES_USER=${DB_USER}
+#      - POSTGRES_PASSWORD=${DB_PASS}
+#      - POSTGRES_DB=${DB_NAME}
+#    ports:
+#      - "${DB_PORT}:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    networks:
+#      - backend
+#
+#  redis:
+#    image: bitnami/redis:6.2
+#    environment:
+#      - REDIS_PASSWORD=${REDIS_PASS}
+#    networks:
+#      - backend
+#
+#  user-api:
+#    image: area/user-api
+#    build:
+#      context: backend
+#      dockerfile: userAPI/Dockerfile
+#    environment:
+#      - API_HOST=0.0.0.0
+#      - API_PORT=$USER_API_PORT
+#      - API_SESSION_SECRET=$USER_API_SESSION_SECRET
+#      - API_SESSION_MAX_AGE=$USER_API_SESSION_MAX_AGE
+#      - API_SESSION_SECURE=$USER_API_SESSION_SECURE
+#      - DB_HOST=database
+#      - DB_PORT
+#      - DB_URL=postgresql://$DB_USER:$DB_PASS@database:$DB_PORT/$DB_NAME?schema=$DB_USER_SCHEMA
+#      - REDIS_PASS
+#      - REDIS_HOST=redis
+#      - REDIS_PORT
+#      - WORKFLOW_API_PORT
+#      - WORKFLOW_API_HOST=workflow-api
+#      - CREDENTIAL_API_PORT
+#      - CREDENTIAL_API_HOST=credential-api
+#    ports:
+#      - "${USER_API_PORT}:${USER_API_PORT}"
+#    networks:
+#      - backend
+#    depends_on:
+#      - database
+#      - redis
+#
+#  workflow-api:
+#    image: area/workflow-api
+#    build:
+#      context: backend
+#      dockerfile: workflowAPI/Dockerfile
+#    environment:
+#      - API_HOST=0.0.0.0
+#      - API_PORT=$WORKFLOW_API_PORT
+#      - DB_HOST=database
+#      - DB_PORT
+#      - DB_URL=postgresql://$DB_USER:$DB_PASS@database:$DB_PORT/$DB_NAME?schema=$DB_WORKFLOW_SCHEMA
+#    ports:
+#      - "${WORKFLOW_API_PORT}:${WORKFLOW_API_PORT}"
+#    networks:
+#      - backend
+#    depends_on:
+#      - database
+#
+#  credential-api:
+#    image: area/credential-api
+#    build:
+#      context: backend
+#      dockerfile: credentialAPI/Dockerfile
+#    environment:
+#      - API_HOST=0.0.0.0
+#      - API_PORT=$CREDENTIAL_API_PORT
+#      - DB_HOST=database
+#      - DB_PORT
+#      - DB_URL=postgresql://$DB_USER:$DB_PASS@database:$DB_PORT/$DB_NAME?schema=$DB_CREDENTIAL_SCHEMA
+#    ports:
+#      - "${CREDENTIAL_API_PORT}:${CREDENTIAL_API_PORT}"
+#    networks:
+#      - backend
+#    depends_on:
+#      - database
+#
+#  grpc-doc:
+#    image: area/grpc-doc
+#    build:
+#      context: protos
+#      dockerfile: Dockerfile
+#    ports:
+#      - "${GRPC_DOC_PORT}:80"
+#
+## ------------- OBELIX -------------
+#
+#  zookeeper:
+#    image: confluentinc/cp-zookeeper:latest
+#    # I have to delete the exposure of the ports if I have put in the same network ?
+#    ports:
+#      - "22181:22181"
+#    environment:
+#      ZOOKEEPER_CLIENT_PORT: 22181
+#    networks:
+#      - obelix
+#
+#  kafka:
+#    image: confluentinc/cp-kafka:latest
+#    # I have to delete the exposure of the ports if I have put in the same network ?
+#    ports:
+#      - "19092:19092"
+#      - "19091:19091"
+#    environment:
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:22181
+#      KAFKA_LISTENERS: INTERNAL://0.0.0.0:19091,OUTSIDE://0.0.0.0:19092
+#      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:19092,OUTSIDE://kafka:19092
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+#      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+#      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+#    networks:
+#      - obelix
+#    depends_on:
+#      - zookeeper
+#
+#  redis-idefix:
+#    image: bitnami/redis:6.2
+#    environment:
+#      - REDIS_PASSWORD=${REDIS_PASS_IDEFIX}
+#    networks:
+#      - obelix
+#
+#  idefix:
+#    restart: always
+#    image: area/idefix
+#    build:
+#      context: obelix/idefix
+#      dockerfile: Dockerfile
+#    environment:
+#      - REDIS_ADDR=redis-idefix:${REDIS_PORT_IDEFIX}
+#      - REDIS_PASS=${REDIS_PASS_IDEFIX}
+#      - PRODUCER_ENDPOINT=kafka:19092
+#      - TIME_INTERVAL
+#      - WORKFLOW_API_PORT
+#      - WORKFLOW_API_HOST=workflow-api
+#      - CREDENTIAL_API_PORT
+#      - CREDENTIAL_API_HOST=credential-api
+#      - GOOGLE_CLIENT_ID
+#      - GOOGLE_CLIENT_SECRET
+#      - GOOGLE_REDIRECT_URL
+#      - GITHUB_CLIENT_ID
+#      - GITHUB_CLIENT_SECRET
+#      - COINMARKETCAP_CLIENT_ID
+#    depends_on:
+#      - redis-idefix
+#    networks:
+#      - backend
+#      - obelix
+#
+#  panoramix:
+#    restart: always
+#    image: area/panoramix
+#    build:
+#      context: obelix/panoramix
+#      dockerfile: Dockerfile
+#    environment:
+#      - BROKER_ADDRESS=kafka:19092
+#      - WORKFLOW_API_HOST=workflow-api
+#      - WORKFLOW_API_PORT
+#      - CREDENTIAL_API_PORT
+#      - CREDENTIAL_API_HOST=credential-api
+#      - GOOGLE_CLIENT_ID
+#      - GOOGLE_CLIENT_SECRET
+#      - GOOGLE_REDIRECT_URL
+#      - NOTION_CLIENT_ID
+#      - NOTION_CLIENT_SECRET
+#      - NOTION_REDIRECT_URL
+#      - INFURA_ENDPOINT
+#    depends_on:
+#      - idefix
+#    networks:
+#      - backend
+#      - obelix
+#
+#
+#networks:
+#  backend:
+#  obelix:
+#
+#volumes:
+#  postgres_data:
