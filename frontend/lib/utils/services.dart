@@ -29,13 +29,21 @@ class ServiceInfo {
 class ActionInfo {
   final String name;
   final ServiceInfo service;
-  final Map<String, dynamic> params;
+  Map<String, dynamic> params;
   final Function(
     Function(Map<String, dynamic>) onSettingsChange,
     Map<String, dynamic> params,
   ) settings;
+  String id;
+  String action;
+  String nextId;
+  String workflowId;
 
   ActionInfo({
+    this.action = '',
+    this.id = '',
+    this.nextId = '',
+    this.workflowId = '',
     required this.name,
     required this.service,
     required this.params,
@@ -46,13 +54,21 @@ class ActionInfo {
 class ReactionInfo {
   final String name;
   final ServiceInfo service;
-  final Map<String, dynamic> params;
+  Map<String, dynamic> params;
   final Function(
     Function(Map<String, dynamic>) onSettingsChange,
     Map<String, dynamic> params,
   ) settings;
+  String id;
+  String nextId;
+  String reaction;
+  String workflowId;
 
   ReactionInfo({
+    this.reaction = '',
+    this.id = '',
+    this.nextId = '',
+    this.workflowId = '',
     required this.name,
     required this.service,
     required this.params,

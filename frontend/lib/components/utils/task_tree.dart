@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:frontend/controllers/controller_constant.dart';
 import 'package:frontend/controllers/edit_task_controller.dart';
 import 'package:frontend/routes/task_setting.dart';
 
@@ -12,7 +11,7 @@ import 'package:frontend/components/utils/createTask/if_this_button.dart';
 import 'package:frontend/components/utils/createTask/then_that_button.dart';
 import 'package:get/get.dart';
 
-class TaskTree extends StatelessWidget {
+class TaskTree extends StatefulWidget {
   const TaskTree({
     required this.task,
     this.isEditable = true,
@@ -23,15 +22,20 @@ class TaskTree extends StatelessWidget {
   final bool isEditable;
 
   @override
+  State<TaskTree> createState() => _TaskTreeState();
+}
+
+class _TaskTreeState extends State<TaskTree> {
+  @override
   Widget build(BuildContext context) {
     return GetBuilder<EditTaskController>(
-      init: EditTaskController(task: task),
+      init: EditTaskController(task: widget.task),
       builder: (editTask) {
-        Get.lazyPut(() => EditTaskController(task: task));
+        Get.lazyPut(() => EditTaskController(task: widget.task));
         return Column(
           children: [
             const SizedBox(height: 16),
-            if (editTask.task.author != null && isEditable)
+            if (editTask.task.author != null && widget.isEditable)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -54,7 +58,7 @@ class TaskTree extends StatelessWidget {
                 ],
               ),
             if (editTask.task.author != null) const SizedBox(height: 15),
-            if (editTask.task.action == null && isEditable)
+            if (editTask.task.action == null && widget.isEditable)
               const IfThisButton(),
             if (editTask.task.action != null)
               _TaskServiceViewer(
@@ -62,7 +66,7 @@ class TaskTree extends StatelessWidget {
                 color: editTask.task.action!.service.color,
                 title: editTask.task.action!.name,
                 iconPath: editTask.task.action!.service.iconPath,
-                onClick: !isEditable
+                onClick: !widget.isEditable
                     ? null
                     : () async {
                         showDialog<void>(
@@ -117,7 +121,23 @@ class TaskTree extends StatelessWidget {
                                       const EdgeInsets.symmetric(vertical: 10),
                                   child: Center(
                                     child: editTask.task.action!.settings(
-                                      inspect,
+                                      (
+                                        Map<String, dynamic> newParams,
+                                      ) async {
+                                        try {
+                                          setState(() {
+                                            editTask.task.action!.params =
+                                                newParams;
+                                          });
+                                        } catch (e) {
+                                          Get.snackbar(
+                                            'Erreur',
+                                            e.toString().split('\n')[0],
+                                            backgroundColor: Colors.red,
+                                            snackPosition: SnackPosition.BOTTOM,
+                                          );
+                                        }
+                                      },
                                       editTask.task.action!.params,
                                     ),
                                   ),
@@ -150,7 +170,7 @@ class TaskTree extends StatelessWidget {
                     color: reaction.service.color,
                     title: reaction.name,
                     iconPath: reaction.service.iconPath,
-                    onClick: !isEditable
+                    onClick: !widget.isEditable
                         ? null
                         : () async {
                             showDialog<void>(
@@ -206,7 +226,29 @@ class TaskTree extends StatelessWidget {
                                           vertical: 10),
                                       child: Center(
                                         child: reaction.settings(
-                                          inspect,
+                                          (
+                                            Map<String, dynamic> newParams,
+                                          ) async {
+                                            try {
+                                              setState(() {
+                                                reaction.params = newParams;
+                                              });
+                                              await apiController.taskAPI
+                                                  .putReaction(
+                                                apiController.user!.uid,
+                                                reaction.workflowId,
+                                                reaction,
+                                              );
+                                            } catch (e) {
+                                              Get.snackbar(
+                                                'Erreur',
+                                                e.toString().split('\n')[0],
+                                                backgroundColor: Colors.red,
+                                                snackPosition:
+                                                    SnackPosition.BOTTOM,
+                                              );
+                                            }
+                                          },
                                           reaction.params,
                                         ),
                                       ),
@@ -214,7 +256,25 @@ class TaskTree extends StatelessWidget {
                                     Center(
                                       child: Material(
                                         child: InkWell(
-                                          onTap: () {},
+                                          onTap: () async {
+                                            try {
+                                              await apiController.taskAPI
+                                                  .deleteReaction(
+                                                apiController.user!.uid,
+                                                reaction.workflowId,
+                                                widget.task,
+                                                reaction,
+                                              );
+                                            } catch (e) {
+                                              Get.snackbar(
+                                                'Erreur',
+                                                e.toString().split('\n')[0],
+                                                backgroundColor: Colors.red,
+                                                snackPosition:
+                                                    SnackPosition.BOTTOM,
+                                              );
+                                            }
+                                          },
                                           child: const Text(
                                             'Supprimer la reaction',
                                             style: TextStyle(
@@ -235,12 +295,12 @@ class TaskTree extends StatelessWidget {
                   const _ServiceSeparator(),
                 ],
               ),
-            if (isEditable)
+            if (widget.isEditable)
               ThenThatButton(enabled: editTask.task.action != null),
-            if (!isEditable)
+            if (!widget.isEditable)
               GestureDetector(
                 onTap: () => Get.to(
-                  TaskSetting(task: task),
+                  TaskSetting(task: widget.task),
                   transition:
                       kIsWeb ? Transition.noTransition : Transition.rightToLeft,
                 ),
