@@ -36,6 +36,5 @@ RUN flutter doctor
 # Build APK
 COPY . .
 USER root
-RUN chown -R $(whoami) /home/developer/android/local.properties
 RUN yes | flutter doctor --android-licenses
 RUN flutter build apk --release
