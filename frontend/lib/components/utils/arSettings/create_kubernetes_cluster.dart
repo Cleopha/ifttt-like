@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CreateContainerRegistry extends StatelessWidget {
-  const CreateContainerRegistry({
+class CreateKubernetesCluster extends StatelessWidget {
+  const CreateKubernetesCluster({
     required this.onSettingsChange,
     required this.params,
     Key? key,
@@ -15,7 +15,7 @@ class CreateContainerRegistry extends StatelessWidget {
     return Column(
       children: <Widget>[
         const Text(
-          'Nom du conteneur',
+          'Nom du cluster',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -49,7 +49,7 @@ class CreateContainerRegistry extends StatelessWidget {
           ),
         ),
         const Text(
-          'ID du conteneur',
+          'ID du projet',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class CreateContainerRegistry extends StatelessWidget {
           ),
         ),
         const Text(
-          'Region de creation',
+          'Région du cluster',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -110,6 +110,97 @@ class CreateContainerRegistry extends StatelessWidget {
                 },
                 items: <String>['fr-par', 'nl-ams', 'pl-waw']
                     .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ),
+        const Text(
+          'Type de CNI',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
+                  width: 3,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: DropdownButton<String>(
+                value: params['cni'],
+                onChanged: (String? newValue) {
+                  onSettingsChange(Map<String, dynamic>.from(params)
+                    ..addAll({'cni': newValue}));
+                },
+                items: <String>[
+                  'unknown_cni',
+                  'cilium',
+                  'calico',
+                  'weave',
+                  'flannel',
+                  'kilo',
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ),
+        const Text(
+          'Type de controlleur Ingress',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
+                  width: 3,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: DropdownButton<String>(
+                value: params['ingress'],
+                onChanged: (String? newValue) {
+                  onSettingsChange(Map<String, dynamic>.from(params)
+                    ..addAll({'ingress': newValue}));
+                },
+                items: <String>[
+                  'unknown_ingress',
+                  'none',
+                  'nginx',
+                  'traefik',
+                  'traefik2',
+                ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
