@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/components/login/email_login.dart';
 import 'package:frontend/components/login/login_with_button.dart';
@@ -49,7 +50,7 @@ class Login extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     const Text(
-                      'Est-ce que t\'as déjà léché ?',
+                      'Souris légèrement si tu aimes la sodomie',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w600,
@@ -165,9 +166,9 @@ class _LoginOptions extends StatelessWidget {
                               redirectUri: 'com.example.frontend://home',
                               customUriScheme: 'com.example.frontend'),
                           grantType: OAuth2Helper.AUTHORIZATION_CODE,
-                          clientId: '652a1436625a54db39b6',
+                          clientId: dotenv.env['GITHUB_CLIENT_ID'] ?? "",
                           clientSecret:
-                              'f7fca66b14d21c2ecd1de6a1b502e9905bea484c',
+                              dotenv.env['GITHUB_CLIENT_SECRET'] ?? "",
                           scopes: ['repo', 'user'],
                         );
 
@@ -183,6 +184,7 @@ class _LoginOptions extends StatelessWidget {
                             break;
                           }
                         }
+
                         await apiController.userAPI
                             .oauthSignin(token?.accessToken, email, "GITHUB");
 
@@ -210,7 +212,7 @@ class _LoginOptions extends StatelessWidget {
                               customUriScheme: 'com.example.frontend'),
                           grantType: OAuth2Helper.AUTHORIZATION_CODE,
                           clientId:
-                              '301365716393-pk7ibos2ljlva6sp8dbgqtdcrjvb71o8.apps.googleusercontent.com',
+                              dotenv.env['GOOGLE_ANDROID_CLIENT_ID'] ?? "",
                           scopes: [
                             'https://www.googleapis.com/auth/userinfo.email',
                             'https://www.googleapis.com/auth/userinfo.profile',
@@ -228,8 +230,6 @@ class _LoginOptions extends StatelessWidget {
                             await helper.getTokenFromStorage();
                         final body = json.decode(resp.body);
                         String email = body['emailAddresses'][0]['value'];
-                        print(token?.accessToken);
-                        print(email);
 
                         await apiController.userAPI
                             .oauthSignin(token?.accessToken, email, "GOOGLE");

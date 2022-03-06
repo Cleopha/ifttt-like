@@ -182,8 +182,8 @@ Map<String, ActionInfo> actions = {
       params: params,
     ),
   ),
-  'GITHUB_NEW_ASSIGNATION_DETECTED': ActionInfo(
-    name: 'Une nouvelle Assignation a été détectée',
+  'GITHUB_NEW_ISSUE_ASSIGNATION_DETECTED': ActionInfo(
+    name: 'Une nouvelle Assignation d\' issue a été détectée',
     service: services['github']!,
     params: {
       'user': '',
