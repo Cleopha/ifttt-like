@@ -121,10 +121,12 @@ func (w *Watcher) Watch() error {
 						mutex.Lock()
 						defer mutex.Unlock()
 
-						_, err := w.d.Run(service, method, taskID, params, owner)
+						out, err := w.d.Run(service, method, taskID, params, owner)
 						if err != nil {
 							zap.S().Error(err)
 						}
+
+						zap.S().Info("Action check state: ", out[0])
 					}(&wg, &w.mu)
 				}
 			}(elem.Tasks, elem.Owner)

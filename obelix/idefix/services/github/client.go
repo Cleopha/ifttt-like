@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/Cleopha/ifttt-like-common/credentials"
 	"github.com/Cleopha/ifttt-like-common/protos"
+	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 	"google.golang.org/protobuf/types/known/structpb"
 	"idefix/operator"
@@ -68,6 +69,8 @@ type params struct {
 
 // configure get credentials to connect to GitHub API
 func (c *Client) configure(owner string) error {
+	zap.S().Info("Configuring github client..")
+
 	conf := &oauth2.Config{
 		ClientID:     ClientID,
 		ClientSecret: ClientSecret,
@@ -163,6 +166,8 @@ func (c *Client) NewPrDetected(taskID string, prm *structpb.Struct, owner string
 
 // NewIssueDetected check if new issue is open
 func (c *Client) NewIssueDetected(taskID string, prm *structpb.Struct, owner string) error {
+	zap.S().Info("Checking if there is a new issue..")
+
 	issues, err := c.preprocessIssue(prm, owner)
 	if err != nil {
 		return fmt.Errorf("failed to preprecess issue: %w", err)
@@ -176,6 +181,8 @@ func (c *Client) NewIssueDetected(taskID string, prm *structpb.Struct, owner str
 
 		return fmt.Errorf("failed to update redis state: %w", err)
 	}
+
+	zap.S().Info("Current redis state: ", old)
 
 	if err = issues.LookForChange(c.Operator, taskID, old, false, owner); err != nil {
 		return fmt.Errorf("an error has occurred while looking for changes: %w", err)
