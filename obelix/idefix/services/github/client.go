@@ -142,6 +142,8 @@ func (c *Client) preprocessIssue(prm *structpb.Struct, owner string) (*Issues, e
 
 // NewPrDetected check if new pull-request is open
 func (c *Client) NewPrDetected(taskID string, prm *structpb.Struct, owner string) error {
+	zap.S().Info("Checking if there is a new pull request..")
+
 	issues, err := c.preprocessIssue(prm, owner)
 	if err != nil {
 		return fmt.Errorf("failed to preprecess issue: %w", err)
@@ -155,6 +157,8 @@ func (c *Client) NewPrDetected(taskID string, prm *structpb.Struct, owner string
 
 		return fmt.Errorf("failed to update redis state: %w", err)
 	}
+
+	zap.S().Info("Current redis state: ", old)
 
 	err = issues.LookForChange(c.Operator, taskID, old, true, owner)
 	if err != nil {
