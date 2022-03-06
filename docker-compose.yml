@@ -189,11 +189,12 @@ services:
       context: frontend
       dockerfile: Dockerfile
     volumes:
-      - $PWD:/app
+      - mobile_data:/home/developer
 
 networks:
   backend:
   obelix:
 
 volumes:
+  mobile_data:
   postgres_data:
