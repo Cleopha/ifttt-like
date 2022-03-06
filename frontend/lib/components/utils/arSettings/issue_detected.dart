@@ -63,8 +63,8 @@ class IssueDetected extends StatelessWidget {
                               Map<String, dynamic>.from(params)
                                 ..addAll(
                                   {
-                                    'repo': newValue,
-                                    'user': githubName,
+                                    'repo': githubName.split('/')[0],
+                                    'user': githubName.split('/')[1],
                                   },
                                 ),
                             );
