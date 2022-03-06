@@ -44,7 +44,12 @@ class SendTransaction extends StatelessWidget {
                     ..addAll({'to': newValue}));
                 },
                 initialValue: params['to'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
@@ -89,7 +94,12 @@ class SendTransaction extends StatelessWidget {
                 },
                 keyboardType: TextInputType.number,
                 initialValue: params['value'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),

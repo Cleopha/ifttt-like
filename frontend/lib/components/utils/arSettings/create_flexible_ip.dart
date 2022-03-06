@@ -43,7 +43,12 @@ class CreateFlexibleIp extends StatelessWidget {
                     ..addAll({'projectID': newValue}));
                 },
                 initialValue: params['projectID'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),

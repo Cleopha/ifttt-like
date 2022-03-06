@@ -43,7 +43,12 @@ class CreateKubernetesCluster extends StatelessWidget {
                     ..addAll({'name': newValue}));
                 },
                 initialValue: params['name'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
@@ -77,7 +82,12 @@ class CreateKubernetesCluster extends StatelessWidget {
                     ..addAll({'projectID': newValue}));
                 },
                 initialValue: params['projectID'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
@@ -121,7 +131,12 @@ class CreateKubernetesCluster extends StatelessWidget {
                     value: value,
                     child: Text(
                       value,
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   );
                 }).toList(),
@@ -174,7 +189,12 @@ class CreateKubernetesCluster extends StatelessWidget {
                     value: value,
                     child: Text(
                       value,
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   );
                 }).toList(),
@@ -226,7 +246,12 @@ class CreateKubernetesCluster extends StatelessWidget {
                     value: value,
                     child: Text(
                       value,
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   );
                 }).toList(),

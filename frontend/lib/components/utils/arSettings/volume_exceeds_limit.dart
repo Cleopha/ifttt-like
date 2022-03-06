@@ -44,7 +44,12 @@ class VolumeExceedsLimit extends StatelessWidget {
                     ..addAll({'zone': newValue}));
                 },
                 initialValue: params['zone'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
@@ -89,7 +94,12 @@ class VolumeExceedsLimit extends StatelessWidget {
                 },
                 keyboardType: TextInputType.number,
                 initialValue: params['limit'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),

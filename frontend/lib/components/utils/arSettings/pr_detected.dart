@@ -75,7 +75,12 @@ class PrDetected extends StatelessWidget {
                               value: value,
                               child: Text(
                                 value,
-                                style: const TextStyle(fontSize: 16),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             );
                           }).toList(),

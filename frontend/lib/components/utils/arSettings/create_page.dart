@@ -43,7 +43,12 @@ class CreateNewPage extends StatelessWidget {
                     ..addAll({'title': newValue}));
                 },
                 initialValue: params['title'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
@@ -77,7 +82,12 @@ class CreateNewPage extends StatelessWidget {
                     ..addAll({'from': newValue}));
                 },
                 initialValue: params['from'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
