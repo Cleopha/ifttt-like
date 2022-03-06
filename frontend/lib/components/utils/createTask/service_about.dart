@@ -144,7 +144,7 @@ class _ASelector extends StatelessWidget {
           splashColor: Colors.white.withOpacity(0.1),
           highlightColor: Colors.transparent,
           onTap: () {
-            Get.back(result: FlowAR(flow: id, params: {}));
+            Get.back(result: FlowAR(flow: id, params: action.params));
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -197,7 +197,7 @@ class _RSelector extends StatelessWidget {
           splashColor: Colors.white.withOpacity(0.1),
           highlightColor: Colors.transparent,
           onTap: () {
-            Get.back(result: FlowAR(flow: id, params: {}));
+            Get.back(result: FlowAR(flow: id, params: reaction.params));
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
