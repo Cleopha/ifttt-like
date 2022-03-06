@@ -50,18 +50,22 @@ class WorkflowAPI {
     dio.interceptors.add(CookieManager(CookieJar()));
   }
 
+  /// Get all workflows by [userId]
   String getWorkflowsUrl(String userId) {
     return "user/$userId/workflow";
   }
 
+  /// Create a new workflow by [userId]
   String postWorkflowUrl(String userId) {
     return "user/$userId/workflow";
   }
 
+  /// Take [workflowId] and return the url to get its tasks
   String getTasksUrl(String userId, String workflowId) {
     return "user/$userId/workflow/$workflowId/task";
   }
 
+  /// Take [userId] and return its workflows
   Future<List<Workflow>> getWorkflows(String userId) async {
     try {
       Response response = await dio.get(getWorkflowsUrl(userId));
@@ -81,6 +85,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take [userId] and [workflowId] and return the associated [Workflow]
   Future<Workflow> getWorkflow(String userId, String workflowId) async {
     try {
       Response response =
@@ -99,6 +104,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take a [userId] and a [name] and create a new [Workflow]
   Future<Workflow> postWorkflow(String userId, String name) async {
     try {
       Response response = await dio.post(postWorkflowUrl(userId), data: {
@@ -118,6 +124,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take [userId] and [workflowId] and delete the associated [Workflow]
   Future<void> deleteWorkflow(String userId, String workflowId) async {
     try {
       Response response =
@@ -131,6 +138,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take [userId], [workflowId] and [name] and modified the associated [Workflow]'s name
   Future<void> putWorkflow(
       String userId, String workflowId, String name) async {
     try {
@@ -147,6 +155,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take [userId] and [workflowId] and return the associated [Task]s
   Future<Task> getTask(String userId, String workflowId) async {
     try {
       Response response = await dio.get(getTasksUrl(userId, workflowId));
@@ -244,6 +253,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take [userId], [workflowId], [title] and [flow] and create a new action [Task]
   Future<Task> addAction(
     String userId,
     String workflowId,
@@ -332,6 +342,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take [userId], [workflowId], [title] and [flow] and create a new reaction [Task]
   Future<Task> addReaction(
     String userId,
     String workflowId,
@@ -418,6 +429,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take [userId] and return all its tasks
   Future<List<Task>> getAllTasks(String userId) async {
     try {
       Response response = await dio.get("/user/$userId/workflow");
@@ -442,6 +454,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take [userId], [workflowId] and an [action] to update the task
   Future<ActionInfo> putAction(String userId, String workflowId, ActionInfo action) async {
     try {
       String id = action.id;
@@ -477,6 +490,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take [userId], [workflowId] and an [reaction] to update the task
   Future<RawTask> putReaction(
       String userId, String workflowId, ReactionInfo reaction) async {
     try {
@@ -508,6 +522,7 @@ class WorkflowAPI {
     }
   }
 
+  /// Take [userId], [workflowId], a [task] and a [reaction] to delete the task
   Future<void> deleteReaction(String userId, String workflowId, Task task,
       ReactionInfo reaction) async {
     try {
