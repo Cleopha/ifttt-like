@@ -546,6 +546,16 @@ class WorkflowAPI {
           "params": previousReaction.params,
           "nextTask": previousReaction.nextId,
         });
+      } else {
+        task.action.id = reaction.nextId;
+
+        await dio.put("/user/$userId/workflow/$workflowId/task/${task.action.id}", data: {
+          "name": task.action.name,
+          "type": "action",
+          "action": task.action.action,
+          "params": task.action.params,
+          "nextTask": "",
+        });
       }
 
       Response response = await dio
