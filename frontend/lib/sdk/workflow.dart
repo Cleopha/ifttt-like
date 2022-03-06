@@ -442,6 +442,41 @@ class WorkflowAPI {
     }
   }
 
+  Future<ActionInfo> putAction(String userId, String workflowId, ActionInfo action) async {
+    try {
+      String id = action.id;
+
+      Response response = await dio.put("/user/$userId/workflow/$workflowId/task/$id", data: {
+        "name": action.name,
+        "type": "action",
+        "action": action.action,
+        "params": action.params,
+        "nextTask": action.nextId,
+      });
+
+      if (response.statusCode != 200) {
+        throw Exception("Error patching task");
+      }
+
+      List<String> nameAndpath = getActionServiceNameAndPath(response.data['action']);
+
+      return ActionInfo(
+        name: response.data['name'],
+        service: ServiceInfo(
+          name: nameAndpath[0],
+          iconPath: nameAndpath[1],
+        ),
+        id: id,
+        action: response.data['action'],
+        params: response.data['params'],
+        nextId: response.data['nextTask'],
+      );
+
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<RawTask> putReaction(
       String userId, String workflowId, ReactionInfo reaction) async {
     try {
@@ -486,15 +521,16 @@ class WorkflowAPI {
         }
       }
 
-      for (ReactionInfo r in task.reactions) {
-        if (r.id == reaction.nextId) {
-          nextReaction = r;
-          break;
-        }
-      }
-
       if (previousReaction != null) {
-        previousReaction.nextId = nextReaction?.id ?? "";
+        previousReaction.nextId = reaction.nextId;
+
+        await dio.put("/user/$userId/workflow/$workflowId/task/${previousReaction.id}", data: {
+          "name": previousReaction.name,
+          "type": "REACTION",
+          "action": previousReaction.reaction,
+          "params": previousReaction.params,
+          "nextTask": previousReaction.nextId,
+        });
       }
 
       Response response = await dio
