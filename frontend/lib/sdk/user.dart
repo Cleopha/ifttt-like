@@ -138,6 +138,29 @@ class UserAPI {
     }
   }
 
+  Future<String> githubName(String token) async {
+    Dio dio = Dio(BaseOptions(
+      baseUrl: 'https://api.github.com/',
+      connectTimeout: 15000,
+      receiveTimeout: 13000,
+      headers: {"Authorization": "token " + token},
+    ));
+
+    try {
+      String reposUrl = "user";
+
+      Response response = await dio.get(reposUrl);
+
+      if (response.statusCode != 200) {
+        throw Exception("Error getting user repos");
+      }
+
+      return response.data['login'];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> oauthSignin(
       String? accessToken, String email, String type) async {
     try {

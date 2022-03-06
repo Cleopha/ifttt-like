@@ -103,6 +103,13 @@ class CreateInstance extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: DropdownButton<String>(
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                isExpanded: true,
                 value: params['zone'],
                 onChanged: (String? newValue) {
                   onSettingsChange(Map<String, dynamic>.from(params)
