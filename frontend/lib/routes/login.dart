@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -191,9 +189,9 @@ class _LoginOptions extends StatelessWidget {
                         await apiController.userAPI
                             .oauthSignin(token?.accessToken, email, "GITHUB");
 
-                        //apiController.user = await apiController.userAPI.me();
+                        apiController.user = await apiController.userAPI.me();
 
-                        //Get.offAllNamed('/home');
+                        Get.offAllNamed('/home');
                       } catch (e) {
                         Get.snackbar(
                           'Erreur',
@@ -239,40 +237,9 @@ class _LoginOptions extends StatelessWidget {
                         await apiController.userAPI
                             .oauthSignin(token?.accessToken, email, "GOOGLE");
 
-                        //apiController.user = await apiController.userAPI.me();
+                        apiController.user = await apiController.userAPI.me();
 
-                        //Get.offAllNamed('/home');
-                      } catch (e) {
-                        Get.snackbar(
-                          'Erreur',
-                          e.toString().split('\n')[0],
-                          backgroundColor: Colors.red,
-                          snackPosition: SnackPosition.BOTTOM,
-                        );
-                      }
-                    }),
-                const SizedBox(height: 15),
-                LoginWithButton(
-                    pathToIcon: 'assets/icons/notion.svg',
-                    text: 'Continuer avec Notion',
-                    onTap: () async {
-                      try {
-                        OAuth2Helper helper = OAuth2Helper(
-                          NotionOauth2Client(
-                              redirectUri: 'com.example.frontend://home',
-                              customUriScheme: 'com.example.frontend'),
-                          grantType: OAuth2Helper.AUTHORIZATION_CODE,
-                          clientId: '9a2ef875-92d2-4688-b04b-c10168e51452',
-                          clientSecret:
-                              'secret_MIZOU2Kgju6ak3XrWkBuRIoC3fyz1m0BCVzfCk73ZpG',
-                        );
-
-                        print(await helper.getToken());
-                        // await apiController.userApi.oauthLogin(token?.accessToken, email);
-
-                        //apiController.user = await apiController.userAPI.me();
-
-                        //Get.offAllNamed('/home');
+                        Get.offAllNamed('/home');
                       } catch (e) {
                         Get.snackbar(
                           'Erreur',
