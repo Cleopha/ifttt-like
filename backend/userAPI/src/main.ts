@@ -20,6 +20,7 @@ async function bootstrap(): Promise<void> {
 	// TODO: Improve security with selected host and headers
 	app.enableCors({
 		credentials: true,
+		allowedHeaders: '*',
 	});
 
 	// Use winston logger
