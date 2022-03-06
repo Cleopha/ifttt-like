@@ -159,7 +159,13 @@ class _EmailSignInState extends State<EmailSignIn> {
                             );
                             apiController.user =
                                 await apiController.userAPI.me();
-
+                            try {
+                              await apiController.credentialAPI
+                                  .getStorage(apiController.user!.uid);
+                            } catch (_) {
+                              apiController.credentialAPI
+                                  .createStorage(apiController.user!.uid);
+                            }
                             Get.offAllNamed('/home');
                           } catch (e) {
                             Get.snackbar(
