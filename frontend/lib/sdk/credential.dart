@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
+
+/// Handles every interaction with the Credentials API
 class CredentialApi {
   Dio dio;
 
@@ -9,6 +11,7 @@ class CredentialApi {
     dio.interceptors.add(CookieManager(CookieJar()));
   }
 
+  /// Get the storage of a user
   Future<List<Map<String, String>>> getStorage(String userId) async {
     try {
       Response response = await dio.get("/user/$userId/storage");
@@ -23,6 +26,7 @@ class CredentialApi {
     }
   }
 
+  /// Create a new storage for a user
   Future<void> createStorage(String userId) async {
     try {
       Response response = await dio.post("/user/$userId/storage");
@@ -37,6 +41,7 @@ class CredentialApi {
     }
   }
 
+  /// Delete a storage for a user
   Future<void> deleteStorage(String userId) async {
     try {
       Response response = await dio.delete("/user/$userId/storage");
@@ -51,6 +56,7 @@ class CredentialApi {
     }
   }
 
+  /// Create a new credential for a user
   Future<String> createCredential(
       String userId, String service, String token) async {
     if (service.isEmpty ||
@@ -82,6 +88,7 @@ class CredentialApi {
     }
   }
 
+  /// Delete a credential for a user
   Future<void> deleteCredential(String userId, String service) async {
     if (service.isEmpty ||
         [
@@ -110,6 +117,7 @@ class CredentialApi {
     }
   }
 
+  /// Put a credential for a user
   Future<void> putCredential(
       String userId, String service, String token) async {
     if (service.isEmpty ||
@@ -141,6 +149,7 @@ class CredentialApi {
     }
   }
 
+  /// Get a credential for a user
   Future<String> getCredential(String userId, String service) async {
     if (service.isEmpty ||
         [
