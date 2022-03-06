@@ -22,7 +22,7 @@ RUN unzip tools.zip && rm tools.zip
 RUN mv cmdline-tools tools
 RUN mv tools Android/sdk/cmdline-tools
 RUN cd Android/sdk/cmdline-tools/tools/bin/ && yes | ./sdkmanager --licenses
-RUN cd Android/sdk/cmdline-tools/tools/bin/ && ./sdkmanager "build-tools;29.0.2" "patcher;v4" "platform-tools" "platforms;android-29" "sources;android-29"
+RUN cd Android/sdk/cmdline-tools/tools/bin/ && ./sdkmanager "build-tools;29.0.2" "patcher;v4" "platform-tools" "platforms;android-29" "sources;android-29" "cmdline-tools;latest"
 ENV PATH "$PATH:/home/developer/Android/sdk/platform-tools"
 
 
