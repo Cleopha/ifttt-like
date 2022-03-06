@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/controllers/controller_constant.dart';
 import 'package:frontend/utils/services.dart';
@@ -17,12 +18,12 @@ class GithubLogin extends StatelessWidget {
             redirectUri: 'com.example.frontend://home',
             customUriScheme: 'com.example.frontend'),
         grantType: OAuth2Helper.AUTHORIZATION_CODE,
-        clientId: '652a1436625a54db39b6',
-        clientSecret: 'f7fca66b14d21c2ecd1de6a1b502e9905bea484c',
+        clientId: dotenv.env['GITHUB_CLIENT_ID'] ?? "",
+        clientSecret: dotenv.env['GITHUB_CLIENT_SECRET'] ?? "",
         scopes: ['repo', 'user'],
       );
 
-      AccessTokenResponse? token = await helper.getTokenFromStorage();
+      AccessTokenResponse? token = await helper.getToken();
 
       if (token != null && token.accessToken != null) {
         await apiController.credentialAPI.createCredential(

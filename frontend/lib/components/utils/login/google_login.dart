@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/controllers/controller_constant.dart';
 import 'package:frontend/utils/services.dart';
@@ -17,8 +18,7 @@ class GoogleLogin extends StatelessWidget {
             redirectUri: 'com.example.frontend:/home',
             customUriScheme: 'com.example.frontend'),
         grantType: OAuth2Helper.AUTHORIZATION_CODE,
-        clientId:
-            '301365716393-pk7ibos2ljlva6sp8dbgqtdcrjvb71o8.apps.googleusercontent.com',
+        clientId: dotenv.env['GOOGLE_ANDROID_CLIENT_ID'] ?? "",
         scopes: [
           'https://www.googleapis.com/auth/userinfo.email',
           'https://www.googleapis.com/auth/userinfo.profile',
@@ -30,7 +30,7 @@ class GoogleLogin extends StatelessWidget {
         ],
       );
 
-      AccessTokenResponse? token = await helper.getTokenFromStorage();
+      AccessTokenResponse? token = await helper.getToken();
 
       if (token != null && token.accessToken != null) {
         await apiController.credentialAPI.createCredential(
