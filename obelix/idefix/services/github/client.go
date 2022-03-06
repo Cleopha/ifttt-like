@@ -133,6 +133,8 @@ func (c *Client) preprocessIssue(prm *structpb.Struct, owner string) (*Issues, e
 		return nil, fmt.Errorf("failed to read body: %w", err)
 	}
 
+	zap.S().Info(string(data))
+
 	if err = issues.Parse(data); err != nil {
 		return nil, fmt.Errorf("failed to parse body: %w", err)
 	}
