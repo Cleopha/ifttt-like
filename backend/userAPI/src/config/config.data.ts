@@ -9,6 +9,9 @@ const api = {
 		secret: env('API_SESSION_SECRET').asString(),
 		maxAge: env('API_SESSION_MAX_AGE').asInt(),
 		secure: env('API_SESSION_SECURE').asBool()
+	},
+	cors: {
+		origins: env('API_CORS_ORIGINS', false).asString().split(',').filter((e) => e != "")
 	}
 };
 
