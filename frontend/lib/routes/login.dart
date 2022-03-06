@@ -183,9 +183,6 @@ class _LoginOptions extends StatelessWidget {
                             break;
                           }
                         }
-                        print(token?.accessToken);
-                        print(email);
-
                         await apiController.userAPI
                             .oauthSignin(token?.accessToken, email, "GITHUB");
 

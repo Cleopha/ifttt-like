@@ -15,18 +15,24 @@ import 'package:frontend/components/utils/arSettings/issue_detected.dart';
 import 'package:frontend/components/utils/arSettings/pr_detected.dart';
 import 'package:frontend/components/utils/arSettings/volume_exceeds_limit.dart';
 import 'package:frontend/components/utils/arSettings/send_transaction%20.dart';
+import 'package:frontend/components/utils/login/eth_login.dart';
+import 'package:frontend/components/utils/login/github_login.dart';
+import 'package:frontend/components/utils/login/google_login.dart';
+import 'package:frontend/components/utils/login/scalway_login.dart';
 
 class ServiceInfo {
   final String name;
   final String description;
   final String iconPath;
   final Color color;
+  final Widget login;
 
   ServiceInfo({
     required this.name,
     required this.description,
     required this.iconPath,
     required this.color,
+    required this.login,
   });
 }
 
@@ -87,6 +93,7 @@ Map<String, ServiceInfo> services = {
         'GitHub is the best place to share code with friends, co-workers, classmates, and complete strangers. Turn on Applets to automatically track issues, pull requests, repositories, and to quickly create issues.',
     iconPath: 'assets/icons/tags/github.svg',
     color: const Color(0xff4078c0),
+    login: const GithubLogin(),
   ),
   'google': ServiceInfo(
     name: 'Google',
@@ -94,6 +101,7 @@ Map<String, ServiceInfo> services = {
         'Google est un moteur de recherche gratuit et libre d\'accès sur le World Wide Web, ayant donné son nom à la société Google. C\'est aujourd\'hui le moteur de recherche et le site web le plus visité au monde3 : 90 % des internautes l\'utilisaient en 2018.',
     iconPath: 'assets/icons/tags/google.svg',
     color: const Color(0xff23448b),
+    login: const GoogleLogin(),
   ),
   'coinmarketcap': ServiceInfo(
     name: 'CoinMarketCap',
@@ -101,6 +109,7 @@ Map<String, ServiceInfo> services = {
         'CoinMarketCap est le site de référence pour suivre les prix des crypto-actifs dans un monde des cryptomonnaies en pleine expansion. Sa mission est de rendre la crypto plus accessible et efficace au grand public en lui fournissant des informations impartiales, qualitatives et précises afin qu\'ils puissent en tirer leurs propres conclusions.',
     iconPath: 'assets/icons/tags/coinmarketcap.svg',
     color: const Color(0xff1db954),
+    login: Container(),
   ),
   'nist': ServiceInfo(
     name: 'Nist',
@@ -108,6 +117,7 @@ Map<String, ServiceInfo> services = {
         'Le National Institute of Standards and Technology, est une agence du département du Commerce des États-Unis. Son but est de promouvoir l\'économie en développant des technologies, la métrologie et des normes de concert avec l\'industrie.',
     iconPath: 'assets/icons/tags/nist.svg',
     color: const Color(0xff333333),
+    login: Container(),
   ),
   'scaleway': ServiceInfo(
     name: 'Scaleway',
@@ -115,6 +125,7 @@ Map<String, ServiceInfo> services = {
         'Notre mission est de vous apporter le cloud qui donne et a du sens avec une combinaison de puissance de calcul et stockage conforme aux normes RGPD : flexible, fiable, sécurisée, durable et au juste prix. Avec plus de 20 ans d’expertise dans l’innovation, nous proposons un écosystème complet : du bare metal aux datacenters, en passant par l’intelligence artificielle, le calcul, ou encore des serveurs dédiés haut de gamme. Scaleway est le seul fournisseur de type triple play à proposer à la fois de la colocation en datacenter, du cloud public et du cloud privé, le tout avec une approche innovante et holistique pour une consommation énergétique responsable.',
     iconPath: 'assets/icons/tags/scaleway.svg',
     color: const Color(0xff510099),
+    login: const ScalewayLogin(),
   ),
   'ethereum': ServiceInfo(
     name: 'Ethereum',
@@ -122,6 +133,7 @@ Map<String, ServiceInfo> services = {
         'Ethereum is a decentralized platform that runs smart contracts: applications that run exactly as programmed without any possibility of downtime, censorship, fraud or third-party interference.',
     iconPath: 'assets/icons/tags/ethereum.svg',
     color: const Color(0xffe4405f),
+    login: const EthLogin(),
   ),
   'notion': ServiceInfo(
     name: 'Notion',
@@ -129,6 +141,7 @@ Map<String, ServiceInfo> services = {
         'A new tool that blends your everyday work apps into one. It\'s the all-in-one workspace for you and your team.',
     iconPath: 'assets/icons/tags/notion.svg',
     color: Colors.black,
+    login: Container(),
   ),
 };
 
