@@ -793,8 +793,8 @@ class WorkflowAPI {
 
   Future<void> deleteReaction(String userId, String workflowId, Task task, ReactionInfo reaction) async {
     try {
-      ReactionInfo? previousReaction = null;
       ReactionInfo? nextReaction = null;
+      ReactionInfo? previousReaction = null;
 
       for (ReactionInfo r in task.reactions) {
         if (r.nextId == reaction.id) {
@@ -812,6 +812,14 @@ class WorkflowAPI {
 
       if (previousReaction != null) {
         previousReaction.nextId = nextReaction?.id ?? "";
+
+        await dio.put("/user/$userId/workflow/$workflowId/task/${previousReaction.id}", data: {
+          "name": previousReaction.name,
+          "type": "REACTION",
+          "action": previousReaction.reaction,
+          "params": previousReaction.params,
+          "nextTask": previousReaction.nextId,
+        });
       }
 
       Response response = await dio.delete("/user/$userId/workflow/$workflowId/task/${reaction.id}");
