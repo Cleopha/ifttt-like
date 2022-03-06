@@ -122,6 +122,7 @@ func (c *Client) preprocessIssue(prm *structpb.Struct, owner string) (*Issues, e
 	}
 
 	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/issues?filter=%s&state=%s", p.user, p.repo, p.filter, p.state)
+	zap.S().Info("Checking repo: ", url)
 	get, err := c.Requester.Get(url)
 
 	if err != nil {
