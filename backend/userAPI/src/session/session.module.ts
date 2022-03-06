@@ -7,6 +7,9 @@ import { Redis, RedisService } from '@redis';
 
 const RedisStore = ConnectRedis(session);
 
+/**
+ * Bind session to app
+ */
 export const Session = SessionModule.forRootAsync({
 	imports: [ Redis ],
 	inject: [ RedisService, ConfigService ],

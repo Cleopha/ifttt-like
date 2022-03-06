@@ -16,17 +16,28 @@ import { User } from '@user/entities';
 
 import { RegisterDto, LoginDto } from './dto';
 import { AuthMiddleware } from './auth.guard';
-import { ApiTags } from '@nestjs/swagger';
+import {
+	ApiCreatedResponse,
+	ApiInternalServerErrorResponse,
+	ApiOkResponse, ApiOperation,
+	ApiTags,
+	ApiUnauthorizedResponse
+} from '@nestjs/swagger';
+import { UserRO } from './ro/register.ro';
 
 @ApiTags('user')
 @Controller('auth')
 export class AuthController {
 	constructor(
 		@Inject(forwardRef(() => UserService)) private readonly userService: UserService
-	) {}
+	) {
+	}
 
 	@Post('/register')
 	@HttpCode(HttpStatus.CREATED)
+	@ApiOperation({ summary: 'Register a new user in the application' })
+	@ApiCreatedResponse({ type: UserRO })
+	@ApiInternalServerErrorResponse({ description: 'something went wrong' })
 	async register(@Body() registerDto: RegisterDto): Promise<User> {
 		const { password } = registerDto;
 
@@ -40,6 +51,9 @@ export class AuthController {
 
 	@Post('/login')
 	@HttpCode(HttpStatus.OK)
+	@ApiOperation({ summary: 'Login user using basic auth and create a session' })
+	@ApiOkResponse({ description: 'User successfully logged in' })
+	@ApiUnauthorizedResponse({ description: 'invalid password' })
 	async login(@Body() loginDto: LoginDto, @Session() session: ISession): Promise<string> {
 		const { email, password } = loginDto;
 
@@ -57,6 +71,9 @@ export class AuthController {
 	@Post('/logout')
 	@AuthMiddleware()
 	@HttpCode(HttpStatus.OK)
+	@ApiOperation({ summary: 'Logout user and destroy his session' })
+	@ApiOkResponse({ description: 'User successfully logged out', type: 'string' })
+	@ApiUnauthorizedResponse({ description: 'user not logged in' })
 	async logout(@Session() session): Promise<string> {
 		session.destroy();
 		return 'User successfully logged out';

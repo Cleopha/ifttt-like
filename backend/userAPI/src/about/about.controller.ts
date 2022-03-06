@@ -8,6 +8,7 @@ import { AboutService } from './about.service';
 export class AboutController {
 	constructor(private readonly aboutService: AboutService) {}
 
+	// Build about object
 	@Get()
 	about(@Req() req: Request): IAbout {
 		return {

@@ -4,7 +4,9 @@ import { RedisModule, RedisModuleOptions } from 'nestjs-redis';
 
 import { IConfig, IRedisConfig, ConfigService } from '@config';
 
-
+/**
+ * Integrate Redis
+ */
 export const Redis: DynamicModule = RedisModule.forRootAsync({
 	inject: [ ConfigService ],
 	useFactory: (config: ConfigService<IConfig>): RedisModuleOptions => {

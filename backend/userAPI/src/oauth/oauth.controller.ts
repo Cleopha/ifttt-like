@@ -7,7 +7,12 @@ import { ISession } from '@session';
 
 import { LoginDto } from './dto/login.dto';
 import { Convertor } from '@util/convertor';
-import { ApiTags } from '@nestjs/swagger';
+import {
+	ApiInternalServerErrorResponse,
+	ApiOkResponse,
+	ApiOperation,
+	ApiTags,
+} from '@nestjs/swagger';
 import { hash } from 'bcrypt';
 
 @ApiTags('user')
@@ -21,6 +26,9 @@ export class OauthController {
 	}
 
 	@Post('/login')
+	@ApiOperation({ summary: 'Login user using OAuth2 and create a session' })
+	@ApiOkResponse({ description: 'User successfully logged in' })
+	@ApiInternalServerErrorResponse({ description: 'something went wrong' })
 	async login(@Body() loginDto: LoginDto, @Session() session: ISession): Promise<string> {
 		const { email, accessToken, type } = loginDto;
 

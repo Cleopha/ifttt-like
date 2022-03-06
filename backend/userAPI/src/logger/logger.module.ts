@@ -6,6 +6,9 @@ import * as winston from 'winston';
 // Reduce code by destructuration
 const { transports, format } = winston;
 
+/**
+ * Integrate Winston Logger in userAPI
+ */
 export const Logger: DynamicModule = WinstonModule.forRoot({
 	format: format.combine(
 		format.timestamp(),
