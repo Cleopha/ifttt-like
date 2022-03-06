@@ -1,11 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:frontend/components/utils/createTask/add_if.dart';
 import 'package:frontend/controllers/controller_constant.dart';
 import 'package:frontend/controllers/edit_task_controller.dart';
 import 'package:frontend/routes/task_setting.dart';
-import 'package:frontend/sdk/workflow.dart';
 
 import 'package:frontend/utils/task.dart';
 
@@ -149,42 +147,6 @@ class _TaskTreeState extends State<TaskTree> {
                                     ),
                                   ),
                                 ),
-                                Center(
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      final FlowAR? newFlow = await Get.to(
-                                        const AddIf(),
-                                        transition: kIsWeb
-                                            ? Transition.noTransition
-                                            : Transition.rightToLeft,
-                                      );
-                                      if (newFlow != null) {
-                                        try {
-                                          await apiController.taskAPI.putAction(
-                                            apiController.user!.uid,
-                                            editTask.task.workflowId!,
-                                            editTask.task.action!,
-                                          );
-                                        } catch (e) {
-                                          Get.snackbar(
-                                            'Erreur',
-                                            e.toString().split('\n')[0],
-                                            backgroundColor: Colors.red,
-                                            snackPosition: SnackPosition.BOTTOM,
-                                          );
-                                        }
-                                      }
-                                    },
-                                    child: const Text(
-                                      'Changer l\'action',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
                               ],
                             );
                           },
@@ -280,39 +242,6 @@ class _TaskTreeState extends State<TaskTree> {
                                             }
                                           },
                                           reaction.params,
-                                        ),
-                                      ),
-                                    ),
-                                    Center(
-                                      child: Material(
-                                        child: InkWell(
-                                          onTap: () async {
-                                            try {
-                                              await apiController.taskAPI
-                                                  .deleteReaction(
-                                                apiController.user!.uid,
-                                                reaction.workflowId,
-                                                widget.task,
-                                                reaction,
-                                              );
-                                            } catch (e) {
-                                              Get.snackbar(
-                                                'Erreur',
-                                                e.toString().split('\n')[0],
-                                                backgroundColor: Colors.red,
-                                                snackPosition:
-                                                    SnackPosition.BOTTOM,
-                                              );
-                                            }
-                                          },
-                                          child: const Text(
-                                            'Supprimer la reaction',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
                                         ),
                                       ),
                                     ),

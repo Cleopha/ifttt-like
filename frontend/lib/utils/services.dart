@@ -310,7 +310,7 @@ Map<String, ReactionInfo> reactions = {
     service: services['google']!,
     params: {
       'title': '',
-      'start': '2024-02-12T11:00:00+01:00',
+      'start': DateTime.now().toIso8601String(),
     },
     settings: (
       Function(Map<String, dynamic>) onSettingsChamge,
