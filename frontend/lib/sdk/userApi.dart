@@ -573,6 +573,7 @@ class WorkflowAPI {
       for (RawTask rawTask in rawTasks) {
         if (rawTask.type == "ACTION") {
           actionTask = rawTask;
+          break;
         }
       }
 
@@ -720,6 +721,41 @@ class WorkflowAPI {
       }
 
       return tasks;
+
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<ActionInfo> putAction(String userId, String workflowId, ActionInfo action) async {
+    try {
+      String id = action.id;
+
+      Response response = await dio.put("/user/$userId/workflow/$workflowId/task/$id", data: {
+        "name": action.name,
+        "type": "action",
+        "action": action.action,
+        "params": action.params,
+        "nextTask": action.nextId,
+      });
+
+      if (response.statusCode != 200) {
+        throw Exception("Error patching task");
+      }
+
+      List<String> nameAndpath = getActionServiceNameAndPath(response.data['action']);
+
+      return ActionInfo(
+        name: response.data['name'],
+        service: ServiceInfo(
+          name: nameAndpath[0],
+          iconPath: nameAndpath[1],
+        ),
+        id: id,
+        action: response.data['action'],
+        params: response.data['params'],
+        nextId: response.data['nextTask'],
+      );
 
     } catch (e) {
       throw e;
