@@ -36,14 +36,3 @@ jobs:
 
       - name: Build Docker Compose
         run: docker compose build client_mobile
-
-      - name: Run builder
-        run: docker compose up -d client_mobile
-
-      - name: Copy apk
-        run: docker cp ifttt-like_client_mobile-1:/home/developer/build/app/outputs/flutter-apk/app-release.apk .
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: area
-          path: app-release.apk
