@@ -50,7 +50,7 @@ class Login extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     const Text(
-                      'Souris légèrement si tu aimes la sodomie',
+                      'Epitech ou la passion de l\'informatique !',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w600,
