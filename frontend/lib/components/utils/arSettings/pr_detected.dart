@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/controllers/controller_constant.dart';
 
-class PrDetected extends StatelessWidget {
-  PrDetected({
+class PrDetected extends StatefulWidget {
+  const PrDetected({
     required this.onSettingsChange,
     required this.params,
     Key? key,
@@ -11,6 +11,11 @@ class PrDetected extends StatelessWidget {
   final Function(Map<String, dynamic>) onSettingsChange;
   final Map<String, dynamic> params;
 
+  @override
+  State<PrDetected> createState() => _PrDetectedState();
+}
+
+class _PrDetectedState extends State<PrDetected> {
   String githubName = '';
 
   Future<List<String>> _getRepoList() async {
@@ -57,10 +62,16 @@ class PrDetected extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           isExpanded: true,
-                          value: params['repo'] != '' ? params['repo'] : null,
+                          value: widget.params['repo'] != ''
+                              ? widget.params['repo']
+                              : null,
                           onChanged: (String? newValue) {
-                            onSettingsChange(
-                              Map<String, dynamic>.from(params)
+                            setState(() {
+                              widget.params['repo'] = newValue;
+                              widget.params['user'] = githubName;
+                            });
+                            widget.onSettingsChange(
+                              Map<String, dynamic>.from(widget.params)
                                 ..addAll(
                                   {
                                     'repo': newValue,

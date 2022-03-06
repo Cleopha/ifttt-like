@@ -50,7 +50,7 @@ class Login extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     const Text(
-                      'Est-ce que t\'as déjà léché ?',
+                      'Souris légèrement si tu aimes la sodomie',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w600,
