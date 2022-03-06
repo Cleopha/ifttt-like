@@ -25,6 +25,8 @@
   - [:rocket: Clone repository](#rocket-clone-repository)
   - [:warning: Requirement](#warning-requirement)
 - [:checkered_flag: Quick-Start](#checkered_flag-quick-start)
+- [Documentation](#documentation)
+  - [Backend Global Architecture](#backend-global-architecture)
 - [Authors:](#authors)
 
 </details>
@@ -59,6 +61,10 @@ and [http://localhost:7777/credential/](http://localhost:7777/credential/)
 - [Backend](./backend): API system to manage users, workflows and credential
 - [Obelix](./obelix): System to watch for action and execute reaction
 - [Frontend](./frontend): Mobile and Web application
+
+### Backend Global Architecture
+
+![](.github/assets/global_arch.png)
 
 ## Authors:
 
