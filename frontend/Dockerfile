@@ -37,3 +37,5 @@ RUN echo "API_URL=http://0.0.0.0:7001/" > .env
 USER root
 RUN yes | flutter doctor --android-licenses
 RUN flutter build apk --release
+
+ENTRYPOINT ["bash"]
