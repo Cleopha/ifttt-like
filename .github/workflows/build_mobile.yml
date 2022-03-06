@@ -40,4 +40,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: area
-          path: frontend/build/app/outputs/apk/app-release.apk
+          path: frontend/build/app/outputs/apk/release/app-release.apk
