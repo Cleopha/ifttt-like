@@ -99,7 +99,7 @@ class _ScalewayLoginState extends State<ScalewayLogin> {
                 await apiController.credentialAPI.createCredential(
                   apiController.user!.uid,
                   "SCALEWAY",
-                  '$_accessKey+$_secretKey',
+                  '$_secretKey$_accessKey',
                 );
                 Get.back();
               } catch (e) {

@@ -57,14 +57,17 @@ class IssueDetected extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           isExpanded: true,
-                          value: params['repo'] != '' ? params['repo'] : null,
+                          value: params['repo'] != ''
+                              ? '${params['user']}/${params['repo']}'
+                              : null,
                           onChanged: (String? newValue) {
+                            if (newValue == null) return;
                             onSettingsChange(
                               Map<String, dynamic>.from(params)
                                 ..addAll(
                                   {
-                                    'repo': githubName.split('/')[0],
-                                    'user': githubName.split('/')[1],
+                                    'repo': newValue.split('/')[1],
+                                    'user': newValue.split('/')[0],
                                   },
                                 ),
                             );

@@ -63,19 +63,16 @@ class _PrDetectedState extends State<PrDetected> {
                           ),
                           isExpanded: true,
                           value: widget.params['repo'] != ''
-                              ? widget.params['repo']
+                              ? '${widget.params['user']}/${widget.params['repo']}'
                               : null,
                           onChanged: (String? newValue) {
-                            setState(() {
-                              widget.params['repo'] = newValue;
-                              widget.params['user'] = githubName;
-                            });
+                            if (newValue == null) return;
                             widget.onSettingsChange(
                               Map<String, dynamic>.from(widget.params)
                                 ..addAll(
                                   {
-                                    'repo': newValue,
-                                    'user': githubName,
+                                    'repo': newValue.split('/')[1],
+                                    'user': newValue.split('/')[0],
                                   },
                                 ),
                             );

@@ -19,7 +19,7 @@ class _AddIfState extends State<AddIf> {
     setState(() {
       availaleServices = null;
     });
-    final List<String> services = ['nist'];
+    final List<String> services = ['nist', 'coinmarketcap'];
     await apiController.credentialAPI
         .getCredential(apiController.user!.uid, 'GITHUB')
         .then((_) => services.add('github'))
@@ -27,10 +27,6 @@ class _AddIfState extends State<AddIf> {
     await apiController.credentialAPI
         .getCredential(apiController.user!.uid, 'GOOGLE')
         .then((_) => services.add('google'))
-        .catchError((_) {});
-    await apiController.credentialAPI
-        .getCredential(apiController.user!.uid, 'COINMARKET')
-        .then((_) => services.add('coinmarketcap'))
         .catchError((_) {});
     await apiController.credentialAPI
         .getCredential(apiController.user!.uid, 'SCALEWAY')
