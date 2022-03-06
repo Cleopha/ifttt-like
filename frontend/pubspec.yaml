@@ -22,6 +22,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   oauth2_client: ^2.3.2
   flutter_web_auth: ^0.4.1
+  dartdoc: ^5.0.1
 
 dev_dependencies:
   flutter_test:
