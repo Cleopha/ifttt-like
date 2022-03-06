@@ -35,4 +35,13 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build Docker Compose
-        run: docker compose build client_mobile
+        run: |
+          mkdir -p output
+          docker compose build client_mobile
+          docker compose up client_mobile
+          
+      - name: Publish APK artifact
+        uses: actions/artifacts@v3
+        with:
+          name: Build APK
+          path: output
