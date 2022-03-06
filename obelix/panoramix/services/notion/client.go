@@ -14,18 +14,21 @@ import (
 )
 
 var (
-	CredentialEndpoint = ""
+	CredentialAPIHost = ""
+	CredentialAPIPort = ""
 )
 
 var (
-	ErrNoParentFound = errors.New("no parent found")
+	ErrNoParentFound         = errors.New("no parent found")
+	ErrCredentialAPINotFound = errors.New("credentials API not set")
 )
 
 func init() {
-	CredentialEndpoint = os.Getenv("CREDENTIAL_API_PORT")
+	CredentialAPIHost = os.Getenv("CREDENTIAL_API_HOST")
+	CredentialAPIPort = os.Getenv("CREDENTIAL_API_PORT")
 
-	if CredentialEndpoint == "" {
-		zap.S().Fatal("credential API configuration is not set")
+	if CredentialAPIHost == "" || CredentialAPIPort == "" {
+		zap.S().Fatal(ErrCredentialAPINotFound)
 	}
 }
 
@@ -42,7 +45,7 @@ func New(ctx context.Context) *Client {
 }
 
 func (c *Client) configure(owner string) error {
-	credentialClient, err := credentials.NewClient(CredentialEndpoint)
+	credentialClient, err := credentials.NewClient(CredentialAPIHost, CredentialAPIPort)
 	if err != nil {
 		return fmt.Errorf("failed to create gRPC credential client: %w", err)
 	}

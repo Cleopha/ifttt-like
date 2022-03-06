@@ -17,8 +17,15 @@ import (
 )
 
 var (
-	ClientID     = ""
-	ClientSecret = ""
+	ClientID          = ""
+	ClientSecret      = ""
+	CredentialAPIHost = ""
+	CredentialAPIPort = ""
+)
+
+var (
+	ErrNoGitHubCredentials   = errors.New("github credentials are not set")
+	ErrCredentialAPINotFound = errors.New("credentials API not set")
 )
 
 func init() {
@@ -26,7 +33,14 @@ func init() {
 	ClientSecret = os.Getenv("GITHUB_CLIENT_SECRET")
 
 	if ClientID == "" || ClientSecret == "" {
-		log.Fatal(errors.New("github credentials are not set"))
+		log.Fatal(ErrNoGitHubCredentials)
+	}
+
+	CredentialAPIHost = os.Getenv("CREDENTIAL_API_HOST")
+	CredentialAPIPort = os.Getenv("CREDENTIAL_API_PORT")
+
+	if CredentialAPIHost == "" || CredentialAPIPort == "" {
+		log.Fatal(ErrCredentialAPINotFound)
 	}
 }
 
@@ -65,7 +79,7 @@ func (c *Client) configure(owner string) error {
 	}
 	token := &oauth2.Token{}
 
-	credentialClient, err := credentials.NewClient(os.Getenv("CREDENTIAL_API_PORT"))
+	credentialClient, err := credentials.NewClient(CredentialAPIHost, CredentialAPIPort)
 	if err != nil {
 		return fmt.Errorf("failed to create gRPC credential client: %w", err)
 	}

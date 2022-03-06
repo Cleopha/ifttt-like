@@ -19,13 +19,15 @@ import (
 )
 
 var (
-	WorkflowEndpoint = ""
+	WorkflowAPIHost = ""
+	WorkflowAPIPort = ""
 )
 
 func init() {
-	WorkflowEndpoint = os.Getenv("WORKFLOW_API_PORT")
+	WorkflowAPIHost = os.Getenv("WORKFLOW_API_HOST")
+	WorkflowAPIPort = os.Getenv("WORKFLOW_API_PORT")
 
-	if WorkflowEndpoint == "" {
+	if WorkflowAPIPort == "" || WorkflowAPIHost == "" {
 		zap.S().Fatal("workflow API endpoint is not set")
 	}
 }
@@ -98,7 +100,7 @@ func (o *Operator) runWorkflow(initialAction kafka.Message) error {
 	o.mu.Unlock()
 
 	// Creates the task client, used to retrieve a workflow's tasks one after the other.
-	client, err := task.NewClient(WorkflowEndpoint)
+	client, err := task.NewClient(WorkflowAPIHost, WorkflowAPIPort)
 	if err != nil {
 		return fmt.Errorf("failed to create new gRPC client: %w", err)
 	}
@@ -147,6 +149,8 @@ func (o *Operator) consumeService(topic string) error {
 	if err != nil {
 		return fmt.Errorf("failed to create sarama operator: %w", err)
 	}
+
+	defer consumer.Close()
 
 	zap.S().Info("Panoramix is connected to kafka - topic ", topic)
 
