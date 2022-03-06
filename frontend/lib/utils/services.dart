@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/utils/arSettings/assert_variation_detected.dart';
+import 'package:frontend/components/utils/arSettings/assignation_detected.dart';
 import 'package:frontend/components/utils/arSettings/create_container_registry.dart';
 import 'package:frontend/components/utils/arSettings/create_database.dart';
 import 'package:frontend/components/utils/arSettings/create_document.dart';
@@ -9,6 +10,8 @@ import 'package:frontend/components/utils/arSettings/create_instance.dart';
 import 'package:frontend/components/utils/arSettings/create_kubernetes_cluster.dart';
 import 'package:frontend/components/utils/arSettings/create_page.dart';
 import 'package:frontend/components/utils/arSettings/create_sheet.dart';
+import 'package:frontend/components/utils/arSettings/issue_closed_detected.dart';
+import 'package:frontend/components/utils/arSettings/issue_detected.dart';
 import 'package:frontend/components/utils/arSettings/pr_detected.dart';
 import 'package:frontend/components/utils/arSettings/volume_exceeds_limit.dart';
 import 'package:frontend/components/utils/arSettings/send_transaction%20.dart';
@@ -161,7 +164,7 @@ Map<String, ActionInfo> actions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        IssueDetected(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
@@ -179,7 +182,7 @@ Map<String, ActionInfo> actions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        AssignationDetected(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
@@ -197,7 +200,7 @@ Map<String, ActionInfo> actions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        IssueClosedDetected(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
