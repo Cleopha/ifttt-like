@@ -189,7 +189,7 @@ services:
       context: frontend
       dockerfile: Dockerfile
     volumes:
-      - $PWD:/app/build/app/outputs/apk/release/
+      - $PWD/frontend:/app
 
 networks:
   backend:
