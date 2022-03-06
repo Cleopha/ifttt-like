@@ -15,12 +15,18 @@ import AppDoc from '@doc';
 async function bootstrap(): Promise<void> {
 	const app = await NestFactory.create(AppModule);
 
+	// Retrieve configuration
+	const configService = app.get(ConfigService);
+	const origins = configService.get<string[]>('api.cors.origins');
+	const corsOrigins = (origins.length === 0) ? '*' : origins;
+
 	// Enable cors
 	// Default cors should allow any origin with any methods and headers
 	// TODO: Improve security with selected host and headers
 	app.enableCors({
 		credentials: true,
 		allowedHeaders: '*',
+		origin: corsOrigins
 	});
 
 	// Use winston logger
@@ -32,9 +38,6 @@ async function bootstrap(): Promise<void> {
 			}
 		}),
 	);
-
-	// Retrieve configuration
-	const configService = app.get(ConfigService);
 
 	// Apply body validator
 	app.useGlobalPipes(new ValidationPipe({ transform: true }));
@@ -48,6 +51,7 @@ async function bootstrap(): Promise<void> {
 
 	await app.listen(port, host, () => {
 		Logger.log(`Server listening on ${ host }:${ port }`);
+		Logger.log(`Allow cors origins on ${ corsOrigins }`);
 	});
 }
 
