@@ -22,6 +22,7 @@ services:
       - backend
 
   user-api:
+    restart: always
     image: area/user-api
     build:
       context: backend
@@ -51,6 +52,7 @@ services:
       - redis
 
   workflow-api:
+    restart: always
     image: area/workflow-api
     build:
       context: backend
@@ -69,6 +71,7 @@ services:
       - database
 
   credential-api:
+    restart: always
     image: area/credential-api
     build:
       context: backend
@@ -98,9 +101,6 @@ services:
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
-    # I have to delete the exposure of the ports if I have put in the same network ?
-    ports:
-      - "22181:22181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 22181
     networks:
@@ -108,10 +108,6 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:latest
-    # I have to delete the exposure of the ports if I have put in the same network ?
-    ports:
-      - "19092:19092"
-      - "19091:19091"
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:22181
       KAFKA_LISTENERS: INTERNAL://0.0.0.0:19091,OUTSIDE://0.0.0.0:19092
