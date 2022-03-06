@@ -37,6 +37,9 @@ jobs:
       - name: Build Docker Compose
         run: docker compose build client_mobile
 
+      - name: Run builder
+        run: docker compose up client_mobile
+
       - uses: actions/upload-artifact@v3
         with:
           name: area
