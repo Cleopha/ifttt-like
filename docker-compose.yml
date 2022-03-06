@@ -189,7 +189,7 @@ services:
       context: frontend
       dockerfile: Dockerfile
     volumes:
-      - $PWD/frontend:/home/developer
+      - $PWD:/app
 
 networks:
   backend:
