@@ -78,7 +78,12 @@ class CreateDatabase extends StatelessWidget {
                     ..addAll({'projectID': newValue}));
                 },
                 initialValue: params['projectID'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
@@ -112,7 +117,12 @@ class CreateDatabase extends StatelessWidget {
                     ..addAll({'username': newValue}));
                 },
                 initialValue: params['username'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
@@ -158,7 +168,12 @@ class CreateDatabase extends StatelessWidget {
                     ..addAll({'password': newValue}));
                 },
                 initialValue: params['password'].toString(),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
@@ -202,7 +217,12 @@ class CreateDatabase extends StatelessWidget {
                     value: value,
                     child: Text(
                       value,
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   );
                 }).toList(),
