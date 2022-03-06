@@ -129,6 +129,11 @@ class _TaskTreeState extends State<TaskTree> {
                                             editTask.task.action!.params =
                                                 newParams;
                                           });
+                                          await apiController.taskAPI.putAction(
+                                            apiController.user!.uid,
+                                            editTask.task.workflowId!,
+                                            editTask.task.action!,
+                                          );
                                         } catch (e) {
                                           Get.snackbar(
                                             'Erreur',
