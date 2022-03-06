@@ -11,7 +11,7 @@ class AddThen extends StatelessWidget {
   const AddThen({Key? key}) : super(key: key);
 
   Future<List<String>> _getAvailableServices() async {
-    final List<String> services = ['ethereum'];
+    final List<String> services = [];
     await apiController.credentialAPI
         .getCredential(apiController.user!.uid, 'GOOGLE')
         .then((_) => services.add('google'))
@@ -23,6 +23,10 @@ class AddThen extends StatelessWidget {
     await apiController.credentialAPI
         .getCredential(apiController.user!.uid, 'NOTION')
         .then((_) => services.add('notion'))
+        .catchError((_) {});
+    await apiController.credentialAPI
+        .getCredential(apiController.user!.uid, 'ETH')
+        .then((_) => services.add('ethereum'))
         .catchError((_) {});
     return services;
   }

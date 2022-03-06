@@ -103,6 +103,13 @@ class CreateKubernetesCluster extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: DropdownButton<String>(
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                isExpanded: true,
                 value: params['region'],
                 onChanged: (String? newValue) {
                   onSettingsChange(Map<String, dynamic>.from(params)
@@ -143,6 +150,13 @@ class CreateKubernetesCluster extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: DropdownButton<String>(
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                isExpanded: true,
                 value: params['cni'],
                 onChanged: (String? newValue) {
                   onSettingsChange(Map<String, dynamic>.from(params)
@@ -189,6 +203,13 @@ class CreateKubernetesCluster extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: DropdownButton<String>(
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                isExpanded: true,
                 value: params['ingress'],
                 onChanged: (String? newValue) {
                   onSettingsChange(Map<String, dynamic>.from(params)

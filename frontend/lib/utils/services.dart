@@ -9,6 +9,7 @@ import 'package:frontend/components/utils/arSettings/create_instance.dart';
 import 'package:frontend/components/utils/arSettings/create_kubernetes_cluster.dart';
 import 'package:frontend/components/utils/arSettings/create_page.dart';
 import 'package:frontend/components/utils/arSettings/create_sheet.dart';
+import 'package:frontend/components/utils/arSettings/pr_detected.dart';
 import 'package:frontend/components/utils/arSettings/volume_exceeds_limit.dart';
 import 'package:frontend/components/utils/arSettings/send_transaction%20.dart';
 
@@ -142,7 +143,7 @@ Map<String, ActionInfo> actions = {
       Function(Map<String, dynamic>) onSettingsChamge,
       Map<String, dynamic> params,
     ) =>
-        AssertVariationDetected(
+        PrDetected(
       onSettingsChange: onSettingsChamge,
       params: params,
     ),
