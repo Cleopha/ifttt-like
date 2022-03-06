@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
+/// Represents a user of the application.
 class User {
   final String uid;
 
@@ -14,6 +15,7 @@ class User {
   });
 }
 
+/// Handles any interaction with the backend related to authentication and user management.
 class UserAPI {
   Dio dio;
 
@@ -28,6 +30,7 @@ class UserAPI {
   final String meUrl = "user/me";
   final String oauthUrl = "oauth/login";
 
+  /// Registers a new user.
   Future<void> register(String email, String password) async {
     try {
       Response response = await dio.post(registerUrl, data: {
@@ -43,6 +46,7 @@ class UserAPI {
     }
   }
 
+  /// Logs in a user.
   Future<void> login(String email, String password) async {
     try {
       Response response = await dio.post(loginUrl, data: {
@@ -58,6 +62,7 @@ class UserAPI {
     }
   }
 
+  /// Logs out a user.
   Future<void> logout() async {
     try {
       Response response = await dio.post(logoutUrl);
@@ -70,6 +75,7 @@ class UserAPI {
     }
   }
 
+  /// Gets the user's information.
   Future<User> me() async {
     try {
       Response response = await dio.get(meUrl);
@@ -84,6 +90,7 @@ class UserAPI {
     }
   }
 
+  /// Updates the user's information.
   Future<void> patch(User user) async {
     try {
       Response response = await dio.patch(patchUrl + user.uid, data: {
@@ -98,6 +105,7 @@ class UserAPI {
     }
   }
 
+  /// Deletes the user's information.
   Future<void> delete(User user) async {
     try {
       Response response = await dio.delete(patchUrl + user.uid);
@@ -110,6 +118,7 @@ class UserAPI {
     }
   }
 
+  /// Gets the user's github repositories.
   Future<List<String>> githubRepos(String token) async {
     Dio dio = Dio(BaseOptions(
       baseUrl: 'https://api.github.com/',
@@ -138,6 +147,31 @@ class UserAPI {
     }
   }
 
+  /// Gets the user's github name.
+  Future<String> githubName(String token) async {
+    Dio dio = Dio(BaseOptions(
+      baseUrl: 'https://api.github.com/',
+      connectTimeout: 15000,
+      receiveTimeout: 13000,
+      headers: {"Authorization": "token " + token},
+    ));
+
+    try {
+      String reposUrl = "user";
+
+      Response response = await dio.get(reposUrl);
+
+      if (response.statusCode != 200) {
+        throw Exception("Error getting user repos");
+      }
+
+      return response.data['login'];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Logs in with github.
   Future<void> oauthSignin(
       String? accessToken, String email, String type) async {
     try {
