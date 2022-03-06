@@ -18,6 +18,7 @@ import (
 
 var (
 	TimeInterval    = ""
+	WorkflowAPIHost = ""
 	WorkflowAPIPort = ""
 )
 
@@ -28,8 +29,9 @@ var (
 func init() {
 	TimeInterval = os.Getenv("TIME_INTERVAL")
 	WorkflowAPIPort = os.Getenv("WORKFLOW_API_PORT")
+	WorkflowAPIHost = os.Getenv("WORKFLOW_API_HOST")
 
-	if TimeInterval == "" || WorkflowAPIPort == "" {
+	if TimeInterval == "" || WorkflowAPIPort == "" || WorkflowAPIHost == "" {
 		zap.S().Fatal(ErrWatcherConfigurationNotSet)
 	}
 }
@@ -48,7 +50,7 @@ type Action struct {
 }
 
 func New(ctx context.Context) (*Watcher, error) {
-	client, err := workflow.NewClient(WorkflowAPIPort)
+	client, err := workflow.NewClient(WorkflowAPIHost, WorkflowAPIPort)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create grpc client: %w", err)
 	}

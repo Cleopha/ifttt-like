@@ -19,9 +19,16 @@ import (
 )
 
 var (
-	ClientID     = ""
-	ClientSecret = ""
-	RedirectURL  = ""
+	ClientID          = ""
+	ClientSecret      = ""
+	RedirectURL       = ""
+	CredentialAPIHost = ""
+	CredentialAPIPort = ""
+)
+
+var (
+	ErrNoGoogleCredentials   = errors.New("google credentials are not set")
+	ErrCredentialAPINotFound = errors.New("credentials API not set")
 )
 
 func init() {
@@ -30,7 +37,14 @@ func init() {
 	RedirectURL = os.Getenv("GOOGLE_REDIRECT_URL")
 
 	if ClientID == "" || ClientSecret == "" || RedirectURL == "" {
-		log.Fatal(errors.New("google credentials are not set"))
+		log.Fatal(ErrNoGoogleCredentials)
+	}
+
+	CredentialAPIHost = os.Getenv("CREDENTIAL_API_HOST")
+	CredentialAPIPort = os.Getenv("CREDENTIAL_API_PORT")
+
+	if CredentialAPIHost == "" || CredentialAPIPort == "" {
+		log.Fatal(ErrCredentialAPINotFound)
 	}
 }
 
@@ -62,7 +76,7 @@ func (c *Client) configure(owner string) error {
 	}
 
 	token := &oauth2.Token{}
-	credentialClient, err := credentials.NewClient(os.Getenv("CREDENTIAL_API_PORT"))
+	credentialClient, err := credentials.NewClient(CredentialAPIHost, CredentialAPIPort)
 
 	if err != nil {
 		return fmt.Errorf("failed to create credential gRPC client: %w", err)
