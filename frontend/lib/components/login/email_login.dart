@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/components/login/email_signin.dart';
+import 'package:frontend/components/login/web_signup.dart';
 import 'package:frontend/controllers/controller_constant.dart';
 import 'package:get/get.dart';
 
@@ -27,20 +29,22 @@ class _EmailLoginState extends State<EmailLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: TextButton(
-          child: SvgPicture.asset(
-            'assets/icons/left-arrow.svg',
-            semanticsLabel: 'personna icon',
-            alignment: Alignment.centerLeft,
-            color: Colors.black,
-            width: 20,
-          ),
-          onPressed: () => Get.back(),
-        ),
-      ),
+      appBar: kIsWeb
+          ? null
+          : AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leading: TextButton(
+                child: SvgPicture.asset(
+                  'assets/icons/left-arrow.svg',
+                  semanticsLabel: 'personna icon',
+                  alignment: Alignment.centerLeft,
+                  color: Colors.black,
+                  width: 20,
+                ),
+                onPressed: () => Get.back(),
+              ),
+            ),
       body: Align(
         alignment: Alignment.center,
         child: Padding(
@@ -51,7 +55,7 @@ class _EmailLoginState extends State<EmailLogin> {
               const Text(
                 'Connectez-vous !',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: kIsWeb ? 42 : 20,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -126,8 +130,9 @@ class _EmailLoginState extends State<EmailLogin> {
                 ),
               ),
               const SizedBox(height: 15),
-              GestureDetector(
-                onTap: () => Get.off(const EmailSignIn()),
+              TextButton(
+                onPressed: () =>
+                    Get.off(kIsWeb ? const WebSignup() : const EmailSignIn()),
                 child: Text(
                   'Pas de compte ?',
                   style: TextStyle(
@@ -215,7 +220,7 @@ class _EmailLoginState extends State<EmailLogin> {
                   ),
                 ),
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: kIsWeb ? 0 : 60),
             ],
           ),
         ),
