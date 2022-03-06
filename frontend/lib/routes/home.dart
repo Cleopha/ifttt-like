@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:frontend/components/home/top_bar.dart';
 import 'package:frontend/components/utils/create_button.dart';
-import 'package:frontend/components/utils/explore_button.dart';
 import 'package:frontend/components/utils/taskCard/task_card.dart';
 import 'package:frontend/components/utils/task_scroller.dart';
 import 'package:frontend/controllers/controller_constant.dart';
@@ -104,9 +103,6 @@ class Home extends StatelessWidget {
                       children: const [
                         Expanded(
                           child: CreateButton(),
-                        ),
-                        Expanded(
-                          child: ExploreButton(),
                         ),
                       ],
                     ),

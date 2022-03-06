@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-import 'package:frontend/components/utils/create_button.dart';
 import 'package:frontend/components/utils/explore_button.dart';
 import 'package:frontend/controllers/controller_constant.dart';
 
@@ -40,9 +39,6 @@ class TopBar extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ExploreButton(colorReverse: colorReverse),
-                        ),
-                        Expanded(
-                          child: CreateButton(colorReverse: colorReverse),
                         ),
                       ],
                     ),
