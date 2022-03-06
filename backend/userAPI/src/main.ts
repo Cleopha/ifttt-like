@@ -32,7 +32,6 @@ async function bootstrap(): Promise<void> {
 		}),
 	);
 
-
 	// Retrieve configuration
 	const configService = app.get(ConfigService);
 

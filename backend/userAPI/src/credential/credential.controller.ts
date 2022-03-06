@@ -10,7 +10,13 @@ import {
 	Query,
 	UseInterceptors
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+	ApiCreatedResponse,
+	ApiInternalServerErrorResponse,
+	ApiOkResponse,
+	ApiOperation,
+	ApiTags, ApiUnauthorizedResponse
+} from '@nestjs/swagger';
 
 import { OwnerMiddleware } from '@auth';
 import { Credential } from '@protos';
@@ -21,8 +27,9 @@ import { TransformCredentialInterceptor } from './credential.format';
 import { CredentialAPIClient } from './client/credentialAPI.client';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
+import { CredentialRo } from '@credential/ro/credential.ro';
 
-@ApiTags('CredentialAPI')
+@ApiTags('credentialAPI')
 @Controller('/user/:userId/storage/credential')
 @UseInterceptors(TransformCredentialInterceptor)
 export class CredentialController {
@@ -31,6 +38,10 @@ export class CredentialController {
 
 	@OwnerMiddleware('userId')
 	@Get()
+	@ApiOperation({ summary: 'Get a credential value of the provided service' })
+	@ApiOkResponse({ type: CredentialRo })
+	@ApiInternalServerErrorResponse({ description: 'something went wrong' })
+	@ApiUnauthorizedResponse({ description: 'user not logged in' })
 	async getCredential(@Param('userId') owner: string, @Query('service') service: TsService): Promise<Credential> {
 		try {
 			return await this.credentialClient.getCredential({
@@ -44,6 +55,10 @@ export class CredentialController {
 
 	@OwnerMiddleware('userId')
 	@Post()
+	@ApiOperation({ summary: 'Create a credential for the provided service' })
+	@ApiCreatedResponse({ type: CredentialRo })
+	@ApiInternalServerErrorResponse({ description: 'something went wrong' })
+	@ApiUnauthorizedResponse({ description: 'user not logged in' })
 	async createCredential(@Body() dto: CreateCredentialDto, @Param('userId') owner: string, @Query('service') service: TsService): Promise<Credential> {
 		try {
 			return await this.credentialClient.insertCredential({
@@ -59,6 +74,10 @@ export class CredentialController {
 
 	@OwnerMiddleware('userId')
 	@Put()
+	@ApiOperation({ summary: 'Update token value of a credential' })
+	@ApiOkResponse({ type: CredentialRo })
+	@ApiInternalServerErrorResponse({ description: 'something went wrong' })
+	@ApiUnauthorizedResponse({ description: 'user not logged in' })
 	async updateCredential(@Body() dto: UpdateCredentialDto, @Param('userId') owner: string, @Query('service') service: TsService): Promise<Credential> {
 		try {
 			return await this.credentialClient.updateCredential({
@@ -74,6 +93,10 @@ export class CredentialController {
 
 	@OwnerMiddleware('userId')
 	@Delete()
+	@ApiOperation({ summary: 'Delete a credential from the provided service' })
+	@ApiOkResponse({ type: CredentialRo })
+	@ApiInternalServerErrorResponse({ description: 'something went wrong' })
+	@ApiUnauthorizedResponse({ description: 'user not logged in' })
 	async deleteCredential(@Param('userId') owner: string, @Query('service') service: TsService): Promise<Credential> {
 		try {
 			return await this.credentialClient.removeCredential({

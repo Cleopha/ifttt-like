@@ -19,6 +19,13 @@ export function AuthMiddleware(...roles: Role[]) {
 	)
 }
 
+/**
+ * AuthGuard protect the endpoint to grant access
+ * only if the user is authenticated with a session
+ *
+ * It also verifies that user's role fit with those
+ * defined in the reflector key 'roles'.
+ */
 @Injectable()
 export class AuthGuard implements CanActivate {
 	constructor(
