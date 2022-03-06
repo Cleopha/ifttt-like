@@ -188,6 +188,15 @@ services:
     volumes:
       - mobile_data:/home/developer
 
+  proxy:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - $PWD/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - backend
+
 networks:
   backend:
   obelix:
