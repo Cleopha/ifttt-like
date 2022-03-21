@@ -27,6 +27,7 @@
 - [:checkered_flag: Quick-Start](#checkered_flag-quick-start)
 - [Documentation](#documentation)
   - [Backend Global Architecture](#backend-global-architecture)
+- [Demonstration](#demonstration)
 - [Authors:](#authors)
 
 </details>
@@ -65,6 +66,14 @@ and [http://localhost:7777/credential/](http://localhost:7777/credential/)
 ### Backend Global Architecture
 
 ![](.github/assets/global_arch.png)
+
+## Demonstration
+
+
+<p align="center">
+  <img src="./.github/assets/diagram_demo.svg" width="66%" />
+  <img src="./.github/assets/demo.gif" width="29%" />
+</p>
 
 ## Authors:
 
