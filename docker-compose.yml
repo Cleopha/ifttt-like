@@ -186,7 +186,7 @@ services:
       context: frontend
       dockerfile: Dockerfile
     volumes:
-      - mobile_data:/home/developer
+      - "$PWD/output:/home/developer/build/app/outputs/apk/release"
 
   proxy:
     image: nginx:latest
